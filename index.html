@@ -1,0 +1,517 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Tools Collection</title>
+    <style>
+      :root {
+        --bg-color: #1e1e1e;
+        --text-color: #f0f0f0;
+        --link-color: #58a6ff;
+        --border-color: #444;
+        --hover-bg: #2c2c2c;
+        --tag-bg: #3a3a3a;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+
+      header {
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .header-content {
+        flex-grow: 1;
+      }
+
+      h1 {
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        color: var(--text-color);
+        opacity: 0.7;
+        margin-bottom: 1rem;
+      }
+
+      a {
+        color: var(--link-color);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .tools-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .tool-card {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .tool-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background-color: var(--hover-bg);
+      }
+
+      .tool-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      .tool-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-color);
+        opacity: 0.7;
+      }
+
+      .tool-id {
+        background-color: var(--tag-bg);
+        border-radius: 12px;
+        padding: 0.1rem 0.5rem;
+      }
+
+      .tool-description {
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+      }
+
+      .tool-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .tag {
+        background-color: var(--tag-bg);
+        border-radius: 12px;
+        padding: 0.2rem 0.6rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+      }
+
+      .tool-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        font-size: 0.9rem;
+      }
+
+      .tool-links a {
+        background-color: var(--tag-bg);
+        border-radius: 4px;
+        padding: 0.25rem 0.6rem;
+        transition:
+          background-color 0.2s,
+          color 0.2s;
+      }
+
+      .tool-links a:hover {
+        background-color: var(--link-color);
+        color: white;
+        text-decoration: none;
+      }
+
+      footer {
+        margin-top: 3rem;
+        text-align: center;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+        font-size: 0.9rem;
+        opacity: 0.7;
+      }
+
+      .filters {
+        margin-bottom: 2rem;
+      }
+
+      .tag-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .filter-tag {
+        background-color: var(--tag-bg);
+        border-radius: 12px;
+        padding: 0.2rem 0.6rem;
+        font-size: 0.85rem;
+        cursor: pointer;
+        white-space: nowrap;
+        user-select: none;
+      }
+
+      .filter-tag.active {
+        background-color: var(--link-color);
+        color: white;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+
+      @media (max-width: 600px) {
+        .tools-container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <h1>My Tools Collection</h1>
+        <p class="subtitle">
+          A curated list of tools I've created or find useful
+        </p>
+      </div>
+    </header>
+
+    <div class="filters">
+      <input
+        type="text"
+        class="search-input"
+        id="search"
+        placeholder="Search tools..."
+      />
+      <div>
+        <p><strong>Filter by tags:</strong></p>
+        <div class="tag-filter" id="tag-filters">
+          <!-- Tags will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <div class="tools-container" id="tools-container">
+      <!-- Tool cards will be populated by JavaScript -->
+    </div>
+
+    <footer>
+      <p>
+        © 2025 Your Name -
+        <a href="https://github.com/yourusername">GitHub</a> -
+        <a href="https://twitter.com/yourusername">Twitter</a>
+      </p>
+    </footer>
+
+    <script>
+      // TOOL SCHEMA
+      /*
+      {
+        id: number
+        title: string
+        description: string,
+        tags: [string]
+        links: object{
+          string(display name): string(url)
+        }
+        lastUpdated: string(date)
+
+      }
+
+
+
+    */
+
+      const tools = [];
+
+      // Function to generate HTML for tool links
+      function renderLinks(links) {
+        if (!links || Object.keys(links).length === 0) {
+          return "";
+        }
+
+        return Object.entries(links)
+          .map(
+            ([label, url]) => `<a href="${url}" target="_blank">${label}</a>`,
+          )
+          .join("");
+      }
+
+      // Function to render tool cards
+      function renderTools(toolsToRender) {
+        const container = document.getElementById("tools-container");
+        container.innerHTML = "";
+
+        if (toolsToRender.length === 0) {
+          container.innerHTML = "<p>No tools match your search criteria.</p>";
+          return;
+        }
+
+        toolsToRender.forEach((tool) => {
+          const card = document.createElement("div");
+          card.className = "tool-card";
+          card.dataset.id = tool.id;
+
+          const tagsHtml = tool.tags
+            .map((tag) => `<span class="tag">${tag}</span>`)
+            .join("");
+          const linksHtml = renderLinks(tool.links);
+          const formattedDate = new Date(tool.lastUpdated).toLocaleDateString(
+            "en-US",
+            {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            },
+          );
+
+          card.innerHTML = `
+                    <div class="tool-meta">
+                        <span class="tool-id">#${tool.id}</span>
+                        <span class="tool-date">Updated: ${formattedDate}</span>
+                    </div>
+                    <h3 class="tool-title">${tool.title}</h3>
+                    <p class="tool-description">${tool.description}</p>
+                    <div class="tool-tags">${tagsHtml}</div>
+                    <div class="tool-links">${linksHtml}</div>
+                `;
+
+          container.appendChild(card);
+        });
+      }
+
+      // Function to render tag filters
+      function renderTagFilters() {
+        const allTags = new Set();
+        tools.forEach((tool) => {
+          tool.tags.forEach((tag) => allTags.add(tag));
+        });
+
+        const tagFiltersContainer = document.getElementById("tag-filters");
+
+        // Create "All" filter
+        const allFilter = document.createElement("div");
+        allFilter.className = "filter-tag active";
+        allFilter.textContent = "All";
+        allFilter.dataset.tag = "all";
+        tagFiltersContainer.appendChild(allFilter);
+
+        // Create filters for each tag
+        Array.from(allTags)
+          .sort()
+          .forEach((tag) => {
+            const filterTag = document.createElement("div");
+            filterTag.className = "filter-tag";
+            filterTag.textContent = tag;
+            filterTag.dataset.tag = tag;
+            tagFiltersContainer.appendChild(filterTag);
+          });
+      }
+
+      // Filter tools by search term and active tags
+      function filterTools() {
+        const searchTerm = document
+          .getElementById("search")
+          .value.toLowerCase();
+        const activeTags = Array.from(
+          document.querySelectorAll(".filter-tag.active"),
+        )
+          .map((el) => el.dataset.tag)
+          .filter((tag) => tag !== "all");
+
+        const filteredTools = tools.filter((tool) => {
+          // Filter by search term
+          const matchesSearch =
+            tool.title.toLowerCase().includes(searchTerm) ||
+            tool.description.toLowerCase().includes(searchTerm) ||
+            tool.tags.some((tag) => tag.toLowerCase().includes(searchTerm));
+
+          // Filter by active tags
+          const matchesTags =
+            activeTags.length === 0 ||
+            activeTags.some((tag) => tool.tags.includes(tag));
+
+          return matchesSearch && matchesTags;
+        });
+
+        renderTools(filteredTools);
+        updateUrlParams(); // Update URL when filters change
+      }
+
+      // Initial render
+      document.addEventListener("DOMContentLoaded", () => {
+        renderTagFilters();
+        handleUrlParams(); // Process URL parameters first
+
+        if (!window.location.search) {
+          // If no URL parameters, just render all tools
+          renderTools(tools);
+        }
+
+        // Event listener for search input
+        document
+          .getElementById("search")
+          .addEventListener("input", filterTools);
+
+        // Event listeners for tag filters
+        document
+          .getElementById("tag-filters")
+          .addEventListener("click", (e) => {
+            if (!e.target.classList.contains("filter-tag")) return;
+
+            if (e.target.dataset.tag === "all") {
+              // If clicking "All", deactivate other filters
+              document.querySelectorAll(".filter-tag").forEach((el) => {
+                el.classList.remove("active");
+              });
+              e.target.classList.add("active");
+            } else {
+              // If clicking a specific tag, deactivate "All"
+              document
+                .querySelector('.filter-tag[data-tag="all"]')
+                .classList.remove("active");
+
+              // Toggle active state of the clicked tag
+              e.target.classList.toggle("active");
+
+              // If no tag is active, activate "All"
+              const activeTagsCount =
+                document.querySelectorAll(".filter-tag.active").length;
+              if (activeTagsCount === 0) {
+                document
+                  .querySelector('.filter-tag[data-tag="all"]')
+                  .classList.add("active");
+              }
+            }
+
+            filterTools();
+          });
+
+        // Add click event to tool cards for direct linking
+        document
+          .querySelector(".tools-container")
+          .addEventListener("click", function (e) {
+            const toolCard = e.target.closest(".tool-card");
+            if (toolCard && !e.target.closest("a")) {
+              const toolId = toolCard.dataset.id;
+              // Update URL with tool ID
+              const url = new URL(window.location.href);
+              url.searchParams.set("id", toolId);
+              window.history.pushState({}, "", url);
+            }
+          });
+      });
+      // Handle URL parameters for filtering and sharing
+      function handleUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchParam = urlParams.get("search");
+        const tagsParam = urlParams.get("tags");
+        const idParam = urlParams.get("id");
+
+        // Apply search parameter
+        if (searchParam) {
+          const searchInput = document.getElementById("search");
+          searchInput.value = searchParam;
+          // Trigger filtering
+          filterTools();
+        }
+
+        // Apply tag filtering
+        if (tagsParam) {
+          const tagFilters = document.querySelectorAll(".filter-tag");
+          const tagsToActivate = tagsParam.split(",");
+
+          // Deactivate 'All' filter
+          document
+            .querySelector('.filter-tag[data-tag="all"]')
+            .classList.remove("active");
+
+          // Activate specified tags
+          tagFilters.forEach((tagFilter) => {
+            if (tagsToActivate.includes(tagFilter.dataset.tag)) {
+              tagFilter.classList.add("active");
+            }
+          });
+
+          // Trigger filtering
+          filterTools();
+        }
+
+        // Scroll to specific tool by ID
+        if (idParam) {
+          setTimeout(() => {
+            const toolElement = document.querySelector(
+              `.tool-card[data-id="${idParam}"]`,
+            );
+            if (toolElement) {
+              toolElement.scrollIntoView({ behavior: "smooth" });
+              toolElement.style.boxShadow = "0 0 0 2px var(--link-color)";
+              setTimeout(() => {
+                toolElement.style.boxShadow = "";
+              }, 2000);
+            }
+          }, 500);
+        }
+      }
+
+      // Update URL parameters when filtering
+      function updateUrlParams() {
+        const searchTerm = document.getElementById("search").value;
+        const activeTags = Array.from(
+          document.querySelectorAll(".filter-tag.active"),
+        )
+          .map((el) => el.dataset.tag)
+          .filter((tag) => tag !== "all");
+
+        const params = new URLSearchParams();
+
+        if (searchTerm) {
+          params.set("search", searchTerm);
+        }
+
+        if (activeTags.length > 0) {
+          params.set("tags", activeTags.join(","));
+        }
+
+        const newUrl =
+          window.location.pathname +
+          (params.toString() ? "?" + params.toString() : "");
+        window.history.replaceState({}, "", newUrl);
+      }
+    </script>
+  </body>
+</html>
