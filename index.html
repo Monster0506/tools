@@ -205,7 +205,14 @@
       <div class="header-content">
         <h1>My Tools Collection</h1>
         <p class="subtitle">
-          A curated list of tools I've created or find useful
+          A curated list of tools I've created or find useful. Based on
+          <a href="https://tools.simonwillison.net/"
+            >Simon Willison's tool collection</a
+          >
+        </p>
+        <p>
+          Most of the code can be found in
+          <a href="https://github.com/monster0506/tools">monster0506/tools</a>
         </p>
       </div>
     </header>
@@ -248,15 +255,34 @@
         links: object{
           string(display name): string(url)
         }
-        lastUpdated: string(date)
+        lastUpdated: string(date YYYY-MM-DD)
 
       }
 
-
-
     */
 
-      const tools = [];
+      const tools = [
+        {
+          id: 1,
+          title: "QR Code Generator",
+          description:
+            "Web application to generate various types of QR codes including URLs, text, contact information (vCard), and Wi-Fi credentials.",
+          tags: [
+            "javascript",
+            "utility",
+            "static-site",
+            "web",
+            "development",
+            "images",
+          ],
+          links: {
+            Visit: "qrcode-generator",
+            GitHub:
+              "https://github.com/monster0506/tools/tree/main/static-sites/qrcode-generator",
+          },
+          lastUpdated: "2025-05-02",
+        },
+      ];
 
       // Function to generate HTML for tool links
       function renderLinks(links) {
@@ -265,9 +291,7 @@
         }
 
         return Object.entries(links)
-          .map(
-            ([label, url]) => `<a href="${url}" target="_blank">${label}</a>`,
-          )
+          .map(([label, url]) => `<a href="${url}">${label}</a>`)
           .join("");
       }
 

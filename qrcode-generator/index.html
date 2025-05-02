@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Static QR Code Generator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>QR Code Generator</h1>
+
+    <div class="container">
+      <div class="controls">
+        <label for="qrType">Select Type:</label>
+        <select id="qrType">
+          <option value="url" selected>URL</option>
+          <option value="text">Text</option>
+          <option value="wifi">Wi-Fi</option>
+          <option value="vcard">Contact (vCard)</option>
+        </select>
+
+        <div id="input-url" class="input-section">
+          <label for="urlInput">URL:</label>
+          <input type="url" id="urlInput" placeholder="https://example.com" />
+        </div>
+
+        <div id="input-text" class="input-section" style="display: none">
+          <label for="textInput">Text:</label>
+          <textarea
+            id="textInput"
+            rows="4"
+            placeholder="Enter your text here"
+          ></textarea>
+        </div>
+
+        <div id="input-wifi" class="input-section" style="display: none">
+          <label for="wifiSSID">Network Name (SSID):</label>
+          <input type="text" id="wifiSSID" placeholder="MyWiFiNetwork" />
+          <label for="wifiPassword">Password:</label>
+          <input
+            type="password"
+            id="wifiPassword"
+            placeholder="MySecretPassword"
+          />
+          <label for="wifiEncryption">Encryption:</label>
+          <select id="wifiEncryption">
+            <option value="WPA" selected>WPA/WPA2</option>
+            <option value="WEP">WEP</option>
+            <option value="nopass">None</option>
+          </select>
+        </div>
+
+        <div id="input-vcard" class="input-section" style="display: none">
+          <label for="vcardName">Name:</label>
+          <input type="text" id="vcardName" placeholder="John Doe" />
+          <label for="vcardPhone">Phone:</label>
+          <input type="tel" id="vcardPhone" placeholder="+1234567890" />
+          <label for="vcardEmail">Email:</label>
+          <input
+            type="email"
+            id="vcardEmail"
+            placeholder="john.doe@example.com"
+          />
+          <label for="vcardOrg">Organization:</label>
+          <input type="text" id="vcardOrg" placeholder="ACME Corp" />
+        </div>
+
+        <button id="generateBtn">Generate QR Code</button>
+      </div>
+
+      <div class="qr-display">
+        <h2>Generated QR Code:</h2>
+        <div id="qrcode"></div>
+        <button id="downloadBtn" style="display: none">Download PNG</button>
+        <button id="copyBtn" style="display: none">Copy Image</button>
+        <p id="errorMessage" class="error"></p>
+        <p id="successMessage" class="success"></p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
