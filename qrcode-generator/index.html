@@ -17,6 +17,9 @@
           <option value="text">Text</option>
           <option value="wifi">Wi-Fi</option>
           <option value="vcard">Contact (vCard)</option>
+          <option value="email">Email</option>
+          <option value="sms">SMS</option>
+          <option value="geo">Geo Location</option>
         </select>
 
         <div id="input-url" class="input-section">
@@ -65,6 +68,54 @@
           <input type="text" id="vcardOrg" placeholder="ACME Corp" />
         </div>
 
+        <div id="input-geo" class="input-section" style="display: none">
+          <label for="geoLatitude">Latitude:</label>
+          <input
+            type="number"
+            step="any"
+            id="geoLatitude"
+            placeholder="37.7749"
+          />
+          <label for="geoLongitude">Longitude:</label>
+          <input
+            type="number"
+            step="any"
+            id="geoLongitude"
+            placeholder="-122.4194"
+          />
+        </div>
+
+        <div id="input-sms" class="input-section" style="display: none">
+          <label for="smsNumber">Phone Number:</label>
+          <input type="tel" id="smsNumber" placeholder="+1234567890" />
+          <label for="smsBody">Message Body:</label>
+          <textarea
+            id="smsBody"
+            rows="4"
+            placeholder="Enter your SMS message here"
+          ></textarea>
+        </div>
+
+        <div id="input-email" class="input-section" style="display: none">
+          <label for="emailRecipient">To:</label>
+          <input
+            type="email"
+            id="emailRecipient"
+            placeholder="recipient@example.com"
+          />
+          <label for="emailSubject">Subject:</label>
+          <input
+            type="text"
+            id="emailSubject"
+            placeholder="Subject of the email"
+          />
+          <label for="emailBody">Message Body:</label>
+          <textarea
+            id="emailBody"
+            rows="4"
+            placeholder="Enter your email message here"
+          ></textarea>
+        </div>
         <button id="generateBtn">Generate QR Code</button>
       </div>
 

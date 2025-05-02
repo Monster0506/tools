@@ -74,6 +74,55 @@ document.addEventListener("DOMContentLoaded", () => {
           if (email) data += `EMAIL:${email}\n`;
           data += `END:VCARD`;
           break;
+        case "email":
+          const emailRecipient =
+            document.getElementById("emailRecipient").value;
+          const emailSubject = document.getElementById("emailSubject").value;
+          const emailBody = document.getElementById("emailBody").value;
+
+          if (!emailRecipient) {
+            throw new Error("Please enter a recipient email address.");
+          }
+
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRecipient)) {
+            throw new Error("Please enter a valid recipient email address.");
+          }
+
+          data = `MATMSG:TO:${emailRecipient};SUB:${emailSubject || ""};BODY:${
+            emailBody || ""
+          };;`;
+          break;
+        case "sms":
+          const smsNumber = document.getElementById("smsNumber").value;
+          const smsBody = document.getElementById("smsBody").value;
+
+          if (!smsNumber) {
+            throw new Error("Please enter a phone number.");
+          }
+          // Basic phone number validation (customize as needed)
+          if (!/^\+?\d+$/.test(smsNumber)) {
+            throw new Error("Please enter a valid phone number.");
+          }
+
+          data = `SMSTO:${smsNumber}:${smsBody || ""}`; // Alternate SMS format:  sms:${smsNumber}?body=${encodeURIComponent(smsBody || "")}
+          break;
+        case "geo":
+          const geoLatitude = document.getElementById("geoLatitude").value;
+          const geoLongitude = document.getElementById("geoLongitude").value;
+
+          if (!geoLatitude || !geoLongitude) {
+            throw new Error("Please enter both latitude and longitude.");
+          }
+
+          if (
+            !/^-?\d+(\.\d+)?$/.test(geoLatitude) ||
+            !/^-?\d+(\.\d+)?$/.test(geoLongitude)
+          ) {
+            throw new Error("Latitude and longitude must be numeric values.");
+          }
+
+          data = `geo:${geoLatitude},${geoLongitude}`;
+          break;
         default:
           throw new Error("Invalid QR code type selected.");
       }
