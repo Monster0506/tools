@@ -1,22 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Keep references to elements needed frequently or across functions
   const doiInput = document.getElementById("doiInput");
   const extractButton = document.getElementById("extractButton");
   const outputArea = document.getElementById("outputArea");
-  const metadataOutput = outputArea.querySelector(".metadata-output"); // Used in multiple places
+  const metadataOutput = outputArea.querySelector(".metadata-output");
   const coreMetadataContainer = metadataOutput.querySelector(
-    // Get this once
     ".core-metadata-container",
   );
-  const rawOutput = outputArea.querySelector(".raw-output");
-  const rawJsonPre = rawOutput.querySelector(".raw-json");
   const errorSection = document.querySelector(".error-section");
   const errorMessage = errorSection.querySelector(".error-message");
 
-  // Add event listener to the extract button
   extractButton.addEventListener("click", handleExtractClick);
 
-  // Allow extraction on pressing Enter key
   doiInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -24,104 +18,85 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Add event listeners to expandable headers dynamically
-  // This avoids relying on global section variables
   document.querySelectorAll(".expandable-header").forEach((header) => {
     header.addEventListener("click", () => {
-      const section = header.closest(".expandable-section"); // Find parent section
+      const section = header.closest(".expandable-section");
       if (section) {
-        toggleExpandable(section); // Pass the specific section element
+        toggleExpandable(section);
       }
     });
   });
 
   async function handleExtractClick() {
-    const doi = doiInput.value.trim(); // Get DOI from input
+    const doi = doiInput.value.trim();
 
-    // --- UI Reset and Preparation ---
-    clearOutput(); // Clear previous results and hide sections
-    hideError(); // Hide any previous error messages
-    showLoading(); // Show loading state on the button
+    clearOutput();
+    hideError();
+    showLoading();
 
-    // --- Input Validation ---
     if (!doi) {
-      displayError("Please enter a DOI."); // Show error if input is empty
-      hideLoading(); // Hide loading state
-      return; // Stop execution
+      displayError("Please enter a DOI.");
+      hideLoading();
+      return;
     }
 
-    // --- API Call Preparation ---
-    const normalizedDoi = normalizeDoi(doi); // Normalize the DOI format
-    const apiUrl = `https://api.crossref.org/works/${encodeURIComponent(normalizedDoi)}`; // Construct the API URL, ensuring DOI is properly encoded
+    const normalizedDoi = normalizeDoi(doi);
+    const apiUrl = `https://api.crossref.org/works/${encodeURIComponent(normalizedDoi)}`;
 
-    // --- Fetch Data and Handle Response ---
     try {
-      const response = await fetch(apiUrl); // Make the API request
+      const response = await fetch(apiUrl);
 
-      // --- Handle HTTP Errors ---
       if (!response.ok) {
-        // Check for specific common errors
         if (response.status === 404) {
-          displayError(`DOI not found: ${normalizedDoi}`); // Specific message for 404
+          displayError(`DOI not found: ${normalizedDoi}`);
         } else if (response.status === 400) {
           displayError(
             `Bad Request: Check the format of the DOI (${normalizedDoi}).`,
-          ); // Specific message for 400
+          );
         } else {
-          // Generic message for other HTTP errors
           displayError(
             `Error fetching data: ${response.status} ${response.statusText}`,
           );
         }
-        hideLoading(); // Hide loading state on error
-        return; // Stop execution on error
+        hideLoading();
+        return;
       }
 
-      // --- Process Successful Response ---
-      const data = await response.json(); // Parse the JSON response body
+      const data = await response.json();
 
-      // Check if the API call was successful according to CrossRef's status
       if (data.status === "ok" && data.message) {
-        // Call functions to display different parts of the metadata
         displayCoreMetadata(data.message);
         displayAuthors(data.message.author);
         displayReferences(data.message.reference);
         displayFunders(data.message.funder);
         displayLicenses(data.message.license);
-        displayLinks(data.message.link, data.message.resource); // Pass both link types
-        displayUpdates(data.message["update-to"], data.message["updated-by"]); // Pass both update types
-        displayRawJson(data); // Display the full raw JSON response
+        displayLinks(data.message.link, data.message.resource);
+        displayUpdates(data.message["update-to"], data.message["updated-by"]);
+        displayRawJson(data);
 
-        showOutput(); // Make the output area visible
+        showOutput();
       } else {
-        // Handle cases where the response is OK (200) but CrossRef status indicates an issue
         const errorMessage =
           data.message?.[0]?.message ||
           "Could not retrieve valid metadata for this DOI.";
         displayError(errorMessage);
       }
     } catch (error) {
-      // --- Handle Network or Parsing Errors ---
-      console.error("Fetch error:", error); // Log the full error to the console
+      console.error("Fetch error:", error);
 
-      // Check if it's a TypeError (often indicates network issues or CORS problems)
       if (error instanceof TypeError) {
         displayError(
           "Network error: Could not connect to the CrossRef API. Please check your connection or try again later.",
         );
       } else {
-        // Generic error for other issues during fetch/processing
         displayError("An unexpected error occurred while fetching data.");
       }
     } finally {
-      // --- Cleanup ---
-      // This block always runs, regardless of success or error
-      hideLoading(); // Ensure loading state is always removed
+      hideLoading();
     }
   }
 
   function normalizeDoi(doi) {
-    // ... (no changes needed)
     let normalized = doi;
     if (normalized.startsWith("https://")) normalized = normalized.slice(8);
     if (normalized.startsWith("http://")) normalized = normalized.slice(7);
@@ -139,8 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let html = "";
 
     const fullJournal = Array.isArray(metadata["container-title"])
-      ? metadata["container-title"].join(", ") // Join if array
-      : metadata["container-title"] || "N/A"; // Use directly or fallback
+      ? metadata["container-title"].join(", ")
+      : metadata["container-title"] || "N/A";
 
     const shortJournal = Array.isArray(metadata["short-container-title"])
       ? metadata["short-container-title"].join(", ")
@@ -154,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
       metadata.issued["date-parts"] &&
       Array.isArray(metadata.issued["date-parts"][0]) &&
       metadata.issued["date-parts"][0].length > 0
-        ? metadata.issued["date-parts"][0][0] // Get the year part
+        ? metadata.issued["date-parts"][0][0]
         : "N/A";
 
     const title = Array.isArray(metadata.title)
@@ -184,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     html += `<p><strong>Issue:</strong> ${issue}</p>`;
     html += `<p><strong>Year:</strong> ${year}</p>`;
     html += `<p><strong>Article Title:</strong> ${title}</p>`;
-    html += `<p><strong>Page(s):</strong> ${page}</p>`; // Display the original full page string
+    html += `<p><strong>Page(s):</strong> ${page}</p>`;
     html += `<p><strong>First Page:</strong> ${firstPage}</p>`;
     html += `<p><strong>Last Page:</strong> ${lastPage}</p>`;
 
@@ -200,13 +175,10 @@ document.addEventListener("DOMContentLoaded", () => {
       html += `<p><strong>CrossRef URL:</strong> ${crossRefURL}</p>`;
     }
 
-    // --- Update the DOM ---
-    coreMetadataContainer.innerHTML = html; // Set the content of the designated container
+    coreMetadataContainer.innerHTML = html;
   }
-  // --- Updated Display Functions ---
 
   function displayAuthors(authors) {
-    // Get section element inside the function
     const authorsSection = document.getElementById("authorsSection");
     if (!authorsSection) {
       console.error("displayAuthors: Could not find #authorsSection");
@@ -219,14 +191,14 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(
         "displayAuthors: Could not find .expandable-content or .expand-icon within #authorsSection",
       );
-      authorsSection.classList.add("hidden"); // Hide if essential parts missing
+      authorsSection.classList.add("hidden");
       return;
     }
 
-    authorsContent.innerHTML = ""; // Clear previous content
-    authorsSection.classList.remove("expanded"); // Reset expansion state
-    authorsContent.style.display = "none"; // Ensure content is hidden initially
-    icon.textContent = "+"; // Reset icon
+    authorsContent.innerHTML = "";
+    authorsSection.classList.remove("expanded");
+    authorsContent.style.display = "none";
+    icon.textContent = "+";
 
     if (authors && Array.isArray(authors) && authors.length > 0) {
       let html = "<ul>";
@@ -235,14 +207,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (author.given && author.family) {
           html += `<strong>Name:</strong> ${author.given} ${author.family}`;
         } else if (author.name) {
-          // Handle cases where name is a single string
           html += `<strong>Name:</strong> ${author.name}`;
         } else {
           html += "<strong>Name:</strong> Unknown Author";
         }
 
         if (author.ORCID) {
-          // Ensure ORCID is displayed correctly as a link
           const orcidUrl = author.ORCID.startsWith("http")
             ? author.ORCID
             : `https://orcid.org/${author.ORCID}`;
@@ -267,14 +237,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       html += "</ul>";
       authorsContent.innerHTML = html;
-      authorsSection.classList.remove("hidden"); // Make section visible
+      authorsSection.classList.remove("hidden");
     } else {
-      authorsSection.classList.add("hidden"); // Hide section if no authors
+      authorsSection.classList.add("hidden");
     }
   }
 
   function displayReferences(references) {
-    // Get section element inside the function
     const referencesSection = document.getElementById("referencesSection");
     if (!referencesSection) {
       console.error("displayReferences: Could not find #referencesSection");
@@ -293,16 +262,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    referencesContent.innerHTML = ""; // Clear previous content
-    referencesSection.classList.remove("expanded"); // Reset expansion state
-    referencesContent.style.display = "none"; // Ensure content is hidden initially
-    icon.textContent = "+"; // Reset icon
+    referencesContent.innerHTML = "";
+    referencesSection.classList.remove("expanded");
+    referencesContent.style.display = "none";
+    icon.textContent = "+";
 
     if (references && Array.isArray(references) && references.length > 0) {
       let html = "<ul>";
       references.forEach((reference) => {
         html += "<li>";
-        let detailsAdded = false; // Track if any detail was added for line breaks
+        let detailsAdded = false;
 
         if (reference["article-title"]) {
           html += `<strong>Article:</strong> ${reference["article-title"]}`;
@@ -339,12 +308,10 @@ document.addEventListener("DOMContentLoaded", () => {
           detailsAdded = true;
         }
         if (reference.unstructured) {
-          // Fallback for unstructured reference data
           if (detailsAdded) html += "<br>";
           html += `<strong>Details:</strong> ${reference.unstructured}`;
           detailsAdded = true;
         }
-        // Add a fallback if no structured data was found at all
         if (!detailsAdded) {
           html += `Unstructured or incomplete reference data. Key: ${reference.key || "N/A"}`;
         }
@@ -353,14 +320,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       html += "</ul>";
       referencesContent.innerHTML = html;
-      referencesSection.classList.remove("hidden"); // Make section visible
+      referencesSection.classList.remove("hidden");
     } else {
-      referencesSection.classList.add("hidden"); // Hide section if no references
+      referencesSection.classList.add("hidden");
     }
   }
 
   function displayFunders(funders) {
-    // Get section element inside the function
     const fundersSection = document.getElementById("fundersSection");
     if (!fundersSection) {
       console.error("displayFunders: Could not find #fundersSection");
@@ -377,10 +343,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    fundersContent.innerHTML = ""; // Clear previous content
-    fundersSection.classList.remove("expanded"); // Reset expansion state
-    fundersContent.style.display = "none"; // Ensure content is hidden initially
-    icon.textContent = "+"; // Reset icon
+    fundersContent.innerHTML = "";
+    fundersSection.classList.remove("expanded");
+    fundersContent.style.display = "none";
+    icon.textContent = "+";
 
     if (funders && Array.isArray(funders) && funders.length > 0) {
       let html = "<ul>";
@@ -405,7 +371,6 @@ document.addEventListener("DOMContentLoaded", () => {
           html += `<strong>Funder DOI:</strong> <a href="https://doi.org/${funder.DOI}" target="_blank">${funder.DOI}</a>`;
           detailsAdded = true;
         }
-        // Add a fallback if no details found
         if (!detailsAdded) {
           html += "Funder information incomplete.";
         }
@@ -413,14 +378,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       html += "</ul>";
       fundersContent.innerHTML = html;
-      fundersSection.classList.remove("hidden"); // Make section visible
+      fundersSection.classList.remove("hidden");
     } else {
-      fundersSection.classList.add("hidden"); // Hide section if no funders
+      fundersSection.classList.add("hidden");
     }
   }
 
   function displayLicenses(licenses) {
-    // Get section element inside the function
     const licensesSection = document.getElementById("licensesSection");
     if (!licensesSection) {
       console.error("displayLicenses: Could not find #licensesSection");
@@ -439,10 +403,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    licensesContent.innerHTML = ""; // Clear previous content
-    licensesSection.classList.remove("expanded"); // Reset expansion state
-    licensesContent.style.display = "none"; // Ensure content is hidden initially
-    icon.textContent = "+"; // Reset icon
+    licensesContent.innerHTML = "";
+    licensesSection.classList.remove("expanded");
+    licensesContent.style.display = "none";
+    icon.textContent = "+";
 
     if (licenses && Array.isArray(licenses) && licenses.length > 0) {
       let html = "<ul>";
@@ -454,13 +418,11 @@ document.addEventListener("DOMContentLoaded", () => {
           detailsAdded = true;
         }
         if (license.start && license.start["date-parts"]) {
-          // Handle date parts array
           const dateStr = license.start["date-parts"][0].join("-");
           if (detailsAdded) html += "<br>";
           html += `<strong>Start Date:</strong> ${new Date(dateStr).toLocaleDateString()}`;
           detailsAdded = true;
         } else if (license.start && license.start["date-time"]) {
-          // Handle date-time string
           if (detailsAdded) html += "<br>";
           html += `<strong>Start Date:</strong> ${new Date(license.start["date-time"]).toLocaleDateString()}`;
           detailsAdded = true;
@@ -475,7 +437,6 @@ document.addEventListener("DOMContentLoaded", () => {
           html += `<strong>Content Version:</strong> ${license["content-version"]}`;
           detailsAdded = true;
         }
-        // Add a fallback if no details found
         if (!detailsAdded) {
           html += "License information incomplete.";
         }
@@ -483,14 +444,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       html += "</ul>";
       licensesContent.innerHTML = html;
-      licensesSection.classList.remove("hidden"); // Make section visible
+      licensesSection.classList.remove("hidden");
     } else {
-      licensesSection.classList.add("hidden"); // Hide section if no licenses
+      licensesSection.classList.add("hidden");
     }
   }
 
   function displayLinks(links, resource) {
-    // Get section element inside the function
     const linksSection = document.getElementById("linksSection");
     if (!linksSection) {
       console.error("displayLinks: Could not find #linksSection");
@@ -507,21 +467,19 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    linksContent.innerHTML = ""; // Clear previous content
-    linksSection.classList.remove("expanded"); // Reset expansion state
-    linksContent.style.display = "none"; // Ensure content is hidden initially
-    icon.textContent = "+"; // Reset icon
+    linksContent.innerHTML = "";
+    linksSection.classList.remove("expanded");
+    linksContent.style.display = "none";
+    icon.textContent = "+";
 
     let html = "<ul>";
     let linksFound = false;
 
-    // Add primary resource link if available
     if (resource && resource.primary && resource.primary.URL) {
       html += `<li><strong>Primary Resource:</strong> <a href="${resource.primary.URL}" target="_blank">${resource.primary.URL}</a></li>`;
       linksFound = true;
     }
 
-    // Add other links if available
     if (links && Array.isArray(links) && links.length > 0) {
       links.forEach((link) => {
         if (link.URL) {
@@ -546,14 +504,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (linksFound) {
       linksContent.innerHTML = html;
-      linksSection.classList.remove("hidden"); // Make section visible
+      linksSection.classList.remove("hidden");
     } else {
-      linksSection.classList.add("hidden"); // Hide section if no links found
+      linksSection.classList.add("hidden");
     }
   }
 
   function displayUpdates(updateTo, updatedBy) {
-    // Get section element inside the function
     const updatesSection = document.getElementById("updatesSection");
     if (!updatesSection) {
       console.error("displayUpdates: Could not find #updatesSection");
@@ -570,10 +527,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    updatesContent.innerHTML = ""; // Clear previous content
-    updatesSection.classList.remove("expanded"); // Reset expansion state
-    updatesContent.style.display = "none"; // Ensure content is hidden initially
-    icon.textContent = "+"; // Reset icon
+    updatesContent.innerHTML = "";
+    updatesSection.classList.remove("expanded");
+    updatesContent.style.display = "none";
+    icon.textContent = "+";
 
     let html = "";
     let updatesFound = false;
@@ -591,7 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (updatedBy && Array.isArray(updatedBy) && updatedBy.length > 0) {
       if (updatesFound) {
-        html += "<br>"; // Add a break if both sections exist
+        html += "<br>";
       }
       html += "<strong>Updated By:</strong><ul>";
       updatedBy.forEach((update) => {
@@ -605,37 +562,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (updatesFound) {
       updatesContent.innerHTML = html;
-      updatesSection.classList.remove("hidden"); // Make section visible
+      updatesSection.classList.remove("hidden");
     } else {
-      updatesSection.classList.add("hidden"); // Hide section if no updates found
+      updatesSection.classList.add("hidden");
     }
   }
-  // --- Util Functions ---
 
   function displayRawJson(data) {
-    // Uses global rawJsonPre
-    rawJsonPre.textContent = JSON.stringify(data, null, 2);
-    // rawOutput.classList.remove('hidden'); // Keep commented unless needed
+    const rawOutput = document.getElementById("jsonSection");
+    const jsonContent = rawOutput.querySelector(".expandable-content");
+    jsonContent.textContent = JSON.stringify(data, null, 2);
+    rawOutput.classList.remove("hidden");
   }
 
   function displayError(message) {
-    // Uses global error elements
     errorMessage.textContent = message;
     errorSection.classList.remove("hidden");
   }
 
   function clearOutput() {
-    // Clear core metadata
     if (coreMetadataContainer) {
       coreMetadataContainer.innerHTML = "";
     }
-    // Clear raw JSON
-    rawJsonPre.textContent = "";
-    // Hide main areas
+    const rawOutput = document.getElementById("jsonSection");
+    const jsonContent = rawOutput.querySelector(".expandable-content");
+    jsonContent.textContent = "";
     outputArea.classList.add("hidden");
-    rawOutput.classList.add("hidden");
 
-    // Hide and collapse expandable sections by ID
     const sectionIds = [
       "authorsSection",
       "referencesSection",
@@ -653,7 +606,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const content = section.querySelector(".expandable-content");
         if (content) {
           content.style.display = "none";
-          content.innerHTML = ""; // Also clear content
+          content.innerHTML = "";
         }
         const icon = section.querySelector(".expand-icon");
         if (icon) {
@@ -664,35 +617,28 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function hideError() {
-    // Uses global error elements
     errorSection.classList.add("hidden");
     errorMessage.textContent = "";
   }
 
   function showOutput() {
-    // Uses global outputArea
     outputArea.classList.remove("hidden");
   }
 
   function showLoading() {
-    // Uses global extractButton
     extractButton.textContent = "Loading...";
     extractButton.disabled = true;
   }
 
   function hideLoading() {
-    // Uses global extractButton
     extractButton.textContent = "Extract Metadata";
     extractButton.disabled = false;
   }
 
-  // Function to toggle expandable sections (receives the element)
   function toggleExpandable(sectionElement) {
-    // No changes needed here, it already receives the element
     const content = sectionElement.querySelector(".expandable-content");
     const icon = sectionElement.querySelector(".expand-icon");
 
-    // Check if elements exist before using them
     if (!content || !icon) {
       console.error(
         "Could not find content or icon for section:",
@@ -708,7 +654,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       content.style.display = "block";
       sectionElement.classList.add("expanded");
-      icon.textContent = "-";
     }
   }
-}); // End DOMContentLoaded
+});

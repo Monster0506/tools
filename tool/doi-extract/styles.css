@@ -277,35 +277,6 @@ body {
   color: var(--primary-hover-color);
 }
 
-.raw-output {
-  margin-top: calc(var(--spacing-unit) * 1.5);
-  border-top: 1px dashed var(--border-color);
-  padding-top: var(--spacing-unit);
-}
-
-.raw-output h3 {
-  color: var(--secondary-color);
-  margin-bottom: var(--spacing-unit);
-  font-size: 1.2em;
-  font-weight: 500;
-}
-
-.raw-json {
-  background-color: var(--light-gray);
-  border: 1px solid var(--medium-gray);
-  padding: var(--spacing-unit);
-  border-radius: var(--border-radius);
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  font-family:
-    "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  font-size: 0.9em;
-  line-height: 1.5;
-  max-height: 500px;
-  overflow-y: auto;
-}
-
 .error-section {
   margin-top: calc(var(--spacing-unit) * 1.5);
   padding: var(--spacing-unit);
