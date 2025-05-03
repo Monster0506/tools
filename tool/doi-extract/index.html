@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOI Metadata Extractor</title>
+    <link rel="stylesheet" href="/tool/doi-extract/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="page-header">
+        <h1>DOI Metadata Extraction Tool</h1>
+        <p>
+          Enter a Digital Object Identifier (DOI) to retrieve its associated
+          metadata from CrossRef.
+        </p>
+      </header>
+
+      <section class="input-section">
+        <label for="doiInput" class="input-label">Enter DOI:</label>
+        <input
+          type="text"
+          id="doiInput"
+          class="doi-input"
+          placeholder="e.g., 10.1038/nature12345"
+        />
+        <button id="extractButton" class="extract-button">
+          Extract Metadata
+        </button>
+      </section>
+
+      <section id="outputArea" class="output-section hidden">
+        <h2>Metadata Results</h2>
+        <div class="metadata-output">
+          <!-- ADD THIS DIV for core metadata -->
+          <div class="core-metadata-container">
+            <!-- Core metadata will be populated here -->
+          </div>
+
+          <!-- Expandable Sections remain here -->
+          <div class="expandable-section hidden" id="authorsSection">
+            <h3 class="expandable-header">
+              Authors <span class="expand-icon">+</span>
+            </h3>
+            <div class="expandable-content">
+              <!-- Author list will be populated here -->
+            </div>
+          </div>
+
+          <div class="expandable-section hidden" id="referencesSection">
+            <h3 class="expandable-header">
+              References <span class="expand-icon">+</span>
+            </h3>
+            <div class="expandable-content">
+              <!-- Reference list will be populated here -->
+            </div>
+          </div>
+          <!-- ... other sections like funders, licenses, links, updates ... -->
+          <div class="expandable-section hidden" id="fundersSection">
+            <h3 class="expandable-header">
+              Funders <span class="expand-icon">+</span>
+            </h3>
+            <div class="expandable-content"></div>
+          </div>
+          <div class="expandable-section hidden" id="licensesSection">
+            <h3 class="expandable-header">
+              Licenses <span class="expand-icon">+</span>
+            </h3>
+            <div class="expandable-content"></div>
+          </div>
+          <div class="expandable-section hidden" id="linksSection">
+            <h3 class="expandable-header">
+              Links & Resources <span class="expand-icon">+</span>
+            </h3>
+            <div class="expandable-content"></div>
+          </div>
+          <div class="expandable-section hidden" id="updatesSection">
+            <h3 class="expandable-header">
+              Updates <span class="expand-icon">+</span>
+            </h3>
+            <div class="expandable-content"></div>
+          </div>
+        </div>
+
+        <!-- Raw JSON Output Section -->
+        <div class="raw-output hidden">
+          <h3 class="expandable-header">Raw JSON Response</h3>
+          <!-- Optional: Add a header -->
+          <!-- ADD THE ELEMENT WITH THE CORRECT CLASS HERE -->
+          <pre class="raw-json"></pre>
+        </div>
+      </section>
+
+      <section class="error-section hidden">
+        <p class="error-message"></p>
+      </section>
+    </div>
+
+    <script src="/tool/doi-extract/script.js"></script>
+  </body>
+</html>
