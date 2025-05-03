@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const generateBtn = document.getElementById("generateBtn");
   const downloadBtn = document.getElementById("downloadBtn");
   const copyBtn = document.getElementById("copyBtn");
+  const copyLinkBtn = document.getElementById("copyLinkBtn");
   const qrCodeContainer = document.getElementById("qrcode");
   const errorMessage = document.getElementById("errorMessage");
   const inputSections = document.querySelectorAll(".input-section");
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     errorMessage.textContent = "";
     downloadBtn.style.display = "none";
     copyBtn.style.display = "none";
+    copyLinkBtn.style.display = "none";
     qrCodeInstance = null;
   }
 
@@ -99,12 +101,12 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!smsNumber) {
             throw new Error("Please enter a phone number.");
           }
-          // Basic phone number validation (customize as needed)
+          // Basic phone number validation
           if (!/^\+?\d+$/.test(smsNumber)) {
             throw new Error("Please enter a valid phone number.");
           }
 
-          data = `SMSTO:${smsNumber}:${smsBody || ""}`; // Alternate SMS format:  sms:${smsNumber}?body=${encodeURIComponent(smsBody || "")}
+          data = `SMSTO:${smsNumber}:${smsBody || ""}`;
           break;
         case "geo":
           const geoLatitude = document.getElementById("geoLatitude").value;
@@ -150,16 +152,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         downloadBtn.style.display = "inline-block";
         copyBtn.style.display = "inline-block";
+        copyLinkBtn.style.display = "inline-block";
       } catch (error) {
         console.error("QR Code generation failed:", error);
         errorMessage.textContent =
           "Failed to generate QR Code. Check console for details.";
         downloadBtn.style.display = "none";
         copyBtn.style.display = "none";
+        copyLinkBtn.style.display = "none";
       }
     } else {
       downloadBtn.style.display = "none";
       copyBtn.style.display = "none";
+      copyLinkBtn.style.display = "none";
     }
   }
 
@@ -238,11 +243,137 @@ document.addEventListener("DOMContentLoaded", () => {
       errorMessage.textContent = "Could not find QR code canvas to download.";
     }
   }
+  function copyShareableLink() {
+    const type = qrTypeSelect.value;
+    const data = {};
+
+    switch (type) {
+      case "url":
+        data.url = document.getElementById("urlInput").value;
+        break;
+      case "text":
+        data.text = document.getElementById("textInput").value;
+        break;
+      case "wifi":
+        data.ssid = document.getElementById("wifiSSID").value;
+        data.password = document.getElementById("wifiPassword").value;
+        data.encryption = document.getElementById("wifiEncryption").value;
+        break;
+      case "vcard":
+        data.name = document.getElementById("vcardName").value;
+        data.phone = document.getElementById("vcardPhone").value;
+        data.email = document.getElementById("vcardEmail").value;
+        data.org = document.getElementById("vcardOrg").value;
+        break;
+      case "email":
+        data.emailRecipient = document.getElementById("emailRecipient").value;
+        data.emailSubject = document.getElementById("emailSubject").value;
+        data.emailBody = document.getElementById("emailBody").value;
+        break;
+      case "sms":
+        data.smsNumber = document.getElementById("smsNumber").value;
+        data.smsBody = document.getElementById("smsBody").value;
+        break;
+      case "geo":
+        data.geoLatitude = document.getElementById("geoLatitude").value;
+        data.geoLongitude = document.getElementById("geoLongitude").value;
+        break;
+    }
+
+    const shareData = { type: type, data: data };
+
+    const jsonString = JSON.stringify(shareData);
+    const compressed = LZString.compressToEncodedURIComponent(jsonString);
+    const encodedData = compressed;
+
+    const baseUrl = window.location.href.split("#")[0];
+    const shareableLink = `${baseUrl}#data:${encodedData}`;
+
+    navigator.clipboard
+      .writeText(shareableLink)
+      .then(() => {
+        successMessage.textContent = "Shareable link copied to clipboard!";
+        setTimeout(() => {
+          successMessage.textContent = "";
+        }, 3000);
+      })
+      .catch((err) => {
+        errorMessage.textContent = "Failed to copy link: " + err;
+      });
+  }
+
+  function populateFromUrl() {
+    const hash = window.location.hash;
+
+    if (hash) {
+      const parts = hash.substring(1).split(":");
+      if (parts.length === 2 && parts[0] === "data") {
+        try {
+          const encodedData = parts[1];
+          const jsonString =
+            LZString.decompressFromEncodedURIComponent(encodedData);
+          const decodedData = JSON.parse(jsonString);
+
+          const type = decodedData.type;
+          const data = decodedData.data;
+
+          qrTypeSelect.value = type;
+          updateInputFields();
+
+          switch (type) {
+            case "url":
+              document.getElementById("urlInput").value = data.url || "";
+              break;
+            case "text":
+              document.getElementById("textInput").value = data.text || "";
+              break;
+            case "wifi":
+              document.getElementById("wifiSSID").value = data.ssid || "";
+              document.getElementById("wifiPassword").value =
+                data.password || "";
+              document.getElementById("wifiEncryption").value =
+                data.encryption || "WPA";
+              break;
+            case "vcard":
+              document.getElementById("vcardName").value = data.name || "";
+              document.getElementById("vcardPhone").value = data.phone || "";
+              document.getElementById("vcardEmail").value = data.email || "";
+              document.getElementById("vcardOrg").value = data.org || "";
+              break;
+            case "email":
+              document.getElementById("emailRecipient").value =
+                data.emailRecipient || "";
+              document.getElementById("emailSubject").value =
+                data.emailSubject || "";
+              document.getElementById("emailBody").value = data.emailBody || "";
+              break;
+            case "sms":
+              document.getElementById("smsNumber").value = data.smsNumber || "";
+              document.getElementById("smsBody").value = data.smsBody || "";
+              break;
+            case "geo":
+              document.getElementById("geoLatitude").value =
+                data.geoLatitude || "";
+              document.getElementById("geoLongitude").value =
+                data.geoLongitude || "";
+              break;
+          }
+
+          generateQRCode();
+        } catch (e) {
+          errorMessage.textContent = "Invalid URL data: " + e;
+          console.error("Error parsing URL data:", e);
+        }
+      }
+    }
+  }
 
   qrTypeSelect.addEventListener("change", updateInputFields);
   generateBtn.addEventListener("click", generateQRCode);
   downloadBtn.addEventListener("click", downloadQRCode);
   copyBtn.addEventListener("click", copyQRCodeToClipboard);
+  copyLinkBtn.addEventListener("click", copyShareableLink);
 
   updateInputFields();
+  populateFromUrl();
 });
