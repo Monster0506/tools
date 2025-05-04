@@ -325,14 +325,14 @@
             .map((tag) => `<span class="tag">${tag}</span>`)
             .join("");
           const linksHtml = renderLinks(tool.links);
-          const formattedDate = new Date(tool.lastUpdated).toLocaleDateString(
-            "en-US",
-            {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            },
-          );
+
+          const formattedDate = new Date(
+            tool.lastUpdated + "T00:00:00",
+          ).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
 
           card.innerHTML = `
                     <div class="tool-meta">
