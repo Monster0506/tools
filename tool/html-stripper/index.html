@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Stripper</title>
+    <link rel="stylesheet" href="/tool/html-stripper/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Simple HTML Stripper</h1>
+
+      <p>
+        Paste your HTML text in the box below and click "Strip HTML" to remove
+        all tags.
+      </p>
+
+      <textarea id="htmlInput" placeholder="Paste your HTML here..."></textarea>
+
+      <div class="button-container">
+        <button id="stripButton">Strip HTML</button>
+        <button id="resetButton" class="secondary-button">Reset</button>
+      </div>
+
+      <h2>Stripped Text</h2>
+      <textarea
+        id="strippedOutput"
+        readonly
+        placeholder="Stripped text will appear here..."
+      ></textarea>
+
+      <button id="copyButton">Copy to Clipboard</button>
+    </div>
+
+    <script src="/tool/html-stripper/script.js"></script>
+  </body>
+</html>
