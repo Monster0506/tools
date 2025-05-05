@@ -1,7 +1,4 @@
-// /tool/ASCIIfy/script.js
-
 document.addEventListener("DOMContentLoaded", () => {
-  // Get references to DOM elements
   const inputArea = document.getElementById("inputArea");
   const highlightedOutputContainer =
     document.getElementById("highlightedOutput");
@@ -15,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const highlightContent = document.getElementById("highlightContent"); // Collapsible content
   const toggleIcon = toggleHighlightButton.querySelector(".toggle-icon"); // Collapse icon
 
-  // --- Helper function to escape HTML special characters ---
   function escapeHtml(unsafe) {
     if (!unsafe) return "";
     return unsafe
@@ -27,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const asciiReplacements = {
-    // Unicode code point as key, ASCII replacement string as value
     // Spaces and similar
     "\u00A0": " ", // No-Break Space
     "\u2000": " ", // En Quad
@@ -79,11 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "\u00B6": "Para. ", // Pilcrow Sign (Paragraph Mark)
     "\u2020": "+", // Dagger
     "\u2021": "++", // Double Dagger
-
-    // ... add more mappings as needed
   };
 
-  // --- Main processing function ---
   function processText() {
     const inputText = inputArea.value;
     let highlightedHtml = "";
@@ -93,22 +85,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const char = inputText[i];
       const charCode = char.charCodeAt(0);
 
-      // Check if the character is within the standard ASCII range (0-127)
       if (charCode >= 0 && charCode <= 127) {
-        // It's ASCII
         highlightedHtml += escapeHtml(char);
         cleanedText += char;
       } else {
-        // It's Non-ASCII
-        // Wrap in a span for highlighting (escape the character itself too)
         highlightedHtml += `<span class="non-ascii">${escapeHtml(char)}</span>`;
 
-        // Check for a smart replacement
         if (asciiReplacements[char]) {
           cleanedText += asciiReplacements[char];
         } else {
-          // No specific replacement found, remove the character
-          // cleanedText += '?'; // Optional: Fallback to a placeholder
         }
       }
     }
@@ -117,20 +102,16 @@ document.addEventListener("DOMContentLoaded", () => {
     cleanedOutput.value = cleanedText;
   }
 
-  // --- Event Listener for Input Textarea ---
   inputArea.addEventListener("input", processText);
 
-  // --- Event Listener for File Input ---
   fileInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (!file) {
-      return; // No file selected
+      return;
     }
 
-    // Check if the file type is plain text
     if (file.type && !file.type.startsWith("text/")) {
       alert("Please upload a valid text file (.txt).");
-      // Reset file input value so the change event fires again if needed
       event.target.value = null;
       return;
     }
@@ -139,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     reader.onload = (e) => {
       inputArea.value = e.target.result;
-      // Manually trigger processing after loading file content
       processText();
     };
 
@@ -150,13 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     reader.readAsText(file);
 
-    // Reset file input value so the change event fires again for the same file
     event.target.value = null;
   });
 
-  // --- Event Listener for Copy Button ---
   copyButton.addEventListener("click", () => {
-    if (!cleanedOutput.value) return; // Don't copy if empty
+    if (!cleanedOutput.value) return;
 
     navigator.clipboard
       .writeText(cleanedOutput.value)
@@ -175,7 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   });
 
-  // --- Event Listener for Download Button ---
   downloadButton.addEventListener("click", () => {
     const textToSave = cleanedOutput.value;
     if (!textToSave) {
@@ -183,43 +160,32 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Create a Blob object
     const blob = new Blob([textToSave], { type: "text/plain;charset=utf-8" });
 
-    // Create a temporary URL for the blob
     const url = URL.createObjectURL(blob);
 
-    // Create a temporary anchor element
     const a = document.createElement("a");
     a.href = url;
-    a.download = "asciified_text.txt"; // Set the desired filename
-    document.body.appendChild(a); // Append to body (required for Firefox)
+    a.download = "asciified_text.txt";
+    document.body.appendChild(a);
 
-    // Programmatically click the anchor
     a.click();
 
-    // Clean up: remove the anchor and revoke the URL
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   });
 
-  // --- Event Listener for Collapsible Section ---
   toggleHighlightButton.addEventListener("click", () => {
     const isExpanded =
       toggleHighlightButton.getAttribute("aria-expanded") === "true";
 
-    // Toggle ARIA attribute
     toggleHighlightButton.setAttribute("aria-expanded", !isExpanded);
 
-    // Toggle class for CSS transition
     highlightContent.classList.toggle("collapsed");
 
-    // Update icon
     toggleIcon.textContent = isExpanded ? "[+]" : "[-]";
   });
 
-  // --- Initial State Setup for Collapsible ---
-  // Set initial state based on aria-expanded (optional, if you want it closed by default)
   const initiallyExpanded =
     toggleHighlightButton.getAttribute("aria-expanded") === "true";
   if (!initiallyExpanded) {
@@ -227,6 +193,5 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleIcon.textContent = "[+]";
   }
 
-  // --- Initial processing (optional) ---
   processText();
 });

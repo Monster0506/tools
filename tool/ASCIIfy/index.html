@@ -14,15 +14,15 @@
         cleaned version.
       </p>
 
-      <!-- Input Section -->
+      
       <div class="input-section">
         <div class="input-controls">
           <label for="inputArea">Enter Text:</label>
-          <!-- Style the label as a button for file upload -->
+          
           <label for="fileInput" class="file-upload-label button-style">
             Upload File
           </label>
-          <!-- Hide the actual file input -->
+          
           <input type="file" id="fileInput" accept=".txt, text/plain" />
         </div>
         <textarea
@@ -32,7 +32,7 @@
         ></textarea>
       </div>
 
-      <!-- Highlighted Output Section (Collapsible) -->
+      
       <div class="highlight-section">
         <button
           id="toggleHighlight"
@@ -42,16 +42,16 @@
         >
           <h2>Highlighted Non-ASCII Characters</h2>
           <span class="toggle-icon">[-]</span>
-          <!-- Icon indicates state -->
+          
         </button>
         <div id="highlightContent" class="collapsible-content">
           <div id="highlightedOutput" aria-live="polite">
-            <pre><code><!-- Highlighted text will appear here --></code></pre>
+            <pre><code>
           </div>
         </div>
       </div>
 
-      <!-- Cleaned Output Section -->
+      
       <div class="output-section">
         <label for="cleanedOutput">Cleaned ASCII Text:</label>
         <textarea
