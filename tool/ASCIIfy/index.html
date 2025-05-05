@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASCIIfy: Remove Non-ASCII Characters</title>
+    <link rel="stylesheet" href="/tool/ASCIIfy/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>ASCIIfy Your Text</h1>
+      <p>
+        Paste text, or upload a file, to identify non-ASCII characters and get a
+        cleaned version.
+      </p>
+
+      <!-- Input Section -->
+      <div class="input-section">
+        <div class="input-controls">
+          <label for="inputArea">Enter Text:</label>
+          <!-- Style the label as a button for file upload -->
+          <label for="fileInput" class="file-upload-label button-style">
+            Upload File
+          </label>
+          <!-- Hide the actual file input -->
+          <input type="file" id="fileInput" accept=".txt, text/plain" />
+        </div>
+        <textarea
+          id="inputArea"
+          rows="10"
+          placeholder="Paste or type your text here, or upload a file..."
+        ></textarea>
+      </div>
+
+      <!-- Highlighted Output Section (Collapsible) -->
+      <div class="highlight-section">
+        <button
+          id="toggleHighlight"
+          class="collapsible-trigger"
+          aria-expanded="true"
+          aria-controls="highlightContent"
+        >
+          <h2>Highlighted Non-ASCII Characters</h2>
+          <span class="toggle-icon">[-]</span>
+          <!-- Icon indicates state -->
+        </button>
+        <div id="highlightContent" class="collapsible-content">
+          <div id="highlightedOutput" aria-live="polite">
+            <pre><code><!-- Highlighted text will appear here --></code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cleaned Output Section -->
+      <div class="output-section">
+        <label for="cleanedOutput">Cleaned ASCII Text:</label>
+        <textarea
+          id="cleanedOutput"
+          rows="10"
+          readonly
+          placeholder="Cleaned text will appear here..."
+        ></textarea>
+        <div class="output-buttons">
+          <button id="copyButton" class="button-style">
+            Copy Cleaned Text
+          </button>
+          <button id="downloadButton" class="button-style">
+            Download Cleaned Text
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/tool/ASCIIfy/script.js"></script>
+  </body>
+</html>
