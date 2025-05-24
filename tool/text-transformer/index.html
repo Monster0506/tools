@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Transformer Tool</title>
+    <link rel="stylesheet" href="/tool/text-transformer/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Text Transformer</h1>
+      </header>
+
+      <main>
+        <section class="input-section">
+          <label for="input-text">Enter your text here:</label>
+          <textarea
+            id="input-text"
+            rows="10"
+            placeholder="Type or paste your text..."
+          ></textarea>
+        </section>
+
+        <section class="filter-section">
+          <label for="search-transformations">Find a transformation:</label>
+          <input
+            type="search"
+            id="search-transformations"
+            placeholder="e.g., lowercase, base64, slugify..."
+            autocomplete="off"
+          />
+          <div
+            id="search-suggestions"
+            class="suggestions-dropdown"
+            style="display: none"
+          ></div>
+        </section>
+
+        <section
+          class="transformations-container"
+          id="transformations-container"
+        >
+          <!-- Categorized transformation blocks will be dynamically inserted here -->
+        </section>
+      </main>
+
+      <footer>
+        <p>Text Transformer Tool - &copy; 2025</p>
+      </footer>
+    </div>
+    <script src="/tool/text-transformer/script.js"></script>
+  </body>
+</html>

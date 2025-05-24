@@ -1,0 +1,493 @@
+[
+  {
+    "id": "lowercase",
+    "label": "Lowercase",
+    "category": "Case & Formatting",
+    "funcName": "transformLowercase"
+  },
+  {
+    "id": "uppercase",
+    "label": "Uppercase",
+    "category": "Case & Formatting",
+    "funcName": "transformUppercase"
+  },
+  {
+    "id": "titlecase",
+    "label": "Title Case",
+    "category": "Case & Formatting",
+    "funcName": "transformTitlecase"
+  },
+  {
+    "id": "sentencecase",
+    "label": "Sentence Case",
+    "category": "Case & Formatting",
+    "funcName": "transformSentencecase"
+  },
+  {
+    "id": "invertcase",
+    "label": "Invert Case",
+    "category": "Case & Formatting",
+    "funcName": "transformInvertcase"
+  },
+  {
+    "id": "alternatingcase",
+    "label": "Alternating Case",
+    "category": "Case & Formatting",
+    "funcName": "transformAlternatingcase"
+  },
+  {
+    "id": "camelcase",
+    "label": "Camel Case",
+    "category": "Case & Formatting",
+    "funcName": "transformCamelcase"
+  },
+  {
+    "id": "pascalcase",
+    "label": "Pascal Case",
+    "category": "Case & Formatting",
+    "funcName": "transformPascalcase"
+  },
+  {
+    "id": "snakecase",
+    "label": "Snake Case",
+    "category": "Case & Formatting",
+    "funcName": "transformSnakecase"
+  },
+  {
+    "id": "kebabcase",
+    "label": "Kebab Case",
+    "category": "Case & Formatting",
+    "funcName": "transformKebabcase"
+  },
+  {
+    "id": "dotcase",
+    "label": "Dot Case",
+    "category": "Case & Formatting",
+    "funcName": "transformDotcase"
+  },
+  {
+    "id": "base64encode",
+    "label": "Base64 Encode (UTF-8)",
+    "category": "Encoding & Decoding",
+    "funcName": "transformBase64Encode"
+  },
+  {
+    "id": "base64decode",
+    "label": "Base64 Decode (UTF-8)",
+    "category": "Encoding & Decoding",
+    "funcName": "transformBase64Decode"
+  },
+  {
+    "id": "urlencode",
+    "label": "URL Encode",
+    "category": "Encoding & Decoding",
+    "funcName": "transformUrlEncode"
+  },
+  {
+    "id": "urldecode",
+    "label": "URL Decode",
+    "category": "Encoding & Decoding",
+    "funcName": "transformUrlDecode"
+  },
+  {
+    "id": "texttobinary",
+    "label": "Text to Binary (8-bit)",
+    "category": "Encoding & Decoding",
+    "funcName": "transformTextToBinary"
+  },
+  {
+    "id": "binarytotext",
+    "label": "Binary (8-bit) to Text",
+    "category": "Encoding & Decoding",
+    "funcName": "transformBinaryToText"
+  },
+  {
+    "id": "htmlentityencode",
+    "label": "HTML Entity Encode",
+    "category": "Encoding & Decoding",
+    "funcName": "transformHtmlEntityEncode"
+  },
+  {
+    "id": "htmlentitydecode",
+    "label": "HTML Entity Decode",
+    "category": "Encoding & Decoding",
+    "funcName": "transformHtmlEntityDecode"
+  },
+  {
+    "id": "escapejsstring",
+    "label": "Escape JavaScript String",
+    "category": "Encoding & Decoding",
+    "funcName": "transformEscapeJsString"
+  },
+  {
+    "id": "unescapejsstring",
+    "label": "Unescape JavaScript String",
+    "category": "Encoding & Decoding",
+    "funcName": "transformUnescapeJsString"
+  },
+  {
+    "id": "sha1hash",
+    "label": "SHA-1 Hash",
+    "category": "Hashing",
+    "funcName": "transformSha1Hash",
+    "isAsync": true
+  },
+  {
+    "id": "sha256hash",
+    "label": "SHA-256 Hash",
+    "category": "Hashing",
+    "funcName": "transformSha256Hash",
+    "isAsync": true
+  },
+  {
+    "id": "sha384hash",
+    "label": "SHA-384 Hash",
+    "category": "Hashing",
+    "funcName": "transformSha384Hash",
+    "isAsync": true
+  },
+  {
+    "id": "sha512hash",
+    "label": "SHA-512 Hash",
+    "category": "Hashing",
+    "funcName": "transformSha512Hash",
+    "isAsync": true
+  },
+  {
+    "id": "jsonprettify",
+    "label": "JSON Prettify",
+    "category": "Structured Data",
+    "funcName": "transformJsonPrettify"
+  },
+  {
+    "id": "jsonminify",
+    "label": "JSON Minify",
+    "category": "Structured Data",
+    "funcName": "transformJsonMinify"
+  },
+  {
+    "id": "jsonvalidate",
+    "label": "JSON Validate",
+    "category": "Structured Data",
+    "funcName": "transformJsonValidate"
+  },
+  {
+    "id": "removeextraspaces",
+    "label": "Remove Extra Spaces",
+    "category": "Whitespace & HTML",
+    "funcName": "transformRemoveExtraSpaces"
+  },
+  {
+    "id": "striphtml",
+    "label": "Strip HTML Tags",
+    "category": "Whitespace & HTML",
+    "funcName": "transformStripHtml"
+  },
+  {
+    "id": "trimallwhitespace",
+    "label": "Remove All Whitespace",
+    "category": "Whitespace & HTML",
+    "funcName": "transformTrimAllWhitespace"
+  },
+  {
+    "id": "trimleading",
+    "label": "Trim Leading Whitespace",
+    "category": "Whitespace & HTML",
+    "funcName": "transformTrimLeading"
+  },
+  {
+    "id": "trimtrailing",
+    "label": "Trim Trailing Whitespace",
+    "category": "Whitespace & HTML",
+    "funcName": "transformTrimTrailing"
+  },
+  {
+    "id": "sortlinesalpha",
+    "label": "Sort Lines (Alpha)",
+    "category": "Line Operations",
+    "funcName": "transformSortLinesAlpha"
+  },
+  {
+    "id": "sortlinesrevalpha",
+    "label": "Sort Lines (Rev Alpha)",
+    "category": "Line Operations",
+    "funcName": "transformSortLinesRevAlpha"
+  },
+  {
+    "id": "removeduplicatelines",
+    "label": "Remove Duplicate Lines",
+    "category": "Line Operations",
+    "funcName": "transformRemoveDuplicateLines"
+  },
+  {
+    "id": "numberlines",
+    "label": "Number Lines",
+    "category": "Line Operations",
+    "funcName": "transformNumberLines"
+  },
+  {
+    "id": "prefixlines",
+    "label": "Prefix Lines (with '> ')",
+    "category": "Line Operations",
+    "funcName": "transformPrefixLines"
+  },
+  {
+    "id": "removeblanklines",
+    "label": "Remove Blank Lines",
+    "category": "Line Operations",
+    "funcName": "transformRemoveBlankLines"
+  },
+  {
+    "id": "splittocommalines",
+    "label": "Split by Comma to Lines",
+    "category": "Line Operations",
+    "funcName": "transformSplitToCommaLines"
+  },
+  {
+    "id": "joinlineswithcomma",
+    "label": "Join Lines with Comma",
+    "category": "Line Operations",
+    "funcName": "transformJoinLinesWithComma"
+  },
+  {
+    "id": "shufflelines",
+    "label": "Shuffle Lines",
+    "category": "Line Operations",
+    "funcName": "transformShuffleLines"
+  },
+  {
+    "id": "sortlinesnumericasc",
+    "label": "Sort Lines (Numeric, Asc)",
+    "category": "Line Operations",
+    "funcName": "transformSortLinesNumericAsc"
+  },
+  {
+    "id": "sortlinesnumericdesc",
+    "label": "Sort Lines (Numeric, Desc)",
+    "category": "Line Operations",
+    "funcName": "transformSortLinesNumericDesc"
+  },
+  {
+    "id": "reverselinesorder",
+    "label": "Reverse Lines Order",
+    "category": "Line Operations",
+    "funcName": "transformReverseLinesOrder"
+  },
+  {
+    "id": "padstart",
+    "label": "Pad Start",
+    "category": "Text Manipulation",
+    "funcName": "transformPadStart",
+    "params": [
+      {
+        "id": "targetLength",
+        "label": "Target Length:",
+        "type": "number",
+        "defaultValue": 10,
+        "min": 1
+      },
+      {
+        "id": "padString",
+        "label": "Pad With:",
+        "type": "text",
+        "defaultValue": "0",
+        "placeholder": "e.g., 0 or _"
+      }
+    ]
+  },
+  {
+    "id": "padend",
+    "label": "Pad End",
+    "category": "Text Manipulation",
+    "funcName": "transformPadEnd",
+    "params": [
+      {
+        "id": "targetLength",
+        "label": "Target Length:",
+        "type": "number",
+        "defaultValue": 10,
+        "min": 1
+      },
+      {
+        "id": "padString",
+        "label": "Pad With:",
+        "type": "text",
+        "defaultValue": "_",
+        "placeholder": "e.g., 0 or _"
+      }
+    ]
+  },
+  {
+    "id": "repeattext",
+    "label": "Repeat Text",
+    "category": "Text Manipulation",
+    "funcName": "transformRepeatText",
+    "params": [
+      {
+        "id": "repeatCount",
+        "label": "Repeat Count:",
+        "type": "number",
+        "defaultValue": 3,
+        "min": 1,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "findreplace",
+    "label": "Find & Replace",
+    "category": "Text Manipulation",
+    "funcName": "transformFindReplace",
+    "params": [
+      {
+        "id": "findString",
+        "label": "Find:",
+        "type": "text",
+        "defaultValue": "foo",
+        "placeholder": "Text to find"
+      },
+      {
+        "id": "replaceString",
+        "label": "Replace with:",
+        "type": "text",
+        "defaultValue": "bar",
+        "placeholder": "Replacement text"
+      },
+      {
+        "id": "caseSensitive",
+        "label": "Case Sensitive",
+        "type": "checkbox",
+        "defaultValue": false
+      },
+      {
+        "id": "global",
+        "label": "Replace All",
+        "type": "checkbox",
+        "defaultValue": true
+      }
+    ]
+  },
+  {
+    "id": "reverse",
+    "label": "Reverse Text",
+    "category": "Data & Utilities",
+    "funcName": "transformReverse"
+  },
+  {
+    "id": "charcount",
+    "label": "Character Count",
+    "category": "Data & Utilities",
+    "funcName": "transformCharCount"
+  },
+  {
+    "id": "wordcount",
+    "label": "Word Count",
+    "category": "Data & Utilities",
+    "funcName": "transformWordCount"
+  },
+  {
+    "id": "linecount",
+    "label": "Line Count",
+    "category": "Data & Utilities",
+    "funcName": "transformLineCount"
+  },
+  {
+    "id": "extractemails",
+    "label": "Extract Email Addresses",
+    "category": "Data & Utilities",
+    "funcName": "transformExtractEmails"
+  },
+  {
+    "id": "extracturls",
+    "label": "Extract URLs",
+    "category": "Data & Utilities",
+    "funcName": "transformExtractUrls"
+  },
+  {
+    "id": "slugify",
+    "label": "Slugify",
+    "category": "Data & Utilities",
+    "funcName": "transformSlugify"
+  },
+  {
+    "id": "countcharacter",
+    "label": "Count Character",
+    "category": "Data & Utilities",
+    "funcName": "transformCountCharacter",
+    "params": [
+      {
+        "id": "charToCount",
+        "label": "Character:",
+        "type": "text",
+        "defaultValue": "a",
+        "maxLength": 10,
+        "placeholder": "e.g., a"
+      },
+      {
+        "id": "caseSensitive",
+        "label": "Case Sensitive",
+        "type": "checkbox",
+        "defaultValue": false
+      }
+    ]
+  },
+  {
+    "id": "extractnumbers",
+    "label": "Extract Numbers",
+    "category": "Data & Utilities",
+    "funcName": "transformExtractNumbers"
+  },
+  {
+    "id": "unixtimetodate",
+    "label": "Unix Timestamp to ISO Date",
+    "category": "Data & Utilities",
+    "funcName": "transformUnixTimeToDate"
+  },
+  {
+    "id": "datetounixtime",
+    "label": "ISO Date to Unix Timestamp",
+    "category": "Data & Utilities",
+    "funcName": "transformDateToUnixTime"
+  },
+  {
+    "id": "rot13",
+    "label": "ROT13 Cipher",
+    "category": "Ciphers",
+    "funcName": "transformRot13"
+  },
+  {
+    "id": "morsecodeencode",
+    "label": "Text to Morse Code",
+    "category": "Ciphers",
+    "funcName": "transformMorseCodeEncode"
+  },
+  {
+    "id": "morsecodedecode",
+    "label": "Morse Code to Text",
+    "category": "Ciphers",
+    "funcName": "transformMorseCodeDecode"
+  },
+  {
+    "id": "generateuuid",
+    "label": "Generate UUID v4",
+    "category": "Generators",
+    "funcName": "transformGenerateUuid",
+    "isAsync": true
+  },
+  {
+    "id": "generateloremipsum",
+    "label": "Generate Lorem Ipsum",
+    "category": "Generators",
+    "funcName": "transformGenerateLoremIpsum",
+    "params": [
+      {
+        "id": "numParagraphs",
+        "label": "Paragraphs:",
+        "type": "number",
+        "defaultValue": 1,
+        "min": 1,
+        "max": 20
+      }
+    ]
+  }
+]

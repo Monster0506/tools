@@ -246,19 +246,19 @@
     <script>
       // TOOL SCHEMA
       /*
-      {
-        id: number
-        title: string
-        description: string,
-        tags: [string]
-        links: object{
-          string(display name): string(url: preferably tool/toolname)
-        }
-        lastUpdated: string(date YYYY-MM-DD)
+            {
+              id: number
+              title: string
+              description: string,
+              tags: [string]
+              links: object{
+                string(display name): string(url: preferably tool/toolname)
+              }
+              lastUpdated: string(date YYYY-MM-DD)
 
-      }
+            }
 
-    */
+          */
       const toolBase = "https://github.com/Monster0506/tools/tree/master/tool/";
       const tools = [
         {
@@ -331,6 +331,30 @@
           },
           lastUpdated: "2025-05-05",
         },
+        {
+          id: 5,
+          title: "Text Transformer",
+          description:
+            "A web tool for text manipulations including case changes, encoding/decoding (Base64, URL, Binary, Morse), HTML operations, line sorting, data extraction (emails, URLs), hashing (SHA), and JSON formatting.",
+          tags: [
+            "javascript",
+            "utility",
+            "static-site",
+            "web",
+            "text-processing",
+            "encoding",
+            "decoding",
+            "hashing",
+            "json",
+            "development",
+            "data-extraction",
+          ],
+          links: {
+            Visit: "tool/text-transformer", // Assuming this is the path
+            GitHub: `${toolBase}text-transformer`, // Assuming toolBase is defined
+          },
+          lastUpdated: "2025-05-24", // Today's date
+        },
       ];
 
       // Function to generate HTML for tool links
@@ -373,15 +397,15 @@
           });
 
           card.innerHTML = `
-                    <div class="tool-meta">
-                        <span class="tool-id">#${tool.id}</span>
-                        <span class="tool-date">Updated: ${formattedDate}</span>
-                    </div>
-                    <h3 class="tool-title">${tool.title}</h3>
-                    <p class="tool-description">${tool.description}</p>
-                    <div class="tool-tags">${tagsHtml}</div>
-                    <div class="tool-links">${linksHtml}</div>
-                `;
+                          <div class="tool-meta">
+                              <span class="tool-id">#${tool.id}</span>
+                              <span class="tool-date">Updated: ${formattedDate}</span>
+                          </div>
+                          <h3 class="tool-title">${tool.title}</h3>
+                          <p class="tool-description">${tool.description}</p>
+                          <div class="tool-tags">${tagsHtml}</div>
+                          <div class="tool-links">${linksHtml}</div>
+                      `;
 
           container.appendChild(card);
         });
