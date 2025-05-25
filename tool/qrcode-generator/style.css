@@ -126,3 +126,50 @@ button:hover {
   margin-top: 15px;
   font-weight: bold;
 }
+
+#fileInput {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #fff;
+  line-height: 1.4;
+}
+
+#fileInput::file-selector-button {
+  padding: 8px 15px;
+  margin-right: 10px;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  color: #495057;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+#fileInput::file-selector-button:hover {
+  background-color: #dee2e6;
+}
+
+#fileInfo {
+  margin-top: 5px;
+  font-size: 0.9em;
+  color: #333;
+  padding: 5px 0;
+  word-break: break-all;
+}
+
+#input-file p {
+  font-size: 0.8em;
+  color: #666;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+.input-section {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px dashed #eee;
+}

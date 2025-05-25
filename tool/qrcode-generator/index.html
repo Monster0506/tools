@@ -20,6 +20,7 @@
           <option value="email">Email</option>
           <option value="sms">SMS</option>
           <option value="geo">Geo Location</option>
+          <option value="file">File (Small - Data URL)</option>
         </select>
 
         <div id="input-url" class="input-section">
@@ -116,6 +117,22 @@
             placeholder="Enter your email message here"
           ></textarea>
         </div>
+
+        <div id="input-file" class="input-section" style="display: none">
+          <label for="fileInput">Select File (Max ~1.5KB recommended):</label>
+          <input type="file" id="fileInput" />
+          <div
+            id="fileInfo"
+            style="margin-top: 5px; font-size: 0.9em; color: #333"
+          ></div>
+          <p style="font-size: 0.8em; color: #666; margin-top: 8px">
+            Note: The file content will be embedded directly into the QR code.
+            Large files will create very dense QR codes that are hard to scan or
+            may exceed capacity. For larger files, upload them online and use
+            the "URL" type.
+          </p>
+        </div>
+
         <button id="generateBtn">Generate QR Code</button>
       </div>
 

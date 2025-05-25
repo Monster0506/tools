@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const qrCodeContainer = document.getElementById("qrcode");
   const errorMessage = document.getElementById("errorMessage");
   const inputSections = document.querySelectorAll(".input-section");
+
+  const fileInputElement = document.getElementById("fileInput");
+  const fileInfoElement = document.getElementById("fileInfo");
   let qrCodeInstance = null;
 
   function updateInputFields() {
@@ -30,138 +33,174 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function formatData() {
-    const type = qrTypeSelect.value;
-    let data = "";
+    return new Promise((resolve, reject) => {
+      const type = qrTypeSelect.value;
+      let dataValue = ""; // To hold the final string for QR code
 
-    try {
-      switch (type) {
-        case "url":
-          data = document.getElementById("urlInput").value;
-          if (!data || !data.startsWith("http")) {
-            throw new Error("Please enter a valid URL (e.g., https://...)");
-          }
-          break;
-        case "text":
-          data = document.getElementById("textInput").value;
-          if (!data) {
-            throw new Error("Please enter some text.");
-          }
-          break;
-        case "wifi":
-          const ssid = document.getElementById("wifiSSID").value;
-          const password = document.getElementById("wifiPassword").value;
-          const encryption = document.getElementById("wifiEncryption").value;
-          if (!ssid) {
-            throw new Error("Wi-Fi Network Name (SSID) is required.");
-          }
-          // Format: WIFI:T:<encryption>;S:<ssid>;P:<password>;;
-          data = `WIFI:T:${encryption};S:${ssid};${
-            password ? `P:${password};` : ""
-          };`;
-          break;
-        case "vcard":
-          const name = document.getElementById("vcardName").value;
-          const phone = document.getElementById("vcardPhone").value;
-          const email = document.getElementById("vcardEmail").value;
-          const org = document.getElementById("vcardOrg").value;
-          if (!name && !phone && !email && !org) {
-            throw new Error("Please enter at least one contact detail.");
-          }
-          // Basic vCard Version 3.0 format
-          data = `BEGIN:VCARD\nVERSION:3.0\n`;
-          if (name)
-            data += `FN:${name}\nN:${name.split(" ").reverse().join(";")}\n`;
-          if (org) data += `ORG:${org}\n`;
-          if (phone) data += `TEL;TYPE=CELL:${phone}\n`;
-          if (email) data += `EMAIL:${email}\n`;
-          data += `END:VCARD`;
-          break;
-        case "email":
-          const emailRecipient =
-            document.getElementById("emailRecipient").value;
-          const emailSubject = document.getElementById("emailSubject").value;
-          const emailBody = document.getElementById("emailBody").value;
+      try {
+        switch (type) {
+          case "url":
+            dataValue = document.getElementById("urlInput").value;
+            if (!dataValue || !/^https?:\/\//i.test(dataValue)) {
+              throw new Error("Please enter a valid URL (e.g., https://...)");
+            }
+            resolve(dataValue);
+            break;
+          case "text":
+            dataValue = document.getElementById("textInput").value;
+            if (!dataValue) {
+              throw new Error("Please enter some text.");
+            }
+            resolve(dataValue);
+            break;
+          case "wifi":
+            const ssid = document.getElementById("wifiSSID").value;
+            const password = document.getElementById("wifiPassword").value;
+            const encryption = document.getElementById("wifiEncryption").value;
+            if (!ssid) {
+              throw new Error("Wi-Fi Network Name (SSID) is required.");
+            }
+            dataValue = `WIFI:T:${encryption};S:${ssid};${
+              password ? `P:${password};` : ""
+            };`;
+            resolve(dataValue);
+            break;
+          case "vcard":
+            const name = document.getElementById("vcardName").value;
+            const phone = document.getElementById("vcardPhone").value;
+            const email = document.getElementById("vcardEmail").value;
+            const org = document.getElementById("vcardOrg").value;
+            if (!name && !phone && !email && !org) {
+              throw new Error("Please enter at least one contact detail.");
+            }
+            dataValue = `BEGIN:VCARD\nVERSION:3.0\n`;
+            if (name)
+              dataValue += `FN:${name}\nN:${name.split(" ").reverse().join(";")}\n`;
+            if (org) dataValue += `ORG:${org}\n`;
+            if (phone) dataValue += `TEL;TYPE=CELL:${phone}\n`;
+            if (email) dataValue += `EMAIL:${email}\n`;
+            dataValue += `END:VCARD`;
+            resolve(dataValue);
+            break;
+          case "email":
+            const emailRecipient =
+              document.getElementById("emailRecipient").value;
+            const emailSubject = document.getElementById("emailSubject").value;
+            const emailBody = document.getElementById("emailBody").value;
+            if (!emailRecipient) {
+              throw new Error("Please enter a recipient email address.");
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRecipient)) {
+              throw new Error("Please enter a valid recipient email address.");
+            }
+            dataValue = `MATMSG:TO:${emailRecipient};SUB:${emailSubject || ""};BODY:${
+              emailBody || ""
+            };;`;
+            resolve(dataValue);
+            break;
+          case "sms":
+            const smsNumber = document.getElementById("smsNumber").value;
+            const smsBody = document.getElementById("smsBody").value;
+            if (!smsNumber) {
+              throw new Error("Please enter a phone number.");
+            }
+            if (!/^\+?\d+$/.test(smsNumber)) {
+              throw new Error("Please enter a valid phone number.");
+            }
+            dataValue = `SMSTO:${smsNumber}:${smsBody || ""}`;
+            resolve(dataValue);
+            break;
+          case "geo":
+            const geoLatitude = document.getElementById("geoLatitude").value;
+            const geoLongitude = document.getElementById("geoLongitude").value;
+            if (!geoLatitude || !geoLongitude) {
+              throw new Error("Please enter both latitude and longitude.");
+            }
+            if (
+              !/^-?\d+(\.\d+)?$/.test(geoLatitude) ||
+              !/^-?\d+(\.\d+)?$/.test(geoLongitude)
+            ) {
+              throw new Error("Latitude and longitude must be numeric values.");
+            }
+            dataValue = `geo:${geoLatitude},${geoLongitude}`;
+            resolve(dataValue);
+            break;
+          case "file":
+            const fileInput = document.getElementById("fileInput");
+            if (!fileInput.files || fileInput.files.length === 0) {
+              throw new Error("Please select a file.");
+            }
+            const file = fileInput.files[0];
+            const MAX_FILE_SIZE = 1.5 * 1024; // 1.5 KB - adjust as needed
 
-          if (!emailRecipient) {
-            throw new Error("Please enter a recipient email address.");
-          }
+            if (file.size > MAX_FILE_SIZE) {
+              throw new Error(
+                `File too large (${(file.size / 1024).toFixed(2)} KB). Max: ${(
+                  MAX_FILE_SIZE / 1024
+                ).toFixed(2)} KB.`,
+              );
+            }
 
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRecipient)) {
-            throw new Error("Please enter a valid recipient email address.");
-          }
-
-          data = `MATMSG:TO:${emailRecipient};SUB:${emailSubject || ""};BODY:${
-            emailBody || ""
-          };;`;
-          break;
-        case "sms":
-          const smsNumber = document.getElementById("smsNumber").value;
-          const smsBody = document.getElementById("smsBody").value;
-
-          if (!smsNumber) {
-            throw new Error("Please enter a phone number.");
-          }
-          // Basic phone number validation
-          if (!/^\+?\d+$/.test(smsNumber)) {
-            throw new Error("Please enter a valid phone number.");
-          }
-
-          data = `SMSTO:${smsNumber}:${smsBody || ""}`;
-          break;
-        case "geo":
-          const geoLatitude = document.getElementById("geoLatitude").value;
-          const geoLongitude = document.getElementById("geoLongitude").value;
-
-          if (!geoLatitude || !geoLongitude) {
-            throw new Error("Please enter both latitude and longitude.");
-          }
-
-          if (
-            !/^-?\d+(\.\d+)?$/.test(geoLatitude) ||
-            !/^-?\d+(\.\d+)?$/.test(geoLongitude)
-          ) {
-            throw new Error("Latitude and longitude must be numeric values.");
-          }
-
-          data = `geo:${geoLatitude},${geoLongitude}`;
-          break;
-        default:
-          throw new Error("Invalid QR code type selected.");
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              resolve(event.target.result); // This is the Data URL
+            };
+            reader.onerror = (error) => {
+              console.error("File reading error:", error);
+              reject(new Error("Error reading file."));
+            };
+            reader.readAsDataURL(file);
+            // Note: resolve/reject is handled by FileReader callbacks, so no explicit resolve/reject here for the switch case.
+            break; // Break from switch, promise will resolve/reject later
+          default:
+            throw new Error("Invalid QR code type selected.");
+        }
+        // For synchronous cases that didn't throw:
+        // errorMessage.textContent = ""; // Already handled by reject or generateQRCode
+      } catch (error) {
+        // This catch handles synchronous errors from the switch cases
+        reject(error); // Reject the promise with the error
       }
-      errorMessage.textContent = "";
-      return data;
-    } catch (error) {
-      errorMessage.textContent = error.message;
-      return null;
-    }
+    });
   }
 
-  function generateQRCode() {
+  // --- MODIFIED: generateQRCode is now async ---
+  async function generateQRCode() {
     clearQRCode();
-    const data = formatData();
+    errorMessage.textContent = ""; // Clear previous errors
+    successMessage.textContent = "";
 
-    if (data) {
-      try {
+    try {
+      const data = await formatData(); // Await the promise from formatData
+
+      if (data) {
+        // data will be null if formatData promise was rejected before this point
         qrCodeInstance = new QRCode(qrCodeContainer, {
           text: data,
           width: 256,
           height: 256,
           colorDark: "#000000",
           colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H,
+          correctLevel: QRCode.CorrectLevel.H, // High error correction is good, but reduces capacity
         });
-        downloadBtn.style.display = "inline-block";
-        copyBtn.style.display = "inline-block";
-        copyLinkBtn.style.display = "inline-block";
-      } catch (error) {
-        console.error("QR Code generation failed:", error);
-        errorMessage.textContent =
-          "Failed to generate QR Code. Check console for details.";
-        downloadBtn.style.display = "none";
-        copyBtn.style.display = "none";
-        copyLinkBtn.style.display = "none";
+        setTimeout(() => {
+          const canvas = qrCodeContainer.querySelector("canvas");
+          if (canvas) {
+            downloadBtn.style.display = "inline-block";
+            if (navigator.clipboard && navigator.clipboard.write) {
+              copyBtn.style.display = "inline-block";
+            }
+            copyLinkBtn.style.display = "inline-block";
+          } else {
+            errorMessage.textContent = "Failed to render QR Code canvas.";
+          }
+        }, 100);
       }
-    } else {
+      // If data is null/undefined (e.g., promise rejected and caught below), buttons remain hidden
+    } catch (error) {
+      // Catches rejections from formatData or errors in this function
+      console.error("QR Code generation failed:", error);
+      errorMessage.textContent = error.message || "Failed to generate QR Code.";
       downloadBtn.style.display = "none";
       copyBtn.style.display = "none";
       copyLinkBtn.style.display = "none";
