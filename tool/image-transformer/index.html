@@ -5,10 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Image Transformation Tool</title>
     <link rel="stylesheet" href="/tool/image-transformer/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
   </head>
   <body>
     <header class="app-header">
-      <h1>Image Transformer</h1>
+      <div class="header-content">
+        <h1>Image Transformer</h1>
+        <div class="global-actions">
+          <button id="undo-btn" title="Undo (Ctrl+Z)">
+            <i class="fas fa-undo"></i>
+          </button>
+          <button id="redo-btn" title="Redo (Ctrl+Y)">
+            <i class="fas fa-redo"></i>
+          </button>
+        </div>
+      </div>
     </header>
 
     <main class="app-layout">
@@ -17,18 +32,16 @@
         <section class="panel-section" id="tools-section">
           <h2>Tools</h2>
           <div id="tool-controls-container">
-            <!-- Transformation controls will be dynamically injected here by script.js -->
-            <!-- Example: <button data-tool="crop">Crop</button> -->
+            <!-- Dynamically injected tool buttons -->
           </div>
         </section>
 
         <section class="panel-section" id="layers-section">
           <h2>Layers</h2>
-          <div class="layer-actions">
+          <div class="layer-actions-toolbar">
             <button id="add-image-btn" title="Add new image layer">
-              Add Image
+              <i class="fas fa-plus-circle"></i>
             </button>
-            <!-- Hidden file input, triggered by the button -->
             <input
               type="file"
               id="image-file-input"
@@ -36,24 +49,44 @@
               multiple
               style="display: none"
             />
+            <button
+              id="duplicate-layer-btn"
+              title="Duplicate Selected Layer"
+              disabled
+            >
+              <i class="fas fa-clone"></i>
+            </button>
+            <div class="layer-move-actions">
+              <button id="move-layer-up-btn" title="Move Layer Up" disabled>
+                <i class="fas fa-arrow-up"></i>
+              </button>
+              <button id="move-layer-down-btn" title="Move Layer Down" disabled>
+                <i class="fas fa-arrow-down"></i>
+              </button>
+            </div>
           </div>
           <div id="layers-list-container">
-            <!-- Layer items will be dynamically injected here by script.js -->
-            <!-- Example: 
-                        <div class="layer-item" data-layer-id="1">
-                            <span>Layer 1</span>
-                            <button class="visibility-toggle">Show/Hide</button>
-                        </div> 
-                        -->
+            <!-- Dynamically injected layer items -->
           </div>
         </section>
       </aside>
 
       <!-- Center Panel: Canvas Area -->
-      <section class="panel panel-center" id="canvas-area">
+      <section class="panel panel-center" id="canvas-area-container">
+        <div class="canvas-toolbar">
+          <button id="zoom-in-btn" title="Zoom In">
+            <i class="fas fa-search-plus"></i>
+          </button>
+          <button id="zoom-out-btn" title="Zoom Out">
+            <i class="fas fa-search-minus"></i>
+          </button>
+          <button id="zoom-fit-btn" title="Fit to View">
+            <i class="fas fa-expand-arrows-alt"></i>
+          </button>
+          <span id="zoom-level-display">100%</span>
+        </div>
         <div id="canvas-wrapper">
-          <!-- The HTML5 Canvas element will be created and managed here by script.js -->
-          <!-- This wrapper helps with styling and positioning the canvas -->
+          <!-- Canvas element injected by JS -->
         </div>
       </section>
 
@@ -62,8 +95,9 @@
         <section class="panel-section" id="properties-section">
           <h2>Properties</h2>
           <div id="selected-tool-properties-container">
-            <!-- Properties for the currently selected tool or layer will be shown here -->
-            <!-- Example: Crop dimensions, rotation angle, filter strength -->
+            <p class="placeholder-text">
+              Select a layer or tool to see its properties.
+            </p>
           </div>
         </section>
 
@@ -98,10 +132,37 @@
             <button id="apply-canvas-size-btn">Apply Canvas Size</button>
           </div>
         </section>
+
         <section class="panel-section" id="export-section">
           <h2>Export</h2>
-          <div id="export-controls-container">
-            <!-- Export options (e.g., format, quality) and button will go here -->
+          <div id="export-controls-container" class="property-control-group">
+            <div>
+              <label for="export-format-select">Format:</label>
+              <select id="export-format-select">
+                <option value="image/png" selected>PNG</option>
+                <option value="image/jpeg">JPEG</option>
+                <option value="image/webp">WEBP</option>
+                <option value="application/pdf">PDF</option>
+              </select>
+            </div>
+            <div
+              id="export-quality-control"
+              class="property-control"
+              style="display: none"
+            >
+              <label for="export-quality-slider"
+                >Quality (0.1 - 1.0):
+                <span id="export-quality-value">0.92</span></label
+              >
+              <input
+                type="range"
+                id="export-quality-slider"
+                min="0.1"
+                max="1.0"
+                step="0.01"
+                value="0.92"
+              />
+            </div>
             <button id="export-image-btn">Export Image</button>
           </div>
         </section>
