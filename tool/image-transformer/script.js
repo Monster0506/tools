@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- DOM Elements ---
+  const loadingOverlay = document.getElementById("loading-overlay");
   const toolControlsContainer = document.getElementById(
     "tool-controls-container",
   );
@@ -165,7 +166,17 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   ];
   let activeTool = "select";
-
+  function showLoadingIndicator(message = "Processing...") {
+    if (loadingOverlay) {
+      loadingOverlay.innerHTML = message.replace(/\n/g, "<br>");
+      loadingOverlay.style.display = "flex";
+    }
+  }
+  function hideLoadingIndicator() {
+    if (loadingOverlay) {
+      loadingOverlay.style.display = "none";
+    }
+  }
   // --- Undo/Redo Functions --- (Same as before)
   function deepCopy(obj) {
     if (obj === null || typeof obj !== "object") {
@@ -263,6 +274,159 @@ document.addEventListener("DOMContentLoaded", () => {
     zoomFit(); // Fit canvas to view initially
     renderCanvas();
     saveState();
+  }
+
+  async function handleRemoveBackground() {
+    if (!selectedLayerId) {
+      alert("Please select a layer first.");
+      return;
+    }
+    const layer = getLayerById(selectedLayerId);
+    if (!layer || layer.isTextLayer) {
+      alert("Background removal is only available for non-text image layers.");
+      return;
+    }
+
+    showLoadingIndicator("Removing background...\nThis may take a moment.");
+
+    let imageFileForApi;
+
+    // Prefer original file if available
+    if (layer.originalFile instanceof File) {
+      imageFileForApi = layer.originalFile;
+    } else {
+      // Fallback: convert current layer.image (original HTMLImageElement) to blob
+      // This sends the original image data, not the one with canvas effects applied
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = layer.originalWidth;
+      tempCanvas.height = layer.originalHeight;
+      const tempCtx = tempCanvas.getContext("2d");
+      if (!(layer.image instanceof HTMLImageElement)) {
+        hideLoadingIndicator();
+        alert(
+          "Cannot process this layer for background removal (not an original image).",
+        );
+        return;
+      }
+      tempCtx.drawImage(
+        layer.image,
+        0,
+        0,
+        layer.originalWidth,
+        layer.originalHeight,
+      );
+      try {
+        imageFileForApi = await new Promise((resolve, reject) => {
+          tempCanvas.toBlob((blob) => {
+            if (blob) {
+              resolve(
+                new File([blob], layer.name || "image.png", {
+                  type: blob.type,
+                }),
+              );
+            } else {
+              reject(new Error("Canvas toBlob failed."));
+            }
+          }, "image/png"); // Always send PNG to API for best quality before its processing
+        });
+      } catch (error) {
+        hideLoadingIndicator();
+        alert(`Error preparing image for background removal: ${error.message}`);
+        return;
+      }
+    }
+
+    const formData = new FormData();
+    formData.append("image", imageFileForApi);
+
+    try {
+      const response = await fetch(
+        "https://bg-remover-omega-beige.vercel.app/remove-background",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `API Error: ${response.status} ${response.statusText}. ${errorText}`,
+        );
+      }
+
+      const imageBlob = await response.blob();
+      const newImg = new Image();
+      newImg.onload = () => {
+        // Create a new image element for the layer to ensure it's fresh
+        const processedImageElement = new Image();
+        processedImageElement.onload = () => {
+          layer.image = processedImageElement; // Update with the new processed image
+          const oldDisplayWidth = layer.width; // Preserve old display width if possible
+
+          layer.originalWidth = processedImageElement.naturalWidth;
+          layer.originalHeight = processedImageElement.naturalHeight;
+          layer.cropX = 0;
+          layer.cropY = 0;
+          layer.cropWidth = processedImageElement.naturalWidth;
+          layer.cropHeight = processedImageElement.naturalHeight;
+          layer.aspectRatio =
+            processedImageElement.naturalWidth /
+            (processedImageElement.naturalHeight || 1);
+
+          // Adjust display size based on new aspect ratio, trying to keep width
+          layer.width = oldDisplayWidth;
+          layer.height = oldDisplayWidth / layer.aspectRatio;
+          if (
+            isNaN(layer.height) ||
+            layer.height <= 0 ||
+            !isFinite(layer.height)
+          ) {
+            // Fallback if aspect ratio leads to invalid height
+            const scaleToFitCanvas = Math.min(
+              (currentCanvasWidth * 0.75) / processedImageElement.naturalWidth,
+              (currentCanvasHeight * 0.75) /
+                processedImageElement.naturalHeight,
+              1,
+            );
+            layer.width = processedImageElement.naturalWidth * scaleToFitCanvas;
+            layer.height =
+              processedImageElement.naturalHeight * scaleToFitCanvas;
+          }
+
+          // Reset potentially problematic filters for a cutout
+          layer.filters.brightness = 100;
+          layer.filters.contrast = 100;
+          // layer.filters.saturate = 100; // Saturation might still be desired
+
+          hideLoadingIndicator();
+          renderCanvas();
+          saveState();
+          updatePropertiesPanel();
+        };
+        processedImageElement.onerror = () => {
+          hideLoadingIndicator();
+          alert("Error loading processed image after background removal.");
+        };
+        processedImageElement.src = URL.createObjectURL(imageBlob);
+      };
+      newImg.onerror = () => {
+        // This outer newImg is just to get dimensions if needed, but we use a new one for the layer
+        hideLoadingIndicator();
+        alert("Error processing image data from API.");
+      };
+      // We don't actually need to load this outer newImg if we use a new one for the layer
+      // The blob URL is enough for the final processedImageElement
+      const blobUrl = URL.createObjectURL(imageBlob);
+      const finalImageForLayer = new Image();
+      finalImageForLayer.onload = newImg.onload; // Chain the onload
+      finalImageForLayer.onerror = newImg.onerror;
+      finalImageForLayer.src = blobUrl;
+    } catch (error) {
+      hideLoadingIndicator();
+      console.error("Background removal failed:", error);
+      alert(`Background removal failed: ${error.message}`);
+    }
   }
   function handleUpdateCanvasSize() {
     let newWidth = parseInt(canvasWidthInput.value, 10);
@@ -795,7 +959,7 @@ document.addEventListener("DOMContentLoaded", () => {
     isText = false,
     textData = null,
   ) {
-    /* ... Same ... */ const processImage = (img, layerName) => {
+    const processImage = (img, layerName) => {
       const naturalImgWidth = img.naturalWidth || img.width;
       const naturalImgHeight = img.naturalHeight || img.height;
       const newLayer = {
@@ -804,7 +968,8 @@ document.addEventListener("DOMContentLoaded", () => {
           layerName.length > 20
             ? layerName.substring(0, 17) + "..."
             : layerName,
-        image: img,
+        image: img, // This is the original HTMLImageElement or HTMLCanvasElement
+        originalFile: fileOrImage instanceof File ? fileOrImage : null, // Store original file if available
         x: 50,
         y: 50,
         width: naturalImgWidth,
@@ -857,6 +1022,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isTextLayer: isText,
         textData: isText ? textData : null,
       };
+      // ... (rest of the scaling logic and adding to layers array)
       const maxDim = Math.max(newLayer.cropWidth, newLayer.cropHeight);
       const canvasMaxDim =
         Math.min(currentCanvasWidth, currentCanvasHeight) * 0.75;
@@ -1273,10 +1439,37 @@ document.addEventListener("DOMContentLoaded", () => {
     return container;
   }
   function updatePropertiesPanel() {
-    /* ... Same logic structure, ensure Text Edit UI is correct ... */ propertiesContainer.innerHTML =
-      "";
+    propertiesContainer.innerHTML = ""; // Clear previous properties
     const selectedLayer = getLayerById(selectedLayerId);
     const toolDefinition = availableTools.find((t) => t.id === activeTool);
+
+    // --- Dynamic "Remove Background" Button ---
+    // Show this button if a non-text image layer is selected and a relevant tool is active
+    if (
+      selectedLayer &&
+      !selectedLayer.isTextLayer &&
+      (activeTool === "select" ||
+        activeTool === "crop" ||
+        activeTool === "resize") // Add other tools where it might be relevant
+    ) {
+      const bgRemoveContainer = document.createElement("div");
+      bgRemoveContainer.className = "property-control-group"; // For consistent spacing
+      bgRemoveContainer.style.marginTop = "1rem";
+      bgRemoveContainer.style.paddingTop = "1rem";
+      bgRemoveContainer.style.borderTop = "1px solid var(--border-color-light)";
+
+      const removeBgBtn = createButton(
+        "Remove Background (API)",
+        handleRemoveBackground,
+      );
+      removeBgBtn.title =
+        "Uses an external API to remove the background. Best with clear subjects. Affects the original image source for this layer.";
+      removeBgBtn.style.width = "100%"; // Make button full width
+      bgRemoveContainer.appendChild(removeBgBtn);
+      propertiesContainer.appendChild(bgRemoveContainer);
+    }
+
+    // --- "Add/Edit Text" Tool UI ---
     if (toolDefinition && toolDefinition.id === "addText") {
       const toolHeader = document.createElement("h4");
       toolHeader.textContent =
@@ -1284,15 +1477,17 @@ document.addEventListener("DOMContentLoaded", () => {
           ? "Edit Text Layer"
           : "Add New Text Layer";
       propertiesContainer.appendChild(toolHeader);
+
       let currentTextData =
         selectedLayer && selectedLayer.isTextLayer
-          ? { ...selectedLayer.textData }
+          ? { ...selectedLayer.textData } // Edit existing
           : {
               content: "Hello World",
               fontFamily: "Arial",
               fontSize: 48,
               color: "#000000",
-            };
+            }; // Defaults for new
+
       const contentInput = createTextInput(
         "Text:",
         "text-content-input",
@@ -1320,10 +1515,12 @@ document.addEventListener("DOMContentLoaded", () => {
         currentTextData.color,
         (val) => (currentTextData.color = val),
       );
+
       propertiesContainer.appendChild(contentInput);
       propertiesContainer.appendChild(fontInput);
       propertiesContainer.appendChild(sizeInput);
       propertiesContainer.appendChild(colorInput);
+
       const actionButtonText =
         selectedLayer && selectedLayer.isTextLayer
           ? "Update Text Layer"
@@ -1339,48 +1536,62 @@ document.addEventListener("DOMContentLoaded", () => {
             textMetrics.actualBoundingBoxDescent;
           if (isNaN(actualHeight) || actualHeight === 0)
             actualHeight = currentTextData.fontSize * 1.2;
-          tempCanvas.width = Math.ceil(textMetrics.width) + 10;
+          tempCanvas.width = Math.ceil(textMetrics.width) + 10; // Add some padding
           tempCanvas.height = Math.ceil(actualHeight) + 10;
+
+          // Re-apply font after canvas resize
           tempCtx.font = `${currentTextData.fontSize}px ${currentTextData.fontFamily}`;
           tempCtx.fillStyle = currentTextData.color;
           tempCtx.textAlign = "left";
           tempCtx.textBaseline = "top";
-          tempCtx.fillText(currentTextData.content, 5, 5);
+          tempCtx.fillText(currentTextData.content, 5, 5); // Draw with padding
+
           if (selectedLayer && selectedLayer.isTextLayer) {
+            // Update existing
             selectedLayer.image = tempCanvas;
             selectedLayer.textData = { ...currentTextData };
             selectedLayer.name = `Text: ${currentTextData.content.substring(0, 10)}...`;
             selectedLayer.originalWidth = tempCanvas.width;
             selectedLayer.originalHeight = tempCanvas.height;
-            selectedLayer.width = tempCanvas.width;
+            selectedLayer.width = tempCanvas.width; // Reset display size
             selectedLayer.height = tempCanvas.height;
+            selectedLayer.cropX = 0; // Reset crop for text layers
+            selectedLayer.cropY = 0;
             selectedLayer.cropWidth = tempCanvas.width;
             selectedLayer.cropHeight = tempCanvas.height;
             updateLayersList();
             renderCanvas();
             saveState();
           } else {
+            // Add new
             addImageAsLayer(
               tempCanvas,
               `Text: ${currentTextData.content.substring(0, 10)}...`,
               true,
               { ...currentTextData },
             );
+            // addImageAsLayer calls selectLayer which calls saveState
           }
         }),
       );
-      return;
+      updateLayerActionButtons(); // Ensure layer buttons are updated
+      return; // Stop here for creator tools
     }
+
+    // --- Placeholder if no layer is selected (and not text tool) ---
     if (!selectedLayer) {
       propertiesContainer.innerHTML =
         '<p class="placeholder-text">Select a layer to see its properties.</p>';
-      updateLayerActionButtons();
+      updateLayerActionButtons(); // Update layer action buttons (they should be disabled)
       return;
     }
+
+    // --- "Select/Move" Tool UI (General Layer Properties) ---
     if (activeTool === "select") {
-      /* ... Same ... */ const generalHeader = document.createElement("h4");
+      const generalHeader = document.createElement("h4");
       generalHeader.textContent = "Layer Properties";
       propertiesContainer.appendChild(generalHeader);
+
       propertiesContainer.appendChild(
         createNumberInput(
           "X:",
@@ -1405,6 +1616,7 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         ),
       );
+
       const widthInputId = `layer-w-${selectedLayer.id}`;
       const heightInputId = `layer-h-${selectedLayer.id}`;
       propertiesContainer.appendChild(
@@ -1447,6 +1659,7 @@ document.addEventListener("DOMContentLoaded", () => {
           1,
         ),
       );
+
       const aspectToggleContainer = document.createElement("div");
       const aspectCheckbox = document.createElement("input");
       aspectCheckbox.type = "checkbox";
@@ -1461,6 +1674,7 @@ document.addEventListener("DOMContentLoaded", () => {
       aspectToggleContainer.appendChild(aspectCheckbox);
       aspectToggleContainer.appendChild(aspectLabel);
       propertiesContainer.appendChild(aspectToggleContainer);
+
       propertiesContainer.appendChild(
         createRangeInput(
           "Opacity:",
@@ -1478,15 +1692,18 @@ document.addEventListener("DOMContentLoaded", () => {
         ),
       );
     }
-    if (toolDefinition) {
+
+    // --- Tool-Specific Properties (for selected layer) ---
+    if (toolDefinition && activeTool !== "select" && activeTool !== "addText") {
       const toolHeader = document.createElement("h4");
       toolHeader.textContent = `${toolDefinition.name} Tool`;
       propertiesContainer.appendChild(toolHeader);
+
       if (
         toolDefinition.type === "filter" ||
         (toolDefinition.type === "effect" && toolDefinition.property)
       ) {
-        /* ... Same ... */ propertiesContainer.appendChild(
+        propertiesContainer.appendChild(
           createRangeInput(
             toolDefinition.name,
             `filter-${toolDefinition.property}-${selectedLayer.id}`,
@@ -1496,7 +1713,7 @@ document.addEventListener("DOMContentLoaded", () => {
               ? 1
               : toolDefinition.max > 10
                 ? 1
-                : 0.01,
+                : 0.01, // step
             selectedLayer.filters[toolDefinition.property],
             toolDefinition.unit,
             (val) => {
@@ -1507,7 +1724,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ),
         );
       } else if (toolDefinition.id === "rotate") {
-        /* ... Same ... */ propertiesContainer.appendChild(
+        propertiesContainer.appendChild(
           createRangeInput(
             "Angle:",
             `layer-rotation-${selectedLayer.id}`,
@@ -1524,7 +1741,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ),
         );
       } else if (toolDefinition.id === "resize") {
-        /* ... Same ... */ const resizeWidthInputId = `resize-w-${selectedLayer.id}`;
+        const resizeWidthInputId = `resize-w-${selectedLayer.id}`;
         const resizeHeightInputId = `resize-h-${selectedLayer.id}`;
         propertiesContainer.appendChild(
           createNumberInput(
@@ -1583,11 +1800,27 @@ document.addEventListener("DOMContentLoaded", () => {
         aspectToggleResize.appendChild(aspectCheckboxResize);
         aspectToggleResize.appendChild(aspectLabelResize);
         propertiesContainer.appendChild(aspectToggleResize);
+
         const resetButton = document.createElement("button");
-        resetButton.textContent = "Reset to Original Size";
+        resetButton.textContent = "Reset Display to Crop Size"; // Changed label
         resetButton.onclick = () => {
-          selectedLayer.width = selectedLayer.originalWidth;
-          selectedLayer.height = selectedLayer.originalHeight;
+          // Reset display size to match current crop aspect ratio, scaled to fit if too large
+          const cropAspectRatio =
+            selectedLayer.cropWidth / (selectedLayer.cropHeight || 1);
+          selectedLayer.width = selectedLayer.cropWidth;
+          selectedLayer.height = selectedLayer.cropHeight;
+          selectedLayer.aspectRatio = cropAspectRatio; // Update layer's display aspect ratio
+
+          // Optionally, scale down if it's too big for the canvas after reset
+          const maxDim = Math.max(selectedLayer.width, selectedLayer.height);
+          const canvasMaxDim =
+            Math.min(currentCanvasWidth, currentCanvasHeight) * 0.9;
+          if (maxDim > canvasMaxDim) {
+            const scale = canvasMaxDim / maxDim;
+            selectedLayer.width = Math.round(selectedLayer.width * scale);
+            selectedLayer.height = Math.round(selectedLayer.height * scale);
+          }
+
           const wInput = document.getElementById(resizeWidthInputId);
           const hInput = document.getElementById(resizeHeightInputId);
           if (wInput) wInput.value = selectedLayer.width;
@@ -1597,7 +1830,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         propertiesContainer.appendChild(resetButton);
       } else if (toolDefinition.id === "flip") {
-        /* ... Same ... */ propertiesContainer.appendChild(
+        propertiesContainer.appendChild(
           createButton("Flip Horizontal", () => {
             selectedLayer.flipHorizontal = !selectedLayer.flipHorizontal;
             renderCanvas();
@@ -1612,7 +1845,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }),
         );
       } else if (toolDefinition.id === "tint") {
-        /* ... Same ... */ propertiesContainer.appendChild(
+        propertiesContainer.appendChild(
           createColorInput(
             "Tint Color:",
             `tint-color-${selectedLayer.id}`,
@@ -1641,7 +1874,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ),
         );
       } else if (toolDefinition.id === "pixelate") {
-        /* ... Same ... */ propertiesContainer.appendChild(
+        propertiesContainer.appendChild(
           createRangeInput(
             "Pixel Size:",
             `pixelate-size-${selectedLayer.id}`,
@@ -1658,7 +1891,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ),
         );
       } else if (toolDefinition.id === "vignette") {
-        /* ... Same ... */ const vgn = selectedLayer.vignette;
+        const vgn = selectedLayer.vignette;
         propertiesContainer.appendChild(
           createRangeInput(
             "Strength:",
@@ -1720,7 +1953,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ),
         );
       } else if (toolDefinition.id === "gradientMap") {
-        /* ... Same ... */ const gm = selectedLayer.gradientMap;
+        const gm = selectedLayer.gradientMap;
         const enabledCheckbox = document.createElement("input");
         enabledCheckbox.type = "checkbox";
         enabledCheckbox.checked = gm.enabled;
@@ -1738,6 +1971,7 @@ document.addEventListener("DOMContentLoaded", () => {
         enabledContainer.appendChild(enabledCheckbox);
         enabledContainer.appendChild(enabledLabel);
         propertiesContainer.appendChild(enabledContainer);
+
         if (gm.enabled) {
           if (!gm.stops || gm.stops.length < 2) {
             gm.stops = [
@@ -1783,7 +2017,7 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
       } else if (toolDefinition.id === "curves") {
-        /* ... Same ... */ const curves = selectedLayer.curves;
+        const curves = selectedLayer.curves;
         const enabledCheckbox = document.createElement("input");
         enabledCheckbox.type = "checkbox";
         enabledCheckbox.checked = curves.enabled;
@@ -1801,6 +2035,7 @@ document.addEventListener("DOMContentLoaded", () => {
         enabledContainer.appendChild(enabledCheckbox);
         enabledContainer.appendChild(enabledLabel);
         propertiesContainer.appendChild(enabledContainer);
+
         if (curves.enabled) {
           propertiesContainer.appendChild(document.createElement("hr"));
           const pointLabels = [
@@ -1815,6 +2050,7 @@ document.addEventListener("DOMContentLoaded", () => {
               const pointContainer = document.createElement("div");
               pointContainer.className = "curve-point-control";
               pointContainer.textContent = `${pointLabels[index]}: `;
+
               const inputLabel = document.createElement("span");
               inputLabel.textContent = ` In: ${point.input}`;
               const outputInput = createNumberInput(
@@ -1822,7 +2058,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 `curves-rgb-${index}-output-${selectedLayer.id}`,
                 point.output,
                 (val) => {
-                  point.output = Math.max(0, Math.min(255, val));
+                  point.output = Math.max(0, Math.min(255, val)); // Clamp
                   renderCanvas();
                   saveState();
                 },
@@ -1832,6 +2068,7 @@ document.addEventListener("DOMContentLoaded", () => {
               );
               outputInput.querySelector("input").style.width = "60px";
               outputInput.querySelector("label").style.marginRight = "5px";
+
               pointContainer.appendChild(inputLabel);
               pointContainer.appendChild(outputInput);
               propertiesContainer.appendChild(pointContainer);
@@ -1854,7 +2091,7 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         }
       } else if (toolDefinition.id === "crop") {
-        /* ... Same ... */ propertiesContainer.appendChild(
+        propertiesContainer.appendChild(
           createNumberInput(
             "Crop X:",
             `crop-x-${selectedLayer.id}`,
@@ -1865,7 +2102,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 Math.min(val, selectedLayer.originalWidth - 1),
               );
               renderCanvas();
-              updatePropertiesPanel();
+              updatePropertiesPanel(); // To update max values if needed
               saveState();
             },
             0,
@@ -1908,7 +2145,7 @@ document.addEventListener("DOMContentLoaded", () => {
               saveState();
             },
             1,
-            selectedLayer.originalWidth,
+            selectedLayer.originalWidth - selectedLayer.cropX,
           ),
         );
         propertiesContainer.appendChild(
@@ -1929,9 +2166,10 @@ document.addEventListener("DOMContentLoaded", () => {
               saveState();
             },
             1,
-            selectedLayer.originalHeight,
+            selectedLayer.originalHeight - selectedLayer.cropY,
           ),
         );
+
         propertiesContainer.appendChild(
           createSelectInput(
             "Crop Shape:",
@@ -1963,7 +2201,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
       }
     }
-    updateLayerActionButtons();
+    updateLayerActionButtons(); // Final call to ensure buttons are correct
   }
 
   // --- Export Functionality --- (Same as before)
@@ -2319,6 +2557,7 @@ document.addEventListener("DOMContentLoaded", () => {
     populateTools();
     updateLayersList();
     updatePropertiesPanel();
+    hideLoadingIndicator();
     setActiveTool("select");
     exportQualityValue.textContent = parseFloat(
       exportQualitySlider.value,
