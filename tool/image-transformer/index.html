@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Transformation Tool</title>
+    <link rel="stylesheet" href="/tool/image-transformer/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Image Transformer</h1>
+    </header>
+
+    <main class="app-layout">
+      <!-- Left Panel: Tools and Layers -->
+      <aside class="panel panel-left">
+        <section class="panel-section" id="tools-section">
+          <h2>Tools</h2>
+          <div id="tool-controls-container">
+            <!-- Transformation controls will be dynamically injected here by script.js -->
+            <!-- Example: <button data-tool="crop">Crop</button> -->
+          </div>
+        </section>
+
+        <section class="panel-section" id="layers-section">
+          <h2>Layers</h2>
+          <div class="layer-actions">
+            <button id="add-image-btn" title="Add new image layer">
+              Add Image
+            </button>
+            <!-- Hidden file input, triggered by the button -->
+            <input
+              type="file"
+              id="image-file-input"
+              accept="image/*"
+              multiple
+              style="display: none"
+            />
+          </div>
+          <div id="layers-list-container">
+            <!-- Layer items will be dynamically injected here by script.js -->
+            <!-- Example: 
+                        <div class="layer-item" data-layer-id="1">
+                            <span>Layer 1</span>
+                            <button class="visibility-toggle">Show/Hide</button>
+                        </div> 
+                        -->
+          </div>
+        </section>
+      </aside>
+
+      <!-- Center Panel: Canvas Area -->
+      <section class="panel panel-center" id="canvas-area">
+        <div id="canvas-wrapper">
+          <!-- The HTML5 Canvas element will be created and managed here by script.js -->
+          <!-- This wrapper helps with styling and positioning the canvas -->
+        </div>
+      </section>
+
+      <!-- Right Panel: Properties and Options -->
+      <aside class="panel panel-right">
+        <section class="panel-section" id="properties-section">
+          <h2>Properties</h2>
+          <div id="selected-tool-properties-container">
+            <!-- Properties for the currently selected tool or layer will be shown here -->
+            <!-- Example: Crop dimensions, rotation angle, filter strength -->
+          </div>
+        </section>
+
+        <section class="panel-section" id="canvas-settings-section">
+          <h2>Canvas Settings</h2>
+          <div
+            id="canvas-size-controls-container"
+            class="property-control-group"
+          >
+            <div>
+              <label for="canvas-width-input">Width (px):</label>
+              <input
+                type="number"
+                id="canvas-width-input"
+                value="1024"
+                min="100"
+                max="4096"
+                step="10"
+              />
+            </div>
+            <div>
+              <label for="canvas-height-input">Height (px):</label>
+              <input
+                type="number"
+                id="canvas-height-input"
+                value="1024"
+                min="100"
+                max="4096"
+                step="10"
+              />
+            </div>
+            <button id="apply-canvas-size-btn">Apply Canvas Size</button>
+          </div>
+        </section>
+        <section class="panel-section" id="export-section">
+          <h2>Export</h2>
+          <div id="export-controls-container">
+            <!-- Export options (e.g., format, quality) and button will go here -->
+            <button id="export-image-btn">Export Image</button>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="app-footer">
+      <p>Image Transformation Tool &copy; 2025</p>
+    </footer>
+
+    <script src="/tool/image-transformer/script.js"></script>
+  </body>
+</html>

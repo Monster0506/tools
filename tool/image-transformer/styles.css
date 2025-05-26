@@ -1,0 +1,511 @@
+/* /tool/image-transformer/styles.css - Refined Theme */
+
+/* --- CSS Variables --- */
+:root {
+  --font-primary:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-monospace:
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+
+  --color-bg-app: #1a1d21;
+  --color-bg-panel: #25292e;
+  --color-bg-panel-header: #2c3137;
+  --color-bg-element: #363b42;
+  --color-bg-element-hover: #454b53;
+  --color-bg-element-active: #50565f;
+  --color-bg-canvas-area: #1e2125;
+
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #a0a0a0;
+  --color-text-headings: #ffffff;
+  --color-text-on-accent: #ffffff;
+
+  --color-accent: #007bff;
+  --color-accent-hover: #0056b3;
+  --color-accent-secondary: #28a745;
+  --color-accent-secondary-hover: #1e7e34;
+  --color-danger: #dc3545;
+  --color-danger-hover: #c82333;
+
+  --border-color-light: #40454c;
+  --border-color-divider: #15171a;
+
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.2);
+
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  --transition-fast: 0.15s ease-out;
+  --transition-normal: 0.25s ease-out;
+}
+
+/* --- Global Resets & Defaults --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-primary);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-app);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: 100vh; /* Explicitly set height */
+  overflow: hidden; /* Prevent body scroll, panels will scroll */
+}
+
+/* --- App Header & Footer --- */
+.app-header {
+  background-color: var(--color-bg-panel-header);
+  color: var(--color-text-headings);
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: center;
+  border-bottom: 1px solid var(--border-color-divider);
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.app-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.app-footer {
+  background-color: var(--color-bg-panel-header);
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--border-color-divider);
+  /* margin-top: auto; Removed as body is now fixed height flex container */
+  flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+/* --- Main App Layout (Three Columns) --- */
+.app-layout {
+  display: flex;
+  flex-grow: 1; /* Takes up space between header and footer */
+  overflow: hidden; /* Important for containing panel overflows */
+  min-height: 0; /* Allows app-layout to shrink if body content is too much (though body is 100vh) */
+}
+
+.panel {
+  background-color: var(--color-bg-panel);
+  border-right: 1px solid var(--border-color-divider);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Primary scroll for panels */
+  position: relative; /* For potential future absolute children */
+  /* min-height: 0; /* Helps flex children behave with overflow */
+}
+
+.panel:last-child {
+  border-right: none;
+}
+
+.panel-left {
+  flex: 0 0 280px;
+}
+
+.panel-center {
+  flex-grow: 1;
+  display: flex; /* It's already a flex item, making it a flex container too */
+  flex-direction: column; /* To manage canvas-wrapper */
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-canvas-area);
+  padding: var(--spacing-md);
+  overflow-y: auto; /* If canvas-wrapper itself becomes too tall */
+}
+
+.panel-right {
+  flex: 0 0 320px;
+}
+
+/* Wrapper for panel content to ensure padding doesn't interfere with scrollbar */
+/* This approach is more robust if padding on .panel itself causes issues */
+/* However, the current .panel with overflow-y: auto should work directly with .panel-section children */
+/* For now, we'll rely on .panel having overflow-y: auto and sections being direct children */
+
+/* --- Panel Sections --- */
+.panel-section {
+  margin: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-app);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-color-light);
+  flex-shrink: 0; /* Prevent sections from shrinking undesirably if panel is flex */
+}
+
+.panel-section h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-headings);
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+/* --- General UI Elements --- */
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  font-family: var(--font-primary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-bg-element);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+  font-size: 0.9rem;
+}
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover {
+  background-color: var(--color-bg-element-hover);
+  border-color: var(--color-accent);
+}
+button:active,
+input[type="button"]:active,
+input[type="submit"]:active,
+input[type="reset"]:active {
+  background-color: var(--color-bg-element-active);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="color"],
+select,
+textarea {
+  /* Added textarea */
+  font-family: var(--font-primary);
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-bg-element);
+  color: var(--color-text-primary);
+  width: 100%;
+  font-size: 0.9rem;
+}
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="color"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--color-accent);
+}
+label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+/* --- Tools Section --- */
+#tool-controls-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--spacing-sm);
+}
+#tool-controls-container button {
+  text-align: center;
+}
+#tool-controls-container button.active {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent-hover);
+  color: var(--color-text-on-accent);
+  font-weight: 500;
+}
+
+/* --- Layers Section --- */
+.layer-actions {
+  margin-bottom: var(--spacing-md);
+}
+#add-image-btn {
+  display: block;
+  width: 100%;
+  background-color: var(--color-accent-secondary);
+  border-color: var(--color-accent-secondary);
+  color: var(--color-text-on-accent);
+  font-weight: 500;
+}
+#add-image-btn:hover {
+  background-color: var(--color-accent-secondary-hover);
+  border-color: var(--color-accent-secondary-hover);
+}
+
+/* Specific scroll container for layers list if needed */
+#layers-list-container {
+  max-height: 300px; /* Or adjust based on panel section context */
+  overflow-y: auto;
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-bg-element); /* Match other elements */
+  margin-top: var(
+    --spacing-sm
+  ); /* Add some space if it's directly after a button */
+}
+
+.layer-item {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color-light); /* Use lighter border inside */
+  cursor: grab;
+  font-size: 0.9rem;
+  transition: background-color var(--transition-fast);
+  color: var(--color-text-secondary);
+}
+.layer-item:last-child {
+  border-bottom: none;
+}
+.layer-item:hover {
+  background-color: var(--color-bg-element-hover);
+  color: var(--color-text-primary);
+}
+.layer-item.selected {
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-weight: 500;
+}
+.layer-item.selected .layer-name,
+.layer-item.selected button {
+  color: var(--color-text-on-accent);
+}
+.layer-item .layer-name {
+  flex-grow: 1;
+  margin: 0 var(--spacing-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.layer-item button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  border-radius: var(--border-radius-sm);
+}
+.layer-item button:hover {
+  color: var(--color-text-primary);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.layer-item .delete-layer-btn:hover {
+  color: var(--color-danger);
+}
+
+/* Drag and Drop Indicators for Layers */
+.layer-item.dragging {
+  opacity: 0.6;
+  background-color: var(--color-bg-element-active);
+  cursor: grabbing;
+}
+.layer-item.drag-over-before {
+  border-top: 2px dashed var(--color-accent);
+} /* Updated class name */
+.layer-item.drag-over-after {
+  border-bottom: 2px dashed var(--color-accent);
+} /* Updated class name */
+
+/* --- Canvas Area --- */
+#canvas-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-app);
+  border-radius: var(--border-radius-md);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  /* min-height: 0; /* Important if panel-center is flex column and wrapper needs to shrink */
+}
+
+#main-canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  background-color: #ffffff;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-md);
+}
+
+/* --- Properties & Settings Sections --- */
+#properties-section h3,
+#canvas-settings-section h2, /* Changed to h2 to match other sections */
+#export-section h2 {
+  /* Changed to h2 to match other sections */
+  font-size: 1.1rem; /* Match other section titles */
+  font-weight: 600;
+  color: var(--color-text-headings);
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.property-control,
+.property-control-group > div {
+  margin-bottom: var(--spacing-sm);
+}
+.property-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+.property-control-group > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.property-control-group input[type="number"] {
+  width: 80px;
+}
+.curve-point-control {
+  /* For curves UI */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xs);
+}
+.curve-point-control span {
+  margin-right: var(--spacing-sm);
+}
+
+#selected-tool-properties-container h4,
+#canvas-settings-section h4,
+#export-section h4 {
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  margin-top: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+  border-bottom: 1px solid var(--border-color-light);
+  padding-bottom: var(--spacing-xs);
+}
+
+#export-image-btn,
+#apply-canvas-size-btn {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-weight: 500;
+}
+#export-image-btn:hover,
+#apply-canvas-size-btn:hover {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+/* --- Utility Classes --- */
+.hidden {
+  display: none !important;
+}
+
+/* --- Responsive Considerations --- */
+@media (max-width: 1200px) {
+  .panel-left {
+    flex-basis: 240px;
+  }
+  .panel-right {
+    flex-basis: 280px;
+  }
+}
+
+@media (max-width: 992px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  .panel {
+    /* When stacked, panels need explicit height constraints to scroll */
+    /* flex-grow: 1; /* Allow panels to take some space */
+    /* min-height: 200px; /* Or some other minimum */
+    /* max-height: 35vh; /* Example max height */
+    /* The above might be too generic, specific panel max-heights are better */
+  }
+  .panel-left,
+  .panel-right {
+    flex-basis: auto; /* Reset basis */
+    width: 100%;
+    max-height: 35vh; /* Explicit max-height to enable scrolling */
+    /* overflow-y: auto; /* Already on .panel */
+    border-right: none;
+    border-bottom: 1px solid var(--border-color-divider);
+  }
+  .panel-center {
+    flex-basis: auto; /* Reset basis */
+    min-height: 40vh; /* Ensure canvas area has some space */
+    /* overflow-y: auto; /* Already on .panel */
+    order: -1;
+  }
+  #tool-controls-container {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+  .panel-left,
+  .panel-right {
+    max-height: 30vh;
+  }
+  .app-header h1 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-app);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-element-active);
+  border-radius: var(--border-radius-sm);
+  border: 2px solid var(--color-bg-app);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-bg-element-active) var(--color-bg-app);
+}
