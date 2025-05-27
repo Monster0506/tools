@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let canvasTransformY = 0;
   const ZOOM_STEP = 0.1;
 
-  // --- Tools Definition --- (Same as before)
+  // --- Tools Definition ---
   const availableTools = [
     { id: "select", name: "Select/Move (V)", type: "core", shortcut: "v" },
     { id: "crop", name: "Crop (C)", type: "geometry", shortcut: "c" },
@@ -143,6 +143,12 @@ document.addEventListener("DOMContentLoaded", () => {
       shortcut: "t",
     },
     {
+      id: "addShape",
+      name: "Add Shape (S)",
+      type: "creator",
+      shortcut: "s",
+    },
+    {
       id: "sharpen",
       name: "Sharpen",
       type: "effect",
@@ -166,6 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   ];
   let activeTool = "select";
+
   function showLoadingIndicator(message = "Processing...") {
     if (loadingOverlay) {
       loadingOverlay.innerHTML = message.replace(/\n/g, "<br>");
@@ -177,13 +184,13 @@ document.addEventListener("DOMContentLoaded", () => {
       loadingOverlay.style.display = "none";
     }
   }
-  // --- Undo/Redo Functions --- (Same as before)
+
   function deepCopy(obj) {
     if (obj === null || typeof obj !== "object") {
       return obj;
     }
     if (obj instanceof HTMLImageElement || obj instanceof HTMLCanvasElement) {
-      return obj;
+      return obj; // Keep references for these
     }
     if (Array.isArray(obj)) {
       return obj.map(deepCopy);
@@ -196,6 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return copy;
   }
+
   function saveState() {
     if (isRestoringState) return;
     const state = {
@@ -218,6 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
     historyPointer = historyStack.length - 1;
     updateUndoRedoButtons();
   }
+
   function restoreState(state) {
     isRestoringState = true;
     layers = deepCopy(state.layers);
@@ -227,6 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentZoomLevel = state.currentZoomLevel || 1.0;
     canvasTransformX = state.canvasTransformX || 0;
     canvasTransformY = state.canvasTransformY || 0;
+
     if (canvas) {
       canvas.width = currentCanvasWidth;
       canvas.height = currentCanvasHeight;
@@ -234,6 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     canvasWidthInput.value = currentCanvasWidth;
     canvasHeightInput.value = currentCanvasHeight;
+
     updateLayersList();
     renderCanvas();
     updatePropertiesPanel();
@@ -241,6 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateZoomDisplay();
     isRestoringState = false;
   }
+
   function undo() {
     if (historyPointer > 0) {
       historyPointer--;
@@ -248,6 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateUndoRedoButtons();
     }
   }
+
   function redo() {
     if (historyPointer < historyStack.length - 1) {
       historyPointer++;
@@ -255,12 +268,12 @@ document.addEventListener("DOMContentLoaded", () => {
       updateUndoRedoButtons();
     }
   }
+
   function updateUndoRedoButtons() {
     undoBtn.disabled = historyPointer <= 0;
     redoBtn.disabled = historyPointer >= historyStack.length - 1;
   }
 
-  // --- Canvas Setup & Size Control ---
   function initializeCanvas() {
     canvas = document.createElement("canvas");
     canvas.id = "main-canvas";
@@ -270,8 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx = canvas.getContext("2d");
     canvasWidthInput.value = currentCanvasWidth;
     canvasHeightInput.value = currentCanvasHeight;
-
-    zoomFit(); // Fit canvas to view initially
+    zoomFit();
     renderCanvas();
     saveState();
   }
@@ -282,8 +294,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     const layer = getLayerById(selectedLayerId);
-    if (!layer || layer.isTextLayer) {
-      alert("Background removal is only available for non-text image layers.");
+    if (!layer || layer.isTextLayer || layer.isShapeLayer) {
+      alert(
+        "Background removal is only available for non-text, non-shape image layers.",
+      );
       return;
     }
 
@@ -291,12 +305,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let imageFileForApi;
 
-    // Prefer original file if available
     if (layer.originalFile instanceof File) {
       imageFileForApi = layer.originalFile;
     } else {
-      // Fallback: convert current layer.image (original HTMLImageElement) to blob
-      // This sends the original image data, not the one with canvas effects applied
       const tempCanvas = document.createElement("canvas");
       tempCanvas.width = layer.originalWidth;
       tempCanvas.height = layer.originalHeight;
@@ -327,7 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
               reject(new Error("Canvas toBlob failed."));
             }
-          }, "image/png"); // Always send PNG to API for best quality before its processing
+          }, "image/png");
         });
       } catch (error) {
         hideLoadingIndicator();
@@ -358,11 +369,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const imageBlob = await response.blob();
       const newImg = new Image();
       newImg.onload = () => {
-        // Create a new image element for the layer to ensure it's fresh
         const processedImageElement = new Image();
         processedImageElement.onload = () => {
-          layer.image = processedImageElement; // Update with the new processed image
-          const oldDisplayWidth = layer.width; // Preserve old display width if possible
+          layer.image = processedImageElement;
+          const oldDisplayWidth = layer.width;
 
           layer.originalWidth = processedImageElement.naturalWidth;
           layer.originalHeight = processedImageElement.naturalHeight;
@@ -374,7 +384,6 @@ document.addEventListener("DOMContentLoaded", () => {
             processedImageElement.naturalWidth /
             (processedImageElement.naturalHeight || 1);
 
-          // Adjust display size based on new aspect ratio, trying to keep width
           layer.width = oldDisplayWidth;
           layer.height = oldDisplayWidth / layer.aspectRatio;
           if (
@@ -382,7 +391,6 @@ document.addEventListener("DOMContentLoaded", () => {
             layer.height <= 0 ||
             !isFinite(layer.height)
           ) {
-            // Fallback if aspect ratio leads to invalid height
             const scaleToFitCanvas = Math.min(
               (currentCanvasWidth * 0.75) / processedImageElement.naturalWidth,
               (currentCanvasHeight * 0.75) /
@@ -394,10 +402,8 @@ document.addEventListener("DOMContentLoaded", () => {
               processedImageElement.naturalHeight * scaleToFitCanvas;
           }
 
-          // Reset potentially problematic filters for a cutout
           layer.filters.brightness = 100;
           layer.filters.contrast = 100;
-          // layer.filters.saturate = 100; // Saturation might still be desired
 
           hideLoadingIndicator();
           renderCanvas();
@@ -411,15 +417,12 @@ document.addEventListener("DOMContentLoaded", () => {
         processedImageElement.src = URL.createObjectURL(imageBlob);
       };
       newImg.onerror = () => {
-        // This outer newImg is just to get dimensions if needed, but we use a new one for the layer
         hideLoadingIndicator();
         alert("Error processing image data from API.");
       };
-      // We don't actually need to load this outer newImg if we use a new one for the layer
-      // The blob URL is enough for the final processedImageElement
       const blobUrl = URL.createObjectURL(imageBlob);
       const finalImageForLayer = new Image();
-      finalImageForLayer.onload = newImg.onload; // Chain the onload
+      finalImageForLayer.onload = newImg.onload;
       finalImageForLayer.onerror = newImg.onerror;
       finalImageForLayer.src = blobUrl;
     } catch (error) {
@@ -428,6 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert(`Background removal failed: ${error.message}`);
     }
   }
+
   function handleUpdateCanvasSize() {
     let newWidth = parseInt(canvasWidthInput.value, 10);
     let newHeight = parseInt(canvasHeightInput.value, 10);
@@ -446,11 +450,8 @@ document.addEventListener("DOMContentLoaded", () => {
     saveState();
   }
 
-  // --- Zoom and Pan Functions ---
   function applyCanvasTransform() {
     if (!canvas) return;
-    // Center the transform origin for a more natural zoom
-    // Or use 'top left' if you prefer panning from that origin
     canvas.style.transformOrigin = "center center";
     canvas.style.transform = `translate(${canvasTransformX}px, ${canvasTransformY}px) scale(${currentZoomLevel})`;
     updateZoomDisplay();
@@ -464,14 +465,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function zoomIn() {
     currentZoomLevel += ZOOM_STEP;
-    currentZoomLevel = Math.min(currentZoomLevel, 5); // Max zoom 500%
+    currentZoomLevel = Math.min(currentZoomLevel, 5);
     applyCanvasTransform();
     saveState();
   }
 
   function zoomOut() {
     currentZoomLevel -= ZOOM_STEP;
-    currentZoomLevel = Math.max(currentZoomLevel, 0.1); // Min zoom 10%
+    currentZoomLevel = Math.max(currentZoomLevel, 0.1);
     applyCanvasTransform();
     saveState();
   }
@@ -487,23 +488,17 @@ document.addEventListener("DOMContentLoaded", () => {
       currentCanvasWidth <= 0 ||
       currentCanvasHeight <= 0
     ) {
-      currentZoomLevel = 1.0; // Fallback
+      currentZoomLevel = 1.0;
     } else {
       const scaleX = wrapperWidth / currentCanvasWidth;
       const scaleY = wrapperHeight / currentCanvasHeight;
-      currentZoomLevel = Math.min(scaleX, scaleY) * 0.98; // *0.98 for a little padding
+      currentZoomLevel = Math.min(scaleX, scaleY) * 0.98;
     }
-
-    // Reset pan to center the fitted canvas (simple centering)
-    // For transform-origin: center center, pan is less critical for fit, but good for explicit pan later
-    canvasTransformX = 0; // (wrapperWidth - (currentCanvasWidth * currentZoomLevel)) / 2;
-    canvasTransformY = 0; // (wrapperHeight - (currentCanvasHeight * currentZoomLevel)) / 2;
-
+    canvasTransformX = 0;
+    canvasTransformY = 0;
     applyCanvasTransform();
-    // Don't save state on initial fit or programmatic fit, only on user zoom actions
   }
 
-  // --- Helper: hexToRgb --- (Same as before)
   function hexToRgb(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
@@ -515,14 +510,13 @@ document.addEventListener("DOMContentLoaded", () => {
       : { r: 0, g: 0, b: 0 };
   }
 
-  // --- Pixel Manipulation Effect Helpers --- (Same as before)
   function applyGradientMapToImage(
     sourceImage,
     targetWidth,
     targetHeight,
     stopsArray,
   ) {
-    /* ... Same ... */ const tempCanvas = document.createElement("canvas");
+    const tempCanvas = document.createElement("canvas");
     tempCanvas.width = targetWidth;
     tempCanvas.height = targetHeight;
     const tempCtx = tempCanvas.getContext("2d", { willReadFrequently: true });
@@ -598,8 +592,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return tempCanvas;
   }
+
   function applyPixelate(sourceImage, targetWidth, targetHeight, pixelateSize) {
-    /* ... Same ... */ const tempCanvas = document.createElement("canvas");
+    const tempCanvas = document.createElement("canvas");
     tempCanvas.width = targetWidth;
     tempCanvas.height = targetHeight;
     const tempCtx = tempCanvas.getContext("2d");
@@ -649,8 +644,9 @@ document.addEventListener("DOMContentLoaded", () => {
     tempCtx.imageSmoothingEnabled = true;
     return tempCanvas;
   }
+
   function generateCurveLUT(points) {
-    /* ... Same ... */ const lut = new Uint8Array(256);
+    const lut = new Uint8Array(256);
     const sortedPoints = [...points].sort((a, b) => a.input - b.input);
     if (sortedPoints.length === 0 || sortedPoints[0].input !== 0) {
       sortedPoints.unshift({ input: 0, output: sortedPoints[0]?.output || 0 });
@@ -688,13 +684,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return lut;
   }
+
   function applyCurvesToImage(
     sourceImage,
     targetWidth,
     targetHeight,
     curvePoints,
   ) {
-    /* ... Same ... */ const tempCanvas = document.createElement("canvas");
+    const tempCanvas = document.createElement("canvas");
     tempCanvas.width = targetWidth;
     tempCanvas.height = targetHeight;
     const tempCtx = tempCanvas.getContext("2d", { willReadFrequently: true });
@@ -737,13 +734,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return tempCanvas;
   }
+
   function applyNoiseToImage(
     sourceImage,
     targetWidth,
     targetHeight,
     noiseAmount,
   ) {
-    /* ... Same ... */ const tempCanvas = document.createElement("canvas");
+    const tempCanvas = document.createElement("canvas");
     tempCanvas.width = targetWidth;
     tempCanvas.height = targetHeight;
     const tempCtx = tempCanvas.getContext("2d", { willReadFrequently: true });
@@ -789,22 +787,80 @@ document.addEventListener("DOMContentLoaded", () => {
     return tempCanvas;
   }
 
-  // --- Rendering Functions --- (renderCanvas, drawCheckerboardBackground - Same as before)
+  function drawShapeOnCanvas(ctx, shapeData, canvasWidth, canvasHeight) {
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillStyle = shapeData.fillColor;
+    ctx.strokeStyle = shapeData.strokeColor;
+    ctx.lineWidth = shapeData.strokeWidth;
+
+    const sw = shapeData.strokeWidth;
+    const halfSw = sw / 2;
+
+    switch (shapeData.type) {
+      case "rectangle":
+        ctx.beginPath();
+        ctx.rect(halfSw, halfSw, canvasWidth - sw, canvasHeight - sw);
+        ctx.fill();
+        if (sw > 0) ctx.stroke();
+        break;
+      case "square":
+        const size = Math.min(canvasWidth, canvasHeight);
+        const x = (canvasWidth - size) / 2;
+        const y = (canvasHeight - size) / 2;
+        ctx.beginPath();
+        ctx.rect(x + halfSw, y + halfSw, size - sw, size - sw);
+        ctx.fill();
+        if (sw > 0) ctx.stroke();
+        break;
+      case "circle":
+        const radius = Math.min(canvasWidth, canvasHeight) / 2 - halfSw;
+        if (radius > 0) {
+          ctx.beginPath();
+          ctx.arc(canvasWidth / 2, canvasHeight / 2, radius, 0, Math.PI * 2);
+          ctx.fill();
+          if (sw > 0) ctx.stroke();
+        }
+        break;
+      case "ellipse":
+        const radiusX = canvasWidth / 2 - halfSw;
+        const radiusY = canvasHeight / 2 - halfSw;
+        if (radiusX > 0 && radiusY > 0) {
+          ctx.beginPath();
+          ctx.ellipse(
+            canvasWidth / 2,
+            canvasHeight / 2,
+            radiusX,
+            radiusY,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
+          if (sw > 0) ctx.stroke();
+        }
+        break;
+    }
+  }
+
   function renderCanvas() {
-    /* ... Same ... */ if (!ctx || !canvas) return;
+    if (!ctx || !canvas) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawCheckerboardBackground();
+
     layers.forEach((layer) => {
-      if (layer.visible && (layer.image || layer.textCanvas)) {
+      if (layer.visible && layer.image) {
         ctx.save();
         ctx.globalAlpha = layer.opacity;
+
         const centerX = layer.x + layer.width / 2;
         const centerY = layer.y + layer.height / 2;
+
         ctx.translate(centerX, centerY);
         if (layer.rotation) ctx.rotate((layer.rotation * Math.PI) / 180);
         if (layer.flipHorizontal) ctx.scale(-1, 1);
         if (layer.flipVertical) ctx.scale(1, -1);
         ctx.translate(-centerX, -centerY);
+
         if (layer.cropShape && layer.cropShape !== "none") {
           ctx.beginPath();
           if (layer.cropShape === "circle") {
@@ -828,7 +884,9 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           ctx.clip();
         }
+
         let currentImageSource = layer.image;
+
         if (layer.curves.enabled && layer.curves.rgb.length > 0) {
           currentImageSource = applyCurvesToImage(
             currentImageSource,
@@ -861,6 +919,7 @@ document.addEventListener("DOMContentLoaded", () => {
             layer.pixelateSize,
           );
         }
+
         let filterString = "";
         filterString += `brightness(${layer.filters.brightness}%) `;
         filterString += `contrast(${layer.filters.contrast}%) `;
@@ -874,6 +933,7 @@ document.addEventListener("DOMContentLoaded", () => {
           filterString += `contrast(${100 + layer.filters.sharpen / 2}%) brightness(${100 - layer.filters.sharpen / 10}%) `;
         }
         ctx.filter = filterString.trim() === "" ? "none" : filterString.trim();
+
         ctx.drawImage(
           currentImageSource,
           currentImageSource === layer.image ? layer.cropX : 0,
@@ -886,11 +946,13 @@ document.addEventListener("DOMContentLoaded", () => {
           layer.height,
         );
         ctx.filter = "none";
+
         if (layer.tintStrength > 0 && layer.tintColor !== "rgba(0,0,0,0)") {
           ctx.globalAlpha = layer.opacity * layer.tintStrength;
           ctx.fillStyle = layer.tintColor;
           ctx.fillRect(layer.x, layer.y, layer.width, layer.height);
         }
+
         if (layer.vignette.strength > 0) {
           const vgn = layer.vignette;
           const gradX = layer.x + layer.width / 2;
@@ -918,6 +980,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.restore();
       }
     });
+
     const selectedLayer = getLayerById(selectedLayerId);
     if (selectedLayer && selectedLayer.visible) {
       ctx.save();
@@ -939,11 +1002,13 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.restore();
     }
   }
+
   function drawCheckerboardBackground() {
-    /* ... Same ... */ if (!canvas || !ctx) return;
+    if (!canvas || !ctx) return;
     const TILE_SIZE = 20;
     const numTilesX = Math.ceil(canvas.width / TILE_SIZE);
     const numTilesY = Math.ceil(canvas.height / TILE_SIZE);
+
     for (let r = 0; r < numTilesY; r++) {
       for (let c = 0; c < numTilesX; c++) {
         ctx.fillStyle = (r + c) % 2 === 0 ? "#cccccc" : "#ffffff";
@@ -952,24 +1017,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // --- Layer Management Functions --- (addImageAsLayer, updateLayersList, etc. - Same as before)
   function addImageAsLayer(
     fileOrImage,
     name = "New Layer",
     isText = false,
     textData = null,
+    isShape = false,
+    shapeData = null,
   ) {
     const processImage = (img, layerName) => {
       const naturalImgWidth = img.naturalWidth || img.width;
       const naturalImgHeight = img.naturalHeight || img.height;
+
       const newLayer = {
         id: nextLayerId++,
         name:
           layerName.length > 20
             ? layerName.substring(0, 17) + "..."
             : layerName,
-        image: img, // This is the original HTMLImageElement or HTMLCanvasElement
-        originalFile: fileOrImage instanceof File ? fileOrImage : null, // Store original file if available
+        image: img,
+        originalFile: fileOrImage instanceof File ? fileOrImage : null,
         x: 50,
         y: 50,
         width: naturalImgWidth,
@@ -1021,8 +1088,10 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         isTextLayer: isText,
         textData: isText ? textData : null,
+        isShapeLayer: isShape,
+        shapeData: isShape ? shapeData : null,
       };
-      // ... (rest of the scaling logic and adding to layers array)
+
       const maxDim = Math.max(newLayer.cropWidth, newLayer.cropHeight);
       const canvasMaxDim =
         Math.min(currentCanvasWidth, currentCanvasHeight) * 0.75;
@@ -1040,9 +1109,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (newLayer.width <= 0) newLayer.width = 100;
       if (newLayer.height <= 0) newLayer.height = 50;
+
       layers.push(newLayer);
       selectLayer(newLayer.id);
     };
+
     if (fileOrImage instanceof File) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -1057,8 +1128,9 @@ document.addEventListener("DOMContentLoaded", () => {
       processImage(fileOrImage, name);
     }
   }
+
   function updateLayersList() {
-    /* ... Same ... */ layersListContainer.innerHTML = "";
+    layersListContainer.innerHTML = "";
     [...layers].reverse().forEach((layer) => {
       const layerItem = document.createElement("div");
       layerItem.className = `layer-item ${layer.id === selectedLayerId ? "selected" : ""}`;
@@ -1066,6 +1138,7 @@ document.addEventListener("DOMContentLoaded", () => {
       layerItem.draggable = true;
       layerItem.addEventListener("dragstart", handleDragStart);
       layerItem.addEventListener("dragend", handleDragEnd);
+
       const layerNameSpan = document.createElement("span");
       layerNameSpan.className = "layer-name";
       layerNameSpan.textContent = layer.name;
@@ -1074,6 +1147,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.stopPropagation();
         makeLayerNameEditable(layer, layerNameSpan);
       });
+
       const visibilityToggle = document.createElement("button");
       visibilityToggle.className = "visibility-toggle";
       visibilityToggle.innerHTML = layer.visible ? "👁️" : "🙈";
@@ -1084,6 +1158,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.stopPropagation();
         toggleLayerVisibility(layer.id);
       });
+
       const deleteBtn = document.createElement("button");
       deleteBtn.className = "delete-layer-btn";
       deleteBtn.innerHTML = "🗑️";
@@ -1092,6 +1167,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.stopPropagation();
         deleteLayer(layer.id);
       });
+
       layerItem.appendChild(visibilityToggle);
       layerItem.appendChild(layerNameSpan);
       layerItem.appendChild(deleteBtn);
@@ -1100,14 +1176,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     updateLayerActionButtons();
   }
+
   function makeLayerNameEditable(layer, spanElement) {
-    /* ... Same ... */ const inputElement = document.createElement("input");
+    const inputElement = document.createElement("input");
     inputElement.type = "text";
     inputElement.value = layer.name;
     inputElement.className = "layer-name-edit";
     spanElement.replaceWith(inputElement);
     inputElement.focus();
     inputElement.select();
+
     const saveName = () => {
       const newName = inputElement.value.trim();
       if (newName && newName !== layer.name) {
@@ -1131,6 +1209,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
   function selectLayer(layerId) {
     selectedLayerId = layerId;
     updateLayersList();
@@ -1138,9 +1217,11 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePropertiesPanel();
     saveState();
   }
+
   function getLayerById(layerId) {
     return layers.find((l) => l.id === layerId);
   }
+
   function toggleLayerVisibility(layerId) {
     const layer = getLayerById(layerId);
     if (layer) {
@@ -1150,6 +1231,7 @@ document.addEventListener("DOMContentLoaded", () => {
       saveState();
     }
   }
+
   function deleteLayer(layerId) {
     layers = layers.filter((layer) => layer.id !== layerId);
     if (selectedLayerId === layerId) {
@@ -1160,16 +1242,18 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePropertiesPanel();
     saveState();
   }
+
   function handleDragStart(e) {
-    /* ... Same ... */ draggedLayerElement = e.target.closest(".layer-item");
+    draggedLayerElement = e.target.closest(".layer-item");
     e.dataTransfer.setData("text/plain", draggedLayerElement.dataset.layerId);
     e.dataTransfer.effectAllowed = "move";
     setTimeout(() => {
       if (draggedLayerElement) draggedLayerElement.classList.add("dragging");
     }, 0);
   }
+
   function handleDragEnd() {
-    /* ... Same ... */ if (draggedLayerElement) {
+    if (draggedLayerElement) {
       draggedLayerElement.classList.remove("dragging");
       draggedLayerElement.classList.remove("drag-over-before");
       draggedLayerElement.classList.remove("drag-over-after");
@@ -1184,8 +1268,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     draggedLayerElement = null;
   }
+
   layersListContainer.addEventListener("dragover", (e) => {
-    /* ... Same, uses drag-over-before/after ... */ e.preventDefault();
+    e.preventDefault();
     e.dataTransfer.dropEffect = "move";
     const afterElement = getDragAfterElement(layersListContainer, e.clientY);
     document
@@ -1205,10 +1290,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
   layersListContainer.addEventListener("dragleave", (e) => {
-    /* ... Same, uses drag-over-before/after ... */ if (
-      e.target === layersListContainer
-    ) {
+    if (e.target === layersListContainer) {
       document
         .querySelectorAll(
           ".layer-item.drag-over-before, .layer-item.drag-over-after",
@@ -1219,18 +1303,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
   });
+
   layersListContainer.addEventListener("drop", (e) => {
-    /* ... Same ... */ e.preventDefault();
+    e.preventDefault();
     if (!draggedLayerElement) return;
     const draggedLayerId = parseInt(e.dataTransfer.getData("text/plain"));
     const draggedLayerObject = layers.find((l) => l.id === draggedLayerId);
     if (!draggedLayerObject) return;
+
     const fromIndex = layers.indexOf(draggedLayerObject);
     layers.splice(fromIndex, 1);
+
     const afterElementInList = getDragAfterElement(
       layersListContainer,
       e.clientY,
     );
+
     if (afterElementInList == null) {
       layers.unshift(draggedLayerObject);
     } else {
@@ -1250,8 +1338,9 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCanvas();
     saveState();
   });
+
   function getDragAfterElement(container, y) {
-    /* ... Same ... */ const draggableElements = [
+    const draggableElements = [
       ...container.querySelectorAll(".layer-item:not(.dragging)"),
     ];
     return draggableElements.reduce(
@@ -1267,15 +1356,18 @@ document.addEventListener("DOMContentLoaded", () => {
       { offset: Number.NEGATIVE_INFINITY },
     ).element;
   }
+
   function duplicateSelectedLayer() {
     if (!selectedLayerId) return;
     const originalLayer = getLayerById(selectedLayerId);
     if (!originalLayer) return;
+
     const newLayer = deepCopy(originalLayer);
     newLayer.id = nextLayerId++;
     newLayer.name = `${originalLayer.name} Copy`;
     newLayer.x += 10;
     newLayer.y += 10;
+
     if (originalLayer.image instanceof HTMLCanvasElement) {
       const newImageCanvas = document.createElement("canvas");
       newImageCanvas.width = originalLayer.image.width;
@@ -1284,16 +1376,19 @@ document.addEventListener("DOMContentLoaded", () => {
       newImageCtx.drawImage(originalLayer.image, 0, 0);
       newLayer.image = newImageCanvas;
     }
+
     const originalIndex = layers.indexOf(originalLayer);
     layers.splice(originalIndex + 1, 0, newLayer);
     selectLayer(newLayer.id);
   }
+
   function moveSelectedLayer(direction) {
     if (!selectedLayerId) return;
     const layer = getLayerById(selectedLayerId);
     if (!layer) return;
     const currentIndex = layers.indexOf(layer);
-    const newIndex = currentIndex - direction;
+    const newIndex = currentIndex - direction; // Up is -1, Down is +1 in array terms
+
     if (newIndex >= 0 && newIndex < layers.length) {
       layers.splice(currentIndex, 1);
       layers.splice(newIndex, 0, layer);
@@ -1302,19 +1397,21 @@ document.addEventListener("DOMContentLoaded", () => {
       saveState();
     }
   }
+
   function updateLayerActionButtons() {
     const canDuplicate = selectedLayerId !== null;
     duplicateLayerBtn.disabled = !canDuplicate;
+
     const selectedLayer = getLayerById(selectedLayerId);
     const currentIndex = selectedLayer ? layers.indexOf(selectedLayer) : -1;
+
     moveLayerUpBtn.disabled = !selectedLayer || currentIndex <= 0;
     moveLayerDownBtn.disabled =
       !selectedLayer || currentIndex >= layers.length - 1;
   }
 
-  // --- Tool Management & Properties Panel --- (Helpers - Same as before)
   function populateTools() {
-    /* ... Same ... */ toolControlsContainer.innerHTML = "";
+    toolControlsContainer.innerHTML = "";
     availableTools.forEach((tool) => {
       const button = document.createElement("button");
       button.dataset.tool = tool.id;
@@ -1324,19 +1421,22 @@ document.addEventListener("DOMContentLoaded", () => {
       toolControlsContainer.appendChild(button);
     });
   }
+
   function setActiveTool(toolId) {
-    /* ... Same ... */ activeTool = toolId;
+    activeTool = toolId;
     populateTools();
     updatePropertiesPanel();
   }
+
   function createButton(text, callback) {
-    /* ... Same ... */ const button = document.createElement("button");
+    const button = document.createElement("button");
     button.textContent = text;
     button.addEventListener("click", callback);
     return button;
   }
+
   function createColorInput(label, id, value, callback) {
-    /* ... Same ... */ const container = document.createElement("div");
+    const container = document.createElement("div");
     container.className = "property-control";
     const labelEl = document.createElement("label");
     labelEl.htmlFor = id;
@@ -1350,8 +1450,9 @@ document.addEventListener("DOMContentLoaded", () => {
     container.appendChild(inputEl);
     return container;
   }
+
   function createTextInput(label, id, value, callback, placeholder = "") {
-    /* ... Same ... */ const container = document.createElement("div");
+    const container = document.createElement("div");
     container.className = "property-control";
     const labelEl = document.createElement("label");
     labelEl.htmlFor = id;
@@ -1366,8 +1467,9 @@ document.addEventListener("DOMContentLoaded", () => {
     container.appendChild(inputEl);
     return container;
   }
+
   function createSelectInput(label, id, options, value, callback) {
-    /* ... Same ... */ const container = document.createElement("div");
+    const container = document.createElement("div");
     container.className = "property-control";
     const labelEl = document.createElement("label");
     labelEl.htmlFor = id;
@@ -1386,8 +1488,9 @@ document.addEventListener("DOMContentLoaded", () => {
     container.appendChild(selectEl);
     return container;
   }
+
   function createRangeInput(label, id, min, max, step, value, unit, callback) {
-    /* ... Same ... */ const container = document.createElement("div");
+    const container = document.createElement("div");
     container.className = "property-control";
     const labelEl = document.createElement("label");
     labelEl.htmlFor = id;
@@ -1395,6 +1498,7 @@ document.addEventListener("DOMContentLoaded", () => {
     valueSpan.textContent = ` (${value}${unit})`;
     labelEl.textContent = `${label}: `;
     labelEl.appendChild(valueSpan);
+
     const inputEl = document.createElement("input");
     inputEl.type = "range";
     inputEl.id = id;
@@ -1411,8 +1515,9 @@ document.addEventListener("DOMContentLoaded", () => {
     container.appendChild(inputEl);
     return container;
   }
+
   function createNumberInput(label, id, value, callback, min, max, step) {
-    /* ... Same ... */ const container = document.createElement("div");
+    const container = document.createElement("div");
     container.className = "property-control";
     const labelEl = document.createElement("label");
     labelEl.htmlFor = id;
@@ -1438,38 +1543,36 @@ document.addEventListener("DOMContentLoaded", () => {
     container.appendChild(inputEl);
     return container;
   }
+
   function updatePropertiesPanel() {
-    propertiesContainer.innerHTML = ""; // Clear previous properties
+    propertiesContainer.innerHTML = "";
     const selectedLayer = getLayerById(selectedLayerId);
     const toolDefinition = availableTools.find((t) => t.id === activeTool);
 
-    // --- Dynamic "Remove Background" Button ---
-    // Show this button if a non-text image layer is selected and a relevant tool is active
     if (
       selectedLayer &&
       !selectedLayer.isTextLayer &&
+      !selectedLayer.isShapeLayer &&
       (activeTool === "select" ||
         activeTool === "crop" ||
-        activeTool === "resize") // Add other tools where it might be relevant
+        activeTool === "resize")
     ) {
       const bgRemoveContainer = document.createElement("div");
-      bgRemoveContainer.className = "property-control-group"; // For consistent spacing
+      bgRemoveContainer.className = "property-control-group";
       bgRemoveContainer.style.marginTop = "1rem";
       bgRemoveContainer.style.paddingTop = "1rem";
       bgRemoveContainer.style.borderTop = "1px solid var(--border-color-light)";
-
       const removeBgBtn = createButton(
         "Remove Background (API)",
         handleRemoveBackground,
       );
       removeBgBtn.title =
-        "Uses an external API to remove the background. Best with clear subjects. Affects the original image source for this layer.";
-      removeBgBtn.style.width = "100%"; // Make button full width
+        "Uses an external API to remove the background. Affects original image source.";
+      removeBgBtn.style.width = "100%";
       bgRemoveContainer.appendChild(removeBgBtn);
       propertiesContainer.appendChild(bgRemoveContainer);
     }
 
-    // --- "Add/Edit Text" Tool UI ---
     if (toolDefinition && toolDefinition.id === "addText") {
       const toolHeader = document.createElement("h4");
       toolHeader.textContent =
@@ -1480,13 +1583,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       let currentTextData =
         selectedLayer && selectedLayer.isTextLayer
-          ? { ...selectedLayer.textData } // Edit existing
+          ? { ...selectedLayer.textData }
           : {
               content: "Hello World",
               fontFamily: "Arial",
               fontSize: 48,
               color: "#000000",
-            }; // Defaults for new
+            };
 
       const contentInput = createTextInput(
         "Text:",
@@ -1536,26 +1639,26 @@ document.addEventListener("DOMContentLoaded", () => {
             textMetrics.actualBoundingBoxDescent;
           if (isNaN(actualHeight) || actualHeight === 0)
             actualHeight = currentTextData.fontSize * 1.2;
-          tempCanvas.width = Math.ceil(textMetrics.width) + 10; // Add some padding
+          tempCanvas.width = Math.ceil(textMetrics.width) + 10;
           tempCanvas.height = Math.ceil(actualHeight) + 10;
 
-          // Re-apply font after canvas resize
           tempCtx.font = `${currentTextData.fontSize}px ${currentTextData.fontFamily}`;
           tempCtx.fillStyle = currentTextData.color;
           tempCtx.textAlign = "left";
           tempCtx.textBaseline = "top";
-          tempCtx.fillText(currentTextData.content, 5, 5); // Draw with padding
+          tempCtx.fillText(currentTextData.content, 5, 5);
 
           if (selectedLayer && selectedLayer.isTextLayer) {
-            // Update existing
             selectedLayer.image = tempCanvas;
             selectedLayer.textData = { ...currentTextData };
             selectedLayer.name = `Text: ${currentTextData.content.substring(0, 10)}...`;
             selectedLayer.originalWidth = tempCanvas.width;
             selectedLayer.originalHeight = tempCanvas.height;
-            selectedLayer.width = tempCanvas.width; // Reset display size
+            selectedLayer.width = tempCanvas.width;
             selectedLayer.height = tempCanvas.height;
-            selectedLayer.cropX = 0; // Reset crop for text layers
+            selectedLayer.aspectRatio =
+              tempCanvas.width / (tempCanvas.height || 1);
+            selectedLayer.cropX = 0;
             selectedLayer.cropY = 0;
             selectedLayer.cropWidth = tempCanvas.width;
             selectedLayer.cropHeight = tempCanvas.height;
@@ -1563,30 +1666,169 @@ document.addEventListener("DOMContentLoaded", () => {
             renderCanvas();
             saveState();
           } else {
-            // Add new
             addImageAsLayer(
               tempCanvas,
               `Text: ${currentTextData.content.substring(0, 10)}...`,
               true,
               { ...currentTextData },
+              false,
+              null,
             );
-            // addImageAsLayer calls selectLayer which calls saveState
           }
         }),
       );
-      updateLayerActionButtons(); // Ensure layer buttons are updated
-      return; // Stop here for creator tools
-    }
+      updateLayerActionButtons();
+      return;
+    } else if (toolDefinition && toolDefinition.id === "addShape") {
+      const toolHeader = document.createElement("h4");
+      toolHeader.textContent =
+        selectedLayer && selectedLayer.isShapeLayer
+          ? "Edit Shape Layer"
+          : "Add New Shape Layer";
+      propertiesContainer.appendChild(toolHeader);
 
-    // --- Placeholder if no layer is selected (and not text tool) ---
-    if (!selectedLayer) {
-      propertiesContainer.innerHTML =
-        '<p class="placeholder-text">Select a layer to see its properties.</p>';
-      updateLayerActionButtons(); // Update layer action buttons (they should be disabled)
+      let currentShapeData =
+        selectedLayer && selectedLayer.isShapeLayer
+          ? { ...selectedLayer.shapeData }
+          : {
+              type: "rectangle",
+              fillColor: "#cccccc",
+              strokeColor: "#333333",
+              strokeWidth: 2,
+            };
+      let currentShapeCanvasWidth =
+        selectedLayer && selectedLayer.isShapeLayer
+          ? selectedLayer.originalWidth
+          : 150;
+      let currentShapeCanvasHeight =
+        selectedLayer && selectedLayer.isShapeLayer
+          ? selectedLayer.originalHeight
+          : 100;
+
+      const shapeTypeInput = createSelectInput(
+        "Shape Type:",
+        "shape-type-input",
+        [
+          { value: "rectangle", text: "Rectangle" },
+          { value: "square", text: "Square" },
+          { value: "circle", text: "Circle" },
+          { value: "ellipse", text: "Ellipse" },
+        ],
+        currentShapeData.type,
+        (val) => (currentShapeData.type = val),
+      );
+      const shapeWidthInput = createNumberInput(
+        "Shape Width (px):",
+        "shape-width-input",
+        currentShapeCanvasWidth,
+        (val) => (currentShapeCanvasWidth = Math.max(1, val)),
+        1,
+        MAX_CANVAS_DIM,
+      );
+      const shapeHeightInput = createNumberInput(
+        "Shape Height (px):",
+        "shape-height-input",
+        currentShapeCanvasHeight,
+        (val) => (currentShapeCanvasHeight = Math.max(1, val)),
+        1,
+        MAX_CANVAS_DIM,
+      );
+      const fillColorInput = createColorInput(
+        "Fill Color:",
+        "shape-fillcolor-input",
+        currentShapeData.fillColor,
+        (val) => (currentShapeData.fillColor = val),
+      );
+      const strokeColorInput = createColorInput(
+        "Stroke Color:",
+        "shape-strokecolor-input",
+        currentShapeData.strokeColor,
+        (val) => (currentShapeData.strokeColor = val),
+      );
+      const strokeWidthInput = createNumberInput(
+        "Stroke Width (px):",
+        "shape-strokewidth-input",
+        currentShapeData.strokeWidth,
+        (val) => (currentShapeData.strokeWidth = Math.max(0, val)),
+        0,
+        100,
+      );
+
+      propertiesContainer.appendChild(shapeTypeInput);
+      propertiesContainer.appendChild(shapeWidthInput);
+      propertiesContainer.appendChild(shapeHeightInput);
+      propertiesContainer.appendChild(fillColorInput);
+      propertiesContainer.appendChild(strokeColorInput);
+      propertiesContainer.appendChild(strokeWidthInput);
+
+      const actionButtonText =
+        selectedLayer && selectedLayer.isShapeLayer
+          ? "Update Shape Layer"
+          : "Add Shape as New Layer";
+      propertiesContainer.appendChild(
+        createButton(actionButtonText, () => {
+          const tempCanvas = document.createElement("canvas");
+          tempCanvas.width = currentShapeCanvasWidth;
+          tempCanvas.height = currentShapeCanvasHeight;
+          const tempCtx = tempCanvas.getContext("2d");
+
+          drawShapeOnCanvas(
+            tempCtx,
+            currentShapeData,
+            tempCanvas.width,
+            tempCanvas.height,
+          );
+          const layerName = `Shape: ${currentShapeData.type.charAt(0).toUpperCase() + currentShapeData.type.slice(1)}`;
+
+          if (selectedLayer && selectedLayer.isShapeLayer) {
+            selectedLayer.image = tempCanvas;
+            selectedLayer.shapeData = { ...currentShapeData };
+            selectedLayer.name = layerName;
+            selectedLayer.originalWidth = tempCanvas.width;
+            selectedLayer.originalHeight = tempCanvas.height;
+            selectedLayer.width = tempCanvas.width;
+            selectedLayer.height = tempCanvas.height;
+            selectedLayer.aspectRatio =
+              tempCanvas.width / (tempCanvas.height || 1);
+            selectedLayer.cropX = 0;
+            selectedLayer.cropY = 0;
+            selectedLayer.cropWidth = tempCanvas.width;
+            selectedLayer.cropHeight = tempCanvas.height;
+            updateLayersList();
+            renderCanvas();
+            saveState();
+          } else {
+            addImageAsLayer(tempCanvas, layerName, false, null, true, {
+              ...currentShapeData,
+            });
+          }
+        }),
+      );
+      updateLayerActionButtons();
       return;
     }
 
-    // --- "Select/Move" Tool UI (General Layer Properties) ---
+    if (
+      !selectedLayer &&
+      activeTool !== "addText" &&
+      activeTool !== "addShape"
+    ) {
+      propertiesContainer.innerHTML =
+        '<p class="placeholder-text">Select a layer to see its properties.</p>';
+      updateLayerActionButtons();
+      return;
+    }
+    if (!selectedLayer) {
+      // For creator tools when no layer is selected, we've already returned.
+      // If other tools are active but no layer, show placeholder.
+      if (activeTool !== "addText" && activeTool !== "addShape") {
+        propertiesContainer.innerHTML =
+          '<p class="placeholder-text">Select a layer to see its properties.</p>';
+      }
+      updateLayerActionButtons();
+      return;
+    }
+
     if (activeTool === "select") {
       const generalHeader = document.createElement("h4");
       generalHeader.textContent = "Layer Properties";
@@ -1693,8 +1935,12 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     }
 
-    // --- Tool-Specific Properties (for selected layer) ---
-    if (toolDefinition && activeTool !== "select" && activeTool !== "addText") {
+    if (
+      toolDefinition &&
+      activeTool !== "select" &&
+      activeTool !== "addText" &&
+      activeTool !== "addShape"
+    ) {
       const toolHeader = document.createElement("h4");
       toolHeader.textContent = `${toolDefinition.name} Tool`;
       propertiesContainer.appendChild(toolHeader);
@@ -1713,7 +1959,7 @@ document.addEventListener("DOMContentLoaded", () => {
               ? 1
               : toolDefinition.max > 10
                 ? 1
-                : 0.01, // step
+                : 0.01,
             selectedLayer.filters[toolDefinition.property],
             toolDefinition.unit,
             (val) => {
@@ -1802,16 +2048,14 @@ document.addEventListener("DOMContentLoaded", () => {
         propertiesContainer.appendChild(aspectToggleResize);
 
         const resetButton = document.createElement("button");
-        resetButton.textContent = "Reset Display to Crop Size"; // Changed label
+        resetButton.textContent = "Reset Display to Crop Size";
         resetButton.onclick = () => {
-          // Reset display size to match current crop aspect ratio, scaled to fit if too large
           const cropAspectRatio =
             selectedLayer.cropWidth / (selectedLayer.cropHeight || 1);
           selectedLayer.width = selectedLayer.cropWidth;
           selectedLayer.height = selectedLayer.cropHeight;
-          selectedLayer.aspectRatio = cropAspectRatio; // Update layer's display aspect ratio
+          selectedLayer.aspectRatio = cropAspectRatio;
 
-          // Optionally, scale down if it's too big for the canvas after reset
           const maxDim = Math.max(selectedLayer.width, selectedLayer.height);
           const canvasMaxDim =
             Math.min(currentCanvasWidth, currentCanvasHeight) * 0.9;
@@ -2058,7 +2302,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 `curves-rgb-${index}-output-${selectedLayer.id}`,
                 point.output,
                 (val) => {
-                  point.output = Math.max(0, Math.min(255, val)); // Clamp
+                  point.output = Math.max(0, Math.min(255, val));
                   renderCanvas();
                   saveState();
                 },
@@ -2102,7 +2346,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 Math.min(val, selectedLayer.originalWidth - 1),
               );
               renderCanvas();
-              updatePropertiesPanel(); // To update max values if needed
+              updatePropertiesPanel();
               saveState();
             },
             0,
@@ -2201,24 +2445,25 @@ document.addEventListener("DOMContentLoaded", () => {
         );
       }
     }
-    updateLayerActionButtons(); // Final call to ensure buttons are correct
+    updateLayerActionButtons();
   }
 
-  // --- Export Functionality --- (Same as before)
   function exportImage() {
-    /* ... Same ... */ if (!canvas || layers.length === 0) {
+    if (!canvas || layers.length === 0) {
       alert("Nothing to export. Add some images first.");
       return;
     }
     const format = exportFormatSelect.value;
     const quality = parseFloat(exportQualitySlider.value);
     const filename = `transformed-image.${format.split("/")[1] === "pdf" ? "pdf" : format.split("/")[1]}`;
+
     const exportCanvas = document.createElement("canvas");
     exportCanvas.width = currentCanvasWidth;
     exportCanvas.height = currentCanvasHeight;
     const exportCtx = exportCanvas.getContext("2d");
+
     layers.forEach((layer) => {
-      if (layer.visible && (layer.image || layer.textCanvas)) {
+      if (layer.visible && layer.image) {
         exportCtx.save();
         exportCtx.globalAlpha = layer.opacity;
         const centerX = layer.x + layer.width / 2;
@@ -2228,6 +2473,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (layer.flipHorizontal) exportCtx.scale(-1, 1);
         if (layer.flipVertical) exportCtx.scale(1, -1);
         exportCtx.translate(-centerX, -centerY);
+
         if (layer.cropShape && layer.cropShape !== "none") {
           exportCtx.beginPath();
           if (layer.cropShape === "circle") {
@@ -2251,6 +2497,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           exportCtx.clip();
         }
+
         let currentImageSource = layer.image;
         if (layer.curves.enabled && layer.curves.rgb.length > 0) {
           currentImageSource = applyCurvesToImage(
@@ -2284,6 +2531,7 @@ document.addEventListener("DOMContentLoaded", () => {
             layer.pixelateSize,
           );
         }
+
         let filterString = "";
         filterString += `brightness(${layer.filters.brightness}%) `;
         filterString += `contrast(${layer.filters.contrast}%) `;
@@ -2298,6 +2546,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         exportCtx.filter =
           filterString.trim() === "" ? "none" : filterString.trim();
+
         exportCtx.drawImage(
           currentImageSource,
           currentImageSource === layer.image ? layer.cropX : 0,
@@ -2310,6 +2559,7 @@ document.addEventListener("DOMContentLoaded", () => {
           layer.height,
         );
         exportCtx.filter = "none";
+
         if (layer.tintStrength > 0 && layer.tintColor !== "rgba(0,0,0,0)") {
           exportCtx.globalAlpha = layer.opacity * layer.tintStrength;
           exportCtx.fillStyle = layer.tintColor;
@@ -2342,6 +2592,7 @@ document.addEventListener("DOMContentLoaded", () => {
         exportCtx.restore();
       }
     });
+
     if (format === "application/pdf") {
       try {
         const { jsPDF } = window.jspdf;
@@ -2380,7 +2631,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // --- Event Listeners & Initialization ---
   addImageBtn.addEventListener("click", () => {
     imageFileInput.click();
   });
@@ -2416,7 +2666,7 @@ document.addEventListener("DOMContentLoaded", () => {
   zoomOutBtn.addEventListener("click", zoomOut);
   zoomFitBtn.addEventListener("click", () => {
     zoomFit();
-    saveState(); /* User initiated fit */
+    saveState();
   });
 
   document.addEventListener("keydown", (e) => {
@@ -2424,6 +2674,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.activeElement.tagName === "INPUT" ||
       document.activeElement.tagName === "TEXTAREA" ||
       document.activeElement.isContentEditable;
+
     if (e.key.toLowerCase() === "z" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       if (e.shiftKey) {
@@ -2438,13 +2689,16 @@ document.addEventListener("DOMContentLoaded", () => {
       redo();
       return;
     }
+
     if (isInputFocused && e.key !== "Escape") return;
+
     const tool = availableTools.find((t) => t.shortcut === e.key.toLowerCase());
     if (tool) {
       e.preventDefault();
       setActiveTool(tool.id);
       return;
     }
+
     if (e.key.toLowerCase() === "s" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       exportImageBtn.click();
@@ -2459,18 +2713,18 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       zoomIn();
       return;
-    } // Zoom In
+    }
     if (e.key === "-") {
       e.preventDefault();
       zoomOut();
       return;
-    } // Zoom Out
+    }
     if (e.key === "0") {
       e.preventDefault();
       zoomFit();
       saveState();
       return;
-    } // Zoom Fit
+    }
 
     if (selectedLayerId !== null) {
       const layer = getLayerById(selectedLayerId);
@@ -2528,13 +2782,13 @@ document.addEventListener("DOMContentLoaded", () => {
         case "[":
           if (e.metaKey || e.ctrlKey) {
             e.preventDefault();
-            moveSelectedLayer(-1);
+            moveSelectedLayer(1); // Move up in list = lower index
           }
           break;
         case "]":
           if (e.metaKey || e.ctrlKey) {
             e.preventDefault();
-            moveSelectedLayer(1);
+            moveSelectedLayer(-1); // Move down in list = higher index
           }
           break;
         case ",":
@@ -2563,7 +2817,8 @@ document.addEventListener("DOMContentLoaded", () => {
       exportQualitySlider.value,
     ).toFixed(2);
     updateUndoRedoButtons();
-    updateLayerActionButtons(); // Ensure these are set correctly on init
+    updateLayerActionButtons();
   }
+
   init();
 });
