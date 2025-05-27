@@ -55,17 +55,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let canvasTransformY = 0;
   const ZOOM_STEP = 0.1;
 
-  // Interaction state for canvas controls (handles, selection)
   let interactionState = {
     isInteracting: false,
-    type: null, // 'dragLayer', 'resize', 'rotate'
-    activeHandle: null, // 'tl', 'tm', 'tr', 'ml', 'mr', 'bl', 'bm', 'br', 'rotate'
+    type: null,
+    activeHandle: null,
     startX: 0,
     startY: 0,
-    originalLayerStates: [], // For multi-layer drag or single layer resize/rotate
+    originalLayerStates: [],
   };
-  const HANDLE_SIZE = 8; // Pixel size of resize handles
-  const ROTATION_HANDLE_OFFSET = 25; // Distance of rotation handle from top-middle
+  const HANDLE_SIZE = 8;
+  const ROTATION_HANDLE_OFFSET = 25;
 
   const availableTools = [
     { id: "select", name: "Select/Move (V)", type: "core", shortcut: "v" },
@@ -299,8 +298,8 @@ document.addEventListener("DOMContentLoaded", () => {
     canvasHeightInput.value = currentCanvasHeight;
 
     canvasWrapper.addEventListener("mousedown", handleCanvasMouseDown);
-    window.addEventListener("mousemove", handleCanvasMouseMove); // Use window for mousemove
-    window.addEventListener("mouseup", handleCanvasMouseUp); // Use window for mouseup
+    window.addEventListener("mousemove", handleCanvasMouseMove);
+    window.addEventListener("mouseup", handleCanvasMouseUp);
 
     zoomFit();
     renderCanvas();
@@ -946,7 +945,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Draw selection highlights and handles
     const primaryLayer = getLayerById(primarySelectedLayerId);
     if (primaryLayer && primaryLayer.visible) {
       ctx.save();
@@ -955,7 +953,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.translate(centerX, centerY);
       if (primaryLayer.rotation)
         ctx.rotate((primaryLayer.rotation * Math.PI) / 180);
-      // Note: Flip is not applied to handles for simplicity, they are on the visual rect
       ctx.strokeStyle = "blue";
       ctx.lineWidth = 2;
       ctx.strokeRect(
@@ -964,13 +961,11 @@ document.addEventListener("DOMContentLoaded", () => {
         primaryLayer.width,
         primaryLayer.height,
       );
-
       if (activeTool === "select") {
         drawSelectionHandles(primaryLayer);
       }
       ctx.restore();
     }
-    // Draw secondary selection highlights
     selectedLayerIds.forEach((id) => {
       if (id === primarySelectedLayerId) return;
       const layer = getLayerById(id);
@@ -997,28 +992,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const halfW = layer.width / 2;
     const halfH = layer.height / 2;
     const handlePoints = [
-      { x: -halfW, y: -halfH, type: "tl" }, // Top-left
-      { x: 0, y: -halfH, type: "tm" }, // Top-middle
-      { x: halfW, y: -halfH, type: "tr" }, // Top-right
-      { x: -halfW, y: 0, type: "ml" }, // Middle-left
-      { x: halfW, y: 0, type: "mr" }, // Middle-right
-      { x: -halfW, y: halfH, type: "bl" }, // Bottom-left
-      { x: 0, y: halfH, type: "bm" }, // Bottom-middle
-      { x: halfW, y: halfH, type: "br" }, // Bottom-right
-      { x: 0, y: -halfH - ROTATION_HANDLE_OFFSET, type: "rotate" }, // Rotation
+      { x: -halfW, y: -halfH, type: "tl" },
+      { x: 0, y: -halfH, type: "tm" },
+      { x: halfW, y: -halfH, type: "tr" },
+      { x: -halfW, y: 0, type: "ml" },
+      { x: halfW, y: 0, type: "mr" },
+      { x: -halfW, y: halfH, type: "bl" },
+      { x: 0, y: halfH, type: "bm" },
+      { x: halfW, y: halfH, type: "br" },
+      { x: 0, y: -halfH - ROTATION_HANDLE_OFFSET, type: "rotate" },
     ];
-
     ctx.fillStyle = "white";
     ctx.strokeStyle = "blue";
     ctx.lineWidth = 1;
-
     handlePoints.forEach((p) => {
       if (p.type === "rotate") {
         ctx.beginPath();
         ctx.arc(p.x, p.y, HANDLE_SIZE / 2, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
-        // Line to main box
         ctx.beginPath();
         ctx.moveTo(0, -halfH);
         ctx.lineTo(p.x, p.y);
@@ -1144,7 +1136,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (newLayer.width <= 0) newLayer.width = 100;
       if (newLayer.height <= 0) newLayer.height = 50;
       layers.push(newLayer);
-      selectLayer(newLayer.id, false); // New layer becomes the only selection
+      selectLayer(newLayer.id, false);
     };
     if (fileOrImage instanceof File) {
       const reader = new FileReader();
@@ -1202,7 +1194,7 @@ document.addEventListener("DOMContentLoaded", () => {
       deleteBtn.title = "Delete Layer (Del/Backspace)";
       deleteBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        deleteSelectedLayers(); // Modified to delete all selected
+        deleteSelectedLayers();
       });
       layerItem.appendChild(visibilityToggle);
       layerItem.appendChild(layerNameSpan);
@@ -1229,14 +1221,14 @@ document.addEventListener("DOMContentLoaded", () => {
         layer.name = newName;
         saveState();
       }
-      updateLayersList(); // This will re-render the list item
+      updateLayersList();
     };
     inputElement.addEventListener("blur", saveName);
     inputElement.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         saveName();
       } else if (e.key === "Escape") {
-        updateLayersList(); // Revert by re-rendering
+        updateLayersList();
       }
     });
   }
@@ -1252,7 +1244,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } else {
         selectedLayerIds.push(layerId);
-        primarySelectedLayerId = layerId; // Make the last shift-clicked primary
+        primarySelectedLayerId = layerId;
       }
     } else {
       selectedLayerIds = [layerId];
@@ -1271,8 +1263,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleLayerVisibility(layerIdToToggle) {
-    // If the toggled layer is part of multi-selection, toggle all selected
-    // Otherwise, just toggle the specific one (even if not primary)
     const idsToToggle = selectedLayerIds.includes(layerIdToToggle)
       ? [...selectedLayerIds]
       : [layerIdToToggle];
@@ -1440,7 +1430,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const originalIndex = layers.indexOf(originalLayer);
     layers.splice(originalIndex + 1, 0, newLayer);
-    selectLayer(newLayer.id, false); // New duplicated layer becomes the only selection
+    selectLayer(newLayer.id, false);
   }
 
   function moveSelectedLayer(direction) {
@@ -1484,12 +1474,13 @@ document.addEventListener("DOMContentLoaded", () => {
     activeTool = toolId;
     populateTools();
     updatePropertiesPanel();
-    renderCanvas(); // Re-render to show/hide handles
+    renderCanvas();
   }
 
-  function createButton(text, callback) {
+  function createButton(content, callback, title = "") {
     const button = document.createElement("button");
-    button.textContent = text;
+    button.innerHTML = content;
+    if (title) button.title = title;
     button.addEventListener("click", callback);
     return button;
   }
@@ -1625,9 +1616,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const removeBgBtn = createButton(
         "Remove Background (API)",
         handleRemoveBackground,
+        "Uses an external API to remove the background. Affects original image source.",
       );
-      removeBgBtn.title =
-        "Uses an external API to remove the background. Affects original image source.";
       removeBgBtn.style.width = "100%";
       bgRemoveContainer.appendChild(removeBgBtn);
       propertiesContainer.appendChild(bgRemoveContainer);
@@ -1975,6 +1965,115 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         ),
       );
+
+      // Alignment Controls
+      if (selectedLayerIds.length === 1 && primarySelectedLayerId) {
+        const canvasAlignmentContainer = document.createElement("div");
+        canvasAlignmentContainer.id = "canvas-alignment-controls";
+        canvasAlignmentContainer.className = "property-control-group";
+        const alignmentHeader = document.createElement("h4");
+        alignmentHeader.textContent = "Align Layer to Canvas";
+        canvasAlignmentContainer.appendChild(alignmentHeader);
+        const buttonsWrapper = document.createElement("div");
+        buttonsWrapper.className = "alignment-buttons";
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-align-left"></i>',
+            () => alignLayerToCanvas("canvasLeft"),
+            "Align Layer to Canvas Left",
+          ),
+        );
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-align-center"></i>',
+            () => alignLayerToCanvas("canvasHCenter"),
+            "Align Layer to Canvas Horizontal Center",
+          ),
+        );
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-align-right"></i>',
+            () => alignLayerToCanvas("canvasRight"),
+            "Align Layer to Canvas Right",
+          ),
+        );
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-arrow-up"></i>',
+            () => alignLayerToCanvas("canvasTop"),
+            "Align Layer to Canvas Top",
+          ),
+        );
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-grip-lines"></i>',
+            () => alignLayerToCanvas("canvasVCenter"),
+            "Align Layer to Canvas Vertical Center",
+          ),
+        );
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-arrow-down"></i>',
+            () => alignLayerToCanvas("canvasBottom"),
+            "Align Layer to Canvas Bottom",
+          ),
+        );
+        canvasAlignmentContainer.appendChild(buttonsWrapper);
+        propertiesContainer.appendChild(canvasAlignmentContainer);
+      } else if (selectedLayerIds.length >= 2 && primarySelectedLayerId) {
+        const multiAlignmentContainer = document.createElement("div");
+        multiAlignmentContainer.id = "multi-alignment-controls";
+        multiAlignmentContainer.className = "property-control-group";
+        const alignmentHeader = document.createElement("h4");
+        alignmentHeader.textContent = "Align Layers (to Primary)";
+        multiAlignmentContainer.appendChild(alignmentHeader);
+        const buttonsWrapper = document.createElement("div");
+        buttonsWrapper.className = "alignment-buttons";
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-align-left"></i>',
+            () => alignLayers("left"),
+            "Align Left Edges",
+          ),
+        );
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-align-center"></i>',
+            () => alignLayers("hCenter"),
+            "Align Horizontal Centers",
+          ),
+        );
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-align-right"></i>',
+            () => alignLayers("right"),
+            "Align Right Edges",
+          ),
+        );
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-arrow-up"></i>',
+            () => alignLayers("top"),
+            "Align Top Edges",
+          ),
+        );
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-grip-lines"></i>',
+            () => alignLayers("vCenter"),
+            "Align Vertical Centers",
+          ),
+        );
+        buttonsWrapper.appendChild(
+          createButton(
+            '<i class="fas fa-arrow-down"></i>',
+            () => alignLayers("bottom"),
+            "Align Bottom Edges",
+          ),
+        );
+        multiAlignmentContainer.appendChild(buttonsWrapper);
+        propertiesContainer.appendChild(multiAlignmentContainer);
+      }
     }
 
     if (
@@ -2087,9 +2186,7 @@ document.addEventListener("DOMContentLoaded", () => {
         aspectToggleResize.appendChild(aspectCheckboxResize);
         aspectToggleResize.appendChild(aspectLabelResize);
         propertiesContainer.appendChild(aspectToggleResize);
-        const resetButton = document.createElement("button");
-        resetButton.textContent = "Reset Display to Crop Size";
-        resetButton.onclick = () => {
+        const resetButton = createButton("Reset Display to Crop Size", () => {
           const cropAspectRatio =
             selectedLayer.cropWidth / (selectedLayer.cropHeight || 1);
           selectedLayer.width = selectedLayer.cropWidth;
@@ -2109,7 +2206,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (hInput) hInput.value = selectedLayer.height;
           renderCanvas();
           saveState();
-        };
+        });
         propertiesContainer.appendChild(resetButton);
       } else if (toolDefinition.id === "flip") {
         propertiesContainer.appendChild(
@@ -2656,7 +2753,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // --- Canvas Interaction: Click to Select, Bounding Box Handles ---
   function getMousePosOnCanvas(e) {
     const rect = canvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) / currentZoomLevel;
@@ -2667,17 +2763,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function isPointInRotatedRect(pointX, pointY, layer) {
     const cx = layer.x + layer.width / 2;
     const cy = layer.y + layer.height / 2;
-    const angleRad = -layer.rotation * (Math.PI / 180); // Inverse rotation
-
-    // Translate point to be relative to layer center
+    const angleRad = -layer.rotation * (Math.PI / 180);
     let localX = pointX - cx;
     let localY = pointY - cy;
-
-    // Rotate point
     const rotatedX = localX * Math.cos(angleRad) - localY * Math.sin(angleRad);
     const rotatedY = localX * Math.sin(angleRad) + localY * Math.cos(angleRad);
-
-    // Check against unrotated rect
     return (
       Math.abs(rotatedX) <= layer.width / 2 &&
       Math.abs(rotatedY) <= layer.height / 2
@@ -2686,16 +2776,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getHandleAtPoint(canvasMouseX, canvasMouseY, layer) {
     if (!layer || activeTool !== "select") return null;
-
     const layerCenterX = layer.x + layer.width / 2;
     const layerCenterY = layer.y + layer.height / 2;
     const angleRad = layer.rotation * (Math.PI / 180);
     const cosA = Math.cos(angleRad);
     const sinA = Math.sin(angleRad);
-
     const halfW = layer.width / 2;
     const halfH = layer.height / 2;
-
     const handleDefinitions = [
       { x: -halfW, y: -halfH, type: "tl" },
       { x: 0, y: -halfH, type: "tm" },
@@ -2707,19 +2794,15 @@ document.addEventListener("DOMContentLoaded", () => {
       { x: halfW, y: halfH, type: "br" },
       { x: 0, y: -halfH - ROTATION_HANDLE_OFFSET, type: "rotate" },
     ];
-
     for (const handleDef of handleDefinitions) {
-      // Transform handleDef position from layer's local rotated space to canvas space
       const rotatedHandleX = handleDef.x * cosA - handleDef.y * sinA;
       const rotatedHandleY = handleDef.x * sinA + handleDef.y * cosA;
       const handleCanvasX = layerCenterX + rotatedHandleX;
       const handleCanvasY = layerCenterY + rotatedHandleY;
-
       const distSq =
         Math.pow(canvasMouseX - handleCanvasX, 2) +
         Math.pow(canvasMouseY - handleCanvasY, 2);
       if (distSq <= Math.pow(HANDLE_SIZE, 2)) {
-        // Increased hit area for easier clicking
         return handleDef.type;
       }
     }
@@ -2727,14 +2810,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleCanvasMouseDown(e) {
-    if (e.target !== canvas) return; // Only interact if click is directly on canvas
+    if (e.target !== canvas) return;
     if (activeTool !== "select") return;
-
     const mousePos = getMousePosOnCanvas(e);
     interactionState.startX = mousePos.x;
     interactionState.startY = mousePos.y;
     interactionState.isInteracting = true;
-
     const primaryLayer = getLayerById(primarySelectedLayerId);
     if (primaryLayer) {
       const handle = getHandleAtPoint(mousePos.x, mousePos.y, primaryLayer);
@@ -2749,12 +2830,10 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         ];
         document.body.style.cursor =
-          handle === "rotate" ? "grabbing" : "nesw-resize"; // Example cursor
+          handle === "rotate" ? "grabbing" : "nesw-resize";
         return;
       }
     }
-
-    // Click to select / Drag
     let hitLayer = null;
     for (let i = layers.length - 1; i >= 0; i--) {
       const layer = layers[i];
@@ -2766,12 +2845,10 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       }
     }
-
     if (hitLayer) {
       if (!selectedLayerIds.includes(hitLayer.id) || e.shiftKey) {
         selectLayer(hitLayer.id, e.shiftKey);
       }
-      // If already selected and not shift clicking, prepare for drag
       if (selectedLayerIds.includes(hitLayer.id)) {
         interactionState.type = "dragLayer";
         interactionState.originalLayerStates = selectedLayerIds.map((id) => {
@@ -2781,7 +2858,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.style.cursor = "grabbing";
       }
     } else {
-      // Clicked on empty canvas area
       if (!e.shiftKey) {
         selectedLayerIds = [];
         primarySelectedLayerId = null;
@@ -2789,18 +2865,16 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCanvas();
         updatePropertiesPanel();
       }
-      interactionState.isInteracting = false; // No interaction if clicked empty
+      interactionState.isInteracting = false;
     }
   }
 
   function handleCanvasMouseMove(e) {
     if (!interactionState.isInteracting || activeTool !== "select") return;
     e.preventDefault();
-
     const mousePos = getMousePosOnCanvas(e);
     const deltaX = mousePos.x - interactionState.startX;
     const deltaY = mousePos.y - interactionState.startY;
-
     if (interactionState.type === "dragLayer") {
       interactionState.originalLayerStates.forEach((origState) => {
         const layerToMove = getLayerById(origState.id);
@@ -2810,7 +2884,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
       renderCanvas();
-      updatePropertiesPanel(); // Update X, Y in panel
+      updatePropertiesPanel();
     } else if (
       (interactionState.type === "resize" ||
         interactionState.type === "rotate") &&
@@ -2821,7 +2895,6 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       const originalState = interactionState.originalLayerStates[0];
       if (!layerToTransform) return;
-
       if (interactionState.type === "rotate") {
         const startAngle = Math.atan2(
           interactionState.startY - originalState.centerY,
@@ -2835,19 +2908,13 @@ document.addEventListener("DOMContentLoaded", () => {
         layerToTransform.rotation =
           originalState.rotation + angleDiff * (180 / Math.PI);
       } else if (interactionState.type === "resize") {
-        // Simplified resize from center model
         const angleRad = -originalState.rotation * (Math.PI / 180);
         const cosA = Math.cos(angleRad);
         const sinA = Math.sin(angleRad);
-
-        // Mouse delta in original layer's unrotated coordinate system
         const localDeltaX = deltaX * cosA - deltaY * sinA;
         const localDeltaY = deltaX * sinA + deltaY * cosA;
-
         let newWidth = originalState.width;
         let newHeight = originalState.height;
-
-        // Adjust width/height based on handle (this is simplified, assumes growth from center)
         if (interactionState.activeHandle.includes("l"))
           newWidth -= localDeltaX;
         if (interactionState.activeHandle.includes("r"))
@@ -2856,21 +2923,18 @@ document.addEventListener("DOMContentLoaded", () => {
           newHeight -= localDeltaY;
         if (interactionState.activeHandle.includes("b"))
           newHeight += localDeltaY;
-
-        // For TM, BM, ML, MR, only one dimension changes
         if (
           interactionState.activeHandle === "tm" ||
           interactionState.activeHandle === "bm"
         ) {
-          newWidth = originalState.width; // No width change
+          newWidth = originalState.width;
         }
         if (
           interactionState.activeHandle === "ml" ||
           interactionState.activeHandle === "mr"
         ) {
-          newHeight = originalState.height; // No height change
+          newHeight = originalState.height;
         }
-
         if (
           maintainAspectRatio &&
           !interactionState.activeHandle.includes("m")
@@ -2882,11 +2946,8 @@ document.addEventListener("DOMContentLoaded", () => {
             newHeight = newWidth / ratio;
           }
         }
-
-        layerToTransform.width = Math.max(10, newWidth); // Min size
+        layerToTransform.width = Math.max(10, newWidth);
         layerToTransform.height = Math.max(10, newHeight);
-
-        // Adjust x,y to keep center fixed
         layerToTransform.x = originalState.centerX - layerToTransform.width / 2;
         layerToTransform.y =
           originalState.centerY - layerToTransform.height / 2;
@@ -2910,25 +2971,20 @@ document.addEventListener("DOMContentLoaded", () => {
       interactionState.activeHandle = null;
       interactionState.originalLayerStates = [];
       document.body.style.cursor = "default";
-      renderCanvas(); // To ensure final state is drawn correctly
+      renderCanvas();
     }
   }
 
-  // --- Alignment Tools ---
   function alignLayers(type) {
     if (selectedLayerIds.length < 2 || !primarySelectedLayerId) return;
-
     const keyLayer = getLayerById(primarySelectedLayerId);
     if (!keyLayer) return;
-
     const keyLayerCenterX = keyLayer.x + keyLayer.width / 2;
     const keyLayerCenterY = keyLayer.y + keyLayer.height / 2;
-
     selectedLayerIds.forEach((id) => {
       if (id === primarySelectedLayerId) return;
       const layer = getLayerById(id);
       if (!layer) return;
-
       switch (type) {
         case "left":
           layer.x = keyLayer.x;
@@ -2954,10 +3010,37 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePropertiesPanel();
     saveState();
   }
-  // Example: To use alignment, you would call alignLayers('left'), alignLayers('hCenter'), etc.
-  // These would typically be triggered by UI buttons not added in this step.
 
-  // --- Event Listeners & Initialization ---
+  function alignLayerToCanvas(type) {
+    if (!primarySelectedLayerId) return;
+    const layer = getLayerById(primarySelectedLayerId);
+    if (!layer) return;
+
+    switch (type) {
+      case "canvasLeft":
+        layer.x = 0;
+        break;
+      case "canvasHCenter":
+        layer.x = (currentCanvasWidth - layer.width) / 2;
+        break;
+      case "canvasRight":
+        layer.x = currentCanvasWidth - layer.width;
+        break;
+      case "canvasTop":
+        layer.y = 0;
+        break;
+      case "canvasVCenter":
+        layer.y = (currentCanvasHeight - layer.height) / 2;
+        break;
+      case "canvasBottom":
+        layer.y = currentCanvasHeight - layer.height;
+        break;
+    }
+    renderCanvas();
+    updatePropertiesPanel();
+    saveState();
+  }
+
   addImageBtn.addEventListener("click", () => {
     imageFileInput.click();
   });
@@ -3001,7 +3084,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.activeElement.tagName === "INPUT" ||
       document.activeElement.tagName === "TEXTAREA" ||
       document.activeElement.isContentEditable;
-
     if (e.key.toLowerCase() === "z" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       if (e.shiftKey) {
@@ -3049,7 +3131,6 @@ document.addEventListener("DOMContentLoaded", () => {
       saveState();
       return;
     }
-
     if (primarySelectedLayerId !== null) {
       const layer = getLayerById(primarySelectedLayerId);
       if (!layer) return;
@@ -3108,25 +3189,25 @@ document.addEventListener("DOMContentLoaded", () => {
         case "d":
           if (e.metaKey || e.ctrlKey) {
             e.preventDefault();
-            duplicateSelectedLayer(); // Duplicates primary selected
+            duplicateSelectedLayer();
           }
           break;
         case "[":
           if (e.metaKey || e.ctrlKey) {
             e.preventDefault();
-            moveSelectedLayer(1); // Moves primary selected
+            moveSelectedLayer(1);
           }
           break;
         case "]":
           if (e.metaKey || e.ctrlKey) {
             e.preventDefault();
-            moveSelectedLayer(-1); // Moves primary selected
+            moveSelectedLayer(-1);
           }
           break;
         case ",":
           if (e.metaKey || e.ctrlKey) {
             e.preventDefault();
-            toggleLayerVisibility(primarySelectedLayerId); // Toggles all selected if primary is selected
+            toggleLayerVisibility(primarySelectedLayerId);
           }
           break;
       }

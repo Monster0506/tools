@@ -579,3 +579,141 @@ label {
   scrollbar-width: thin;
   scrollbar-color: var(--color-bg-element-active) var(--color-bg-app);
 }
+
+.panel-right #selected-tool-properties-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Add some spacing between property groups */
+}
+
+#alignment-controls {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color-light);
+}
+
+#alignment-controls h4 {
+  margin-bottom: 0.75rem;
+  font-size: 0.9em;
+  color: var(--text-color-secondary);
+  font-weight: 600;
+}
+
+.alignment-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px; /* Increased gap for better touch/click targets */
+}
+
+.alignment-buttons button {
+  padding: 8px 10px; /* Adjusted padding */
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  display: flex; /* For icon centering if needed */
+  align-items: center;
+  justify-content: center;
+}
+
+.alignment-buttons button:hover {
+  background-color: var(--button-hover-bg);
+  border-color: var(--accent-color); /* Highlight on hover */
+}
+
+.alignment-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.alignment-buttons button i {
+  font-size: 1.1em; /* Ensure icons are reasonably sized */
+  line-height: 1; /* Prevent extra space from icon line-height */
+}
+
+/* Specific styling for layer items to show primary selection */
+.layer-item.primary-selected {
+  border-left: 3px solid var(--accent-color) !important; /* More prominent primary selection */
+  background-color: var(
+    --layer-item-selected-bg-alt,
+    #3a3a5c
+  ) !important; /* Distinct background for primary */
+}
+
+.layer-item.selected {
+  background-color: var(--layer-item-selected-bg);
+  border-left: 3px solid var(--border-color-light);
+}
+
+.panel-right #selected-tool-properties-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Add some spacing between property groups */
+}
+
+/* Container for alignment controls (both multi-layer and canvas alignment) */
+#multi-alignment-controls,
+#canvas-alignment-controls {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color-light);
+}
+
+#multi-alignment-controls h4,
+#canvas-alignment-controls h4 {
+  margin-bottom: 0.75rem;
+  font-size: 0.9em;
+  color: var(--text-color-secondary);
+  font-weight: 600;
+}
+
+.alignment-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.alignment-buttons button {
+  padding: 8px 10px;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alignment-buttons button:hover {
+  background-color: var(--button-hover-bg);
+  border-color: var(--accent-color);
+}
+
+.alignment-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.alignment-buttons button i {
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+/* Specific styling for layer items to show primary selection */
+.layer-item.primary-selected {
+  border-left: 3px solid var(--accent-color) !important;
+  background-color: var(--layer-item-selected-bg-alt, #3a3a5c) !important;
+}
+
+.layer-item.selected {
+  background-color: var(--layer-item-selected-bg);
+  border-left: 3px solid var(--border-color-light);
+}
