@@ -475,6 +475,134 @@ document.addEventListener("DOMContentLoaded", () => {
         return "Error: crypto.randomUUID not available.";
       }
     },
+    transformToList: (text, params) => {
+      try {
+        const locale = params?.locale || "en-US";
+        const conjunction = params?.conjunction || "and";
+        const items = text.map((s) => s.trim()).filter(Boolean);
+        if (items.length === 0) return "";
+        const listFormat = new Intl.ListFormat(locale, {
+          style: "long",
+          type: conjunction === "or" ? "disjunction" : "conjunction",
+        });
+        return listFormat.format(items);
+      } catch (e) {
+        return `Error: Invalid locale '${params?.locale}'.`;
+      }
+    },
+    transformTruncate: (text, params) => {
+      const maxLength = parseInt(params?.maxLength, 10) || 20;
+      const omission = params?.omission || "...";
+      if (text.length <= maxLength) return text;
+      let truncated = text.substring(0, maxLength - omission.length);
+      const lastSpace = truncated.lastIndexOf(" ");
+      if (lastSpace > 0) {
+        truncated = truncated.substring(0, lastSpace);
+      }
+      return truncated + omission;
+    },
+
+    // For "Case & Formatting" Category
+    transformSmartTitlecase: (text, _params) => {
+      const smallWords =
+        /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
+      return text
+        .toLowerCase()
+        .split(" ")
+        .map((word, index, arr) => {
+          if (
+            index === 0 ||
+            index === arr.length - 1 ||
+            !smallWords.test(word)
+          ) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+          }
+          return word;
+        })
+        .join(" ");
+    },
+
+    // For "Data & Utilities" Category
+    transformCompactNumber: (text, params) => {
+      try {
+        const num = parseFloat(text);
+        if (isNaN(num)) return "Error: Input is not a valid number.";
+        const locale = params?.locale || "en-US";
+        const formatter = new Intl.NumberFormat(locale, {
+          notation: "compact",
+          compactDisplay: "short",
+        });
+        return formatter.format(num);
+      } catch (e) {
+        return `Error: Invalid locale '${params?.locale}'.`;
+      }
+    },
+    transformPercentage: (text, params) => {
+      try {
+        const num = parseFloat(text);
+        if (isNaN(num)) return "Error: Input is not a valid number.";
+        const locale = params?.locale || "en-US";
+        const precision = parseInt(params?.precision, 10) || 0;
+        const formatter = new Intl.NumberFormat(locale, {
+          style: "percent",
+          minimumFractionDigits: precision,
+          maximumFractionDigits: precision,
+        });
+        return formatter.format(num);
+      } catch (e) {
+        return `Error: Invalid locale '${params?.locale}'.`;
+      }
+    },
+    transformRelativeTime: (text, params) => {
+      try {
+        const date = new Date(text);
+        if (isNaN(date.getTime()))
+          return "Error: Invalid date string or timestamp.";
+        const locale = params?.locale || "en-US";
+        const formatter = new Intl.RelativeTimeFormat(locale, {
+          numeric: "auto",
+        });
+        const diffSeconds = (date.getTime() - Date.now()) / 1000;
+        const diffMinutes = diffSeconds / 60;
+        const diffHours = diffMinutes / 60;
+        const diffDays = diffHours / 24;
+        const diffMonths = diffDays / 30.44; // Average month length
+        const diffYears = diffDays / 365.25; // Account for leap years
+
+        if (Math.abs(diffYears) >= 1)
+          return formatter.format(Math.round(diffYears), "year");
+        if (Math.abs(diffMonths) >= 1)
+          return formatter.format(Math.round(diffMonths), "month");
+        if (Math.abs(diffDays) >= 1)
+          return formatter.format(Math.round(diffDays), "day");
+        if (Math.abs(diffHours) >= 1)
+          return formatter.format(Math.round(diffHours), "hour");
+        if (Math.abs(diffMinutes) >= 1)
+          return formatter.format(Math.round(diffMinutes), "minute");
+        return formatter.format(Math.round(diffSeconds), "second");
+      } catch (e) {
+        return `Error: Invalid locale '${params?.locale}'.`;
+      }
+    },
+    transformFormatDate: (text, params) => {
+      try {
+        const date = new Date(text);
+        if (isNaN(date.getTime()))
+          return "Error: Invalid date string or timestamp.";
+        const locale = params?.locale || "en-US";
+        const preset = params?.preset || "long";
+        const formatter = new Intl.DateTimeFormat(locale, {
+          dateStyle: preset,
+        });
+        return formatter.format(date);
+      } catch (e) {
+        return `Error: Invalid locale '${params?.locale}'.`;
+      }
+    },
+    transformFallback: (text, params) => {
+      const placeholder = params?.placeholder || "N/A";
+      return text.trim() === "" ? placeholder : text;
+    },
   };
 
   function createTransformationBlockDOM(transform) {
@@ -648,16 +776,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return acc;
     }, {});
     const categoryOrder = [
-      "Case & Formatting",
-      "Encoding & Decoding",
-      "Hashing",
-      "Structured Data",
-      "Whitespace & HTML",
-      "Line Operations",
+      "Formatting",
+      "Case & Style",
       "Text Manipulation",
-      "Data & Utilities",
-      "Ciphers",
-      "Generators",
+      "Line Operations",
+      "Cleaning & Extraction",
+      "Analysis",
+      "Encoding / Decoding",
+      "Hashing & Ciphers",
+      "Data Formats",
+      "Generators & Utilities",
     ];
     const sortedCategoryNames = Object.keys(groupedByCategory).sort((a, b) => {
       const indexA = categoryOrder.indexOf(a);

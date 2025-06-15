@@ -1,204 +1,352 @@
 [
   {
+    "id": "smarttitlecase",
+    "label": "Smart Title Case",
+    "category": "Case & Style",
+    "funcName": "transformSmartTitlecase"
+  },
+  {
+    "id": "truncate",
+    "label": "Truncate Text",
+    "category": "Text Manipulation",
+    "funcName": "transformTruncate",
+    "params": [
+      {
+        "id": "maxLength",
+        "label": "Max Length:",
+        "type": "number",
+        "defaultValue": 25,
+        "min": 1
+      },
+      {
+        "id": "omission",
+        "label": "Omission:",
+        "type": "text",
+        "defaultValue": "...",
+        "placeholder": "e.g., (more)"
+      }
+    ]
+  },
+  {
+    "id": "tolist",
+    "label": "Format as List (from new lines)",
+    "category": "Formatting",
+    "funcName": "transformToList",
+    "params": [
+      {
+        "id": "conjunction",
+        "label": "Conjunction:",
+        "type": "select",
+        "defaultValue": "and",
+        "options": [
+          { "value": "and", "text": "and" },
+          { "value": "or", "text": "or" }
+        ]
+      },
+      {
+        "id": "locale",
+        "label": "Locale:",
+        "type": "text",
+        "defaultValue": "en-US",
+        "placeholder": "e.g., en-GB, fr-FR"
+      }
+    ]
+  },
+  {
+    "id": "relativetime",
+    "label": "Relative Time (Ago/From Now)",
+    "category": "Formatting",
+    "funcName": "transformRelativeTime",
+    "params": [
+      {
+        "id": "locale",
+        "label": "Locale:",
+        "type": "text",
+        "defaultValue": "en-US",
+        "placeholder": "e.g., en-GB, fr-FR"
+      }
+    ]
+  },
+  {
+    "id": "formatdate",
+    "label": "Format Date",
+    "category": "Formatting",
+    "funcName": "transformFormatDate",
+    "params": [
+      {
+        "id": "preset",
+        "label": "Preset:",
+        "type": "select",
+        "defaultValue": "long",
+        "options": [
+          { "value": "full", "text": "Full (e.g., Sunday, June 15, 2025)" },
+          { "value": "long", "text": "Long (e.g., June 15, 2025)" },
+          { "value": "medium", "text": "Medium (e.g., Jun 15, 2025)" },
+          { "value": "short", "text": "Short (e.g., 6/15/25)" }
+        ]
+      },
+      {
+        "id": "locale",
+        "label": "Locale:",
+        "type": "text",
+        "defaultValue": "en-US",
+        "placeholder": "e.g., de-DE, es-ES"
+      }
+    ]
+  },
+  {
+    "id": "compactnumber",
+    "label": "Compact Number (K/M/B)",
+    "category": "Formatting",
+    "funcName": "transformCompactNumber",
+    "params": [
+      {
+        "id": "locale",
+        "label": "Locale:",
+        "type": "text",
+        "defaultValue": "en-US",
+        "placeholder": "e.g., en-IN, de-DE"
+      }
+    ]
+  },
+  {
+    "id": "percentage",
+    "label": "Format as Percentage",
+    "category": "Formatting",
+    "funcName": "transformPercentage",
+    "params": [
+      {
+        "id": "precision",
+        "label": "Decimal Places:",
+        "type": "number",
+        "defaultValue": 0,
+        "min": 0,
+        "max": 20
+      },
+      {
+        "id": "locale",
+        "label": "Locale:",
+        "type": "text",
+        "defaultValue": "en-US",
+        "placeholder": "e.g., de-DE"
+      }
+    ]
+  },
+  {
+    "id": "fallback",
+    "label": "Fallback If Empty",
+    "category": "Generators & Utilities",
+    "funcName": "transformFallback",
+    "params": [
+      {
+        "id": "placeholder",
+        "label": "Placeholder:",
+        "type": "text",
+        "defaultValue": "N/A",
+        "placeholder": "Text to show if input is empty"
+      }
+    ]
+  },
+  {
     "id": "lowercase",
     "label": "Lowercase",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformLowercase"
   },
   {
     "id": "uppercase",
     "label": "Uppercase",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformUppercase"
   },
   {
     "id": "titlecase",
     "label": "Title Case",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformTitlecase"
   },
   {
     "id": "sentencecase",
     "label": "Sentence Case",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformSentencecase"
   },
   {
     "id": "invertcase",
     "label": "Invert Case",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformInvertcase"
   },
   {
     "id": "alternatingcase",
     "label": "Alternating Case",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformAlternatingcase"
   },
   {
     "id": "camelcase",
     "label": "Camel Case",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformCamelcase"
   },
   {
     "id": "pascalcase",
     "label": "Pascal Case",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformPascalcase"
   },
   {
     "id": "snakecase",
     "label": "Snake Case",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformSnakecase"
   },
   {
     "id": "kebabcase",
     "label": "Kebab Case",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformKebabcase"
   },
   {
     "id": "dotcase",
     "label": "Dot Case",
-    "category": "Case & Formatting",
+    "category": "Case & Style",
     "funcName": "transformDotcase"
   },
   {
     "id": "base64encode",
     "label": "Base64 Encode (UTF-8)",
-    "category": "Encoding & Decoding",
+    "category": "Encoding / Decoding",
     "funcName": "transformBase64Encode"
   },
   {
     "id": "base64decode",
     "label": "Base64 Decode (UTF-8)",
-    "category": "Encoding & Decoding",
+    "category": "Encoding / Decoding",
     "funcName": "transformBase64Decode"
   },
   {
     "id": "urlencode",
     "label": "URL Encode",
-    "category": "Encoding & Decoding",
+    "category": "Encoding / Decoding",
     "funcName": "transformUrlEncode"
   },
   {
     "id": "urldecode",
     "label": "URL Decode",
-    "category": "Encoding & Decoding",
+    "category": "Encoding / Decoding",
     "funcName": "transformUrlDecode"
   },
   {
     "id": "texttobinary",
     "label": "Text to Binary (8-bit)",
-    "category": "Encoding & Decoding",
+    "category": "Encoding / Decoding",
     "funcName": "transformTextToBinary"
   },
   {
     "id": "binarytotext",
     "label": "Binary (8-bit) to Text",
-    "category": "Encoding & Decoding",
+    "category": "Encoding / Decoding",
     "funcName": "transformBinaryToText"
   },
   {
     "id": "htmlentityencode",
     "label": "HTML Entity Encode",
-    "category": "Encoding & Decoding",
+    "category": "Encoding / Decoding",
     "funcName": "transformHtmlEntityEncode"
   },
   {
     "id": "htmlentitydecode",
     "label": "HTML Entity Decode",
-    "category": "Encoding & Decoding",
+    "category": "Encoding / Decoding",
     "funcName": "transformHtmlEntityDecode"
   },
   {
     "id": "escapejsstring",
     "label": "Escape JavaScript String",
-    "category": "Encoding & Decoding",
+    "category": "Encoding / Decoding",
     "funcName": "transformEscapeJsString"
   },
   {
     "id": "unescapejsstring",
     "label": "Unescape JavaScript String",
-    "category": "Encoding & Decoding",
+    "category": "Encoding / Decoding",
     "funcName": "transformUnescapeJsString"
   },
   {
     "id": "sha1hash",
     "label": "SHA-1 Hash",
-    "category": "Hashing",
+    "category": "Hashing & Ciphers",
     "funcName": "transformSha1Hash",
     "isAsync": true
   },
   {
     "id": "sha256hash",
     "label": "SHA-256 Hash",
-    "category": "Hashing",
+    "category": "Hashing & Ciphers",
     "funcName": "transformSha256Hash",
     "isAsync": true
   },
   {
     "id": "sha384hash",
     "label": "SHA-384 Hash",
-    "category": "Hashing",
+    "category": "Hashing & Ciphers",
     "funcName": "transformSha384Hash",
     "isAsync": true
   },
   {
     "id": "sha512hash",
     "label": "SHA-512 Hash",
-    "category": "Hashing",
+    "category": "Hashing & Ciphers",
     "funcName": "transformSha512Hash",
     "isAsync": true
   },
   {
     "id": "jsonprettify",
     "label": "JSON Prettify",
-    "category": "Structured Data",
+    "category": "Data Formats",
     "funcName": "transformJsonPrettify"
   },
   {
     "id": "jsonminify",
     "label": "JSON Minify",
-    "category": "Structured Data",
+    "category": "Data Formats",
     "funcName": "transformJsonMinify"
   },
   {
     "id": "jsonvalidate",
     "label": "JSON Validate",
-    "category": "Structured Data",
+    "category": "Data Formats",
     "funcName": "transformJsonValidate"
   },
   {
     "id": "removeextraspaces",
     "label": "Remove Extra Spaces",
-    "category": "Whitespace & HTML",
+    "category": "Cleaning & Extraction",
     "funcName": "transformRemoveExtraSpaces"
   },
   {
     "id": "striphtml",
     "label": "Strip HTML Tags",
-    "category": "Whitespace & HTML",
+    "category": "Cleaning & Extraction",
     "funcName": "transformStripHtml"
   },
   {
     "id": "trimallwhitespace",
     "label": "Remove All Whitespace",
-    "category": "Whitespace & HTML",
+    "category": "Cleaning & Extraction",
     "funcName": "transformTrimAllWhitespace"
   },
   {
     "id": "trimleading",
     "label": "Trim Leading Whitespace",
-    "category": "Whitespace & HTML",
+    "category": "Cleaning & Extraction",
     "funcName": "transformTrimLeading"
   },
   {
     "id": "trimtrailing",
     "label": "Trim Trailing Whitespace",
-    "category": "Whitespace & HTML",
+    "category": "Cleaning & Extraction",
     "funcName": "transformTrimTrailing"
   },
   {
@@ -370,49 +518,49 @@
   {
     "id": "reverse",
     "label": "Reverse Text",
-    "category": "Data & Utilities",
+    "category": "Text Manipulation",
     "funcName": "transformReverse"
   },
   {
     "id": "charcount",
     "label": "Character Count",
-    "category": "Data & Utilities",
+    "category": "Analysis",
     "funcName": "transformCharCount"
   },
   {
     "id": "wordcount",
     "label": "Word Count",
-    "category": "Data & Utilities",
+    "category": "Analysis",
     "funcName": "transformWordCount"
   },
   {
     "id": "linecount",
     "label": "Line Count",
-    "category": "Data & Utilities",
+    "category": "Analysis",
     "funcName": "transformLineCount"
   },
   {
     "id": "extractemails",
     "label": "Extract Email Addresses",
-    "category": "Data & Utilities",
+    "category": "Cleaning & Extraction",
     "funcName": "transformExtractEmails"
   },
   {
     "id": "extracturls",
     "label": "Extract URLs",
-    "category": "Data & Utilities",
+    "category": "Cleaning & Extraction",
     "funcName": "transformExtractUrls"
   },
   {
     "id": "slugify",
     "label": "Slugify",
-    "category": "Data & Utilities",
+    "category": "Case & Style",
     "funcName": "transformSlugify"
   },
   {
     "id": "countcharacter",
     "label": "Count Character",
-    "category": "Data & Utilities",
+    "category": "Analysis",
     "funcName": "transformCountCharacter",
     "params": [
       {
@@ -434,50 +582,50 @@
   {
     "id": "extractnumbers",
     "label": "Extract Numbers",
-    "category": "Data & Utilities",
+    "category": "Cleaning & Extraction",
     "funcName": "transformExtractNumbers"
   },
   {
     "id": "unixtimetodate",
     "label": "Unix Timestamp to ISO Date",
-    "category": "Data & Utilities",
+    "category": "Data Formats",
     "funcName": "transformUnixTimeToDate"
   },
   {
     "id": "datetounixtime",
     "label": "ISO Date to Unix Timestamp",
-    "category": "Data & Utilities",
+    "category": "Data Formats",
     "funcName": "transformDateToUnixTime"
   },
   {
     "id": "rot13",
     "label": "ROT13 Cipher",
-    "category": "Ciphers",
+    "category": "Hashing & Ciphers",
     "funcName": "transformRot13"
   },
   {
     "id": "morsecodeencode",
     "label": "Text to Morse Code",
-    "category": "Ciphers",
+    "category": "Hashing & Ciphers",
     "funcName": "transformMorseCodeEncode"
   },
   {
     "id": "morsecodedecode",
     "label": "Morse Code to Text",
-    "category": "Ciphers",
+    "category": "Hashing & Ciphers",
     "funcName": "transformMorseCodeDecode"
   },
   {
     "id": "generateuuid",
     "label": "Generate UUID v4",
-    "category": "Generators",
+    "category": "Generators & Utilities",
     "funcName": "transformGenerateUuid",
     "isAsync": true
   },
   {
     "id": "generateloremipsum",
     "label": "Generate Lorem Ipsum",
-    "category": "Generators",
+    "category": "Generators & Utilities",
     "funcName": "transformGenerateLoremIpsum",
     "params": [
       {
