@@ -1,0 +1,332 @@
+:root {
+  /* Colors */
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --secondary-color: #6c757d;
+  --secondary-hover: #5a6268;
+  --accent-color: #28a745; /* Green for success/focus */
+  --text-color: #343a40;
+  --background-light: #f8f9fa;
+  --card-background: #ffffff;
+  --border-color: #dee2e6;
+  --shadow-light: rgba(0, 0, 0, 0.08);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+
+  /* Fonts */
+  --font-heading: "Montserrat", sans-serif;
+  --font-body: "Montserrat", sans-serif;
+  --font-mono: "Roboto Mono", monospace;
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+
+  /* Border Radius */
+  --border-radius: 8px;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--background-light);
+  padding: var(--spacing-lg);
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+h1 {
+  font-family: var(--font-heading);
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 2.5rem;
+  text-shadow: 1px 1px 2px var(--shadow-light);
+}
+
+.container {
+  max-width: 900px;
+  width: 100%;
+  padding: var(--spacing-md);
+}
+
+.controls,
+.filters {
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  box-shadow: 0 4px 12px var(--shadow-light);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  align-items: center;
+}
+
+.filters {
+  padding: var(--spacing-md) var(--spacing-lg); /* More horizontal padding */
+  margin-top: var(--spacing-md);
+  flex-direction: column; /* Stack filters vertically on small screens */
+  align-items: stretch;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-sm);
+  width: 100%; /* Full width for stacking */
+}
+
+.filter-group label {
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+  color: var(--primary-color);
+  font-size: 0.95rem;
+}
+
+.filter-group select,
+.filter-group input[type="text"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  background-color: var(--background-light);
+  appearance: none; /* Remove default arrow */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.9a14.7%2014.7%200%200%200-20.8%200L146.2%20189.9%2026%2069.9a14.7%2014.7%200%200%200-20.8%2020.8l130.4%20130.4c5.7%205.7%2014.8%205.7%2020.5%200L287%2090.7a14.7%2014.7%200%200%200%200-20.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.8rem auto;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.filter-group select:focus,
+.filter-group input[type="text"]:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+button {
+  padding: 0.8rem 1.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px var(--shadow-light);
+  margin: var(--spacing-xs);
+}
+
+button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px var(--shadow-medium);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px var(--shadow-light);
+}
+
+button:disabled {
+  background: var(--secondary-color);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.reset-button {
+  background: var(--secondary-color);
+}
+
+.reset-button:hover {
+  background: var(--secondary-hover);
+}
+
+.card {
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  max-width: 600px;
+  margin: var(--spacing-md) auto var(--spacing-xl);
+  box-shadow: 0 8px 20px var(--shadow-medium);
+  text-align: left;
+  overflow: hidden; /* For transition */
+}
+
+.card h2 {
+  font-family: var(--font-heading);
+  margin-top: 0;
+  margin-bottom: var(--spacing-sm);
+  color: var(--primary-color);
+  font-size: 2rem;
+  text-align: center;
+}
+
+.card p {
+  margin: 0.5rem 0;
+  font-size: 1.05rem;
+  color: var(--text-color);
+}
+
+.card p strong {
+  color: var(--primary-hover);
+}
+
+.card .instructions-header {
+  font-weight: 600;
+  margin-top: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+  color: var(--primary-color);
+}
+
+.card ul {
+  list-style: decimal;
+  padding-left: var(--spacing-lg);
+  margin-top: var(--spacing-xs);
+}
+
+.card ul li {
+  margin-bottom: var(--spacing-xs);
+  color: var(--text-color);
+}
+
+.no-exercise-message {
+  text-align: center;
+  color: var(--secondary-color);
+  font-style: italic;
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+/* Card content transition */
+.card-content-wrapper {
+  transition:
+    opacity 0.5s ease-in-out,
+    transform 0.5s ease-in-out;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-content-wrapper.fading-out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Responsive adjustments for tablet and larger screens */
+@media (min-width: 768px) {
+  .filters {
+    flex-direction: row; /* Row for wider screens */
+    justify-content: space-around;
+    align-items: flex-end; /* Align inputs/selects at bottom */
+  }
+
+  .filter-group {
+    width: auto; /* Auto width for inline layout */
+    flex: 1; /* Distribute space evenly */
+    margin-right: var(--spacing-sm); /* Spacing between groups */
+    margin-bottom: 0;
+  }
+
+  .filter-group:last-child {
+    margin-right: 0;
+  }
+
+  .filter-group select,
+  .filter-group input[type="text"] {
+    max-width: 200px; /* Constrain width of filter inputs */
+  }
+
+  .controls {
+    justify-content: center;
+    flex-direction: row; /* Ensure row direction for larger screens */
+    align-items: center;
+  }
+
+  button {
+    margin: 0 var(--spacing-xs); /* Tighter spacing for buttons */
+  }
+}
+
+/* Responsive adjustments for mobile phones (portrait) */
+@media (max-width: 480px) {
+  body {
+    padding: var(
+      --spacing-sm
+    ); /* Slightly less padding on very small screens */
+  }
+
+  h1 {
+    font-size: 1.8rem; /* Slightly smaller for very narrow screens */
+    margin-bottom: var(--spacing-md); /* Consistent margin */
+  }
+
+  .container {
+    padding: var(--spacing-xs); /* More compact container padding */
+  }
+
+  .filters {
+    padding: var(--spacing-sm); /* Adjust filter section padding */
+  }
+
+  .filter-group {
+    margin-bottom: var(
+      --spacing-sm
+    ); /* Consistent spacing between stacked filters */
+  }
+
+  .filter-group:last-of-type {
+    margin-bottom: 0; /* No bottom margin on the last stacked filter */
+  }
+
+  .card {
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-sm); /* Adjust margin for card */
+    margin-bottom: var(--spacing-lg); /* Ensure enough space at bottom */
+  }
+
+  .card h2 {
+    font-size: 1.5rem; /* Slightly smaller card title */
+  }
+
+  .card p {
+    font-size: 1rem; /* Slightly smaller paragraph text */
+  }
+
+  .card ul {
+    padding-left: var(--spacing-md); /* Adjust list padding */
+  }
+
+  button {
+    padding: 0.7rem 1.2rem; /* Slightly smaller button padding on mobile */
+    font-size: 0.95rem; /* Slightly smaller button font */
+    margin: var(--spacing-xs) 0; /* Ensure vertical stack for all buttons */
+    width: 100%; /* Full width buttons on very small screens */
+  }
+
+  .controls {
+    flex-direction: column; /* Stack buttons vertically in controls */
+    align-items: stretch; /* Stretch buttons to full width */
+  }
+}
