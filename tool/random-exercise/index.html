@@ -8,61 +8,107 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Mono:wght@400&display=swap"
       rel="stylesheet"
     />
+    <!-- Path corrected -->
     <link rel="stylesheet" href="/tool/random-exercise/style.css" />
   </head>
   <body>
     <div class="container">
       <h1>Martial Arts Exercise Generator</h1>
 
-      <div class="filters">
-        <div class="filter-group">
-          <label for="categoryFilter">Category:</label>
-          <select id="categoryFilter" onchange="applyFilters()"></select>
-        </div>
-        <div class="filter-group">
-          <label for="targetFilter">Target:</label>
-          <select id="targetFilter" onchange="applyFilters()"></select>
-        </div>
-        <div class="filter-group">
-          <label for="nameSearch">Search by Name:</label>
-          <input
-            type="text"
-            id="nameSearch"
-            placeholder="e.g., Squat or Push-Up"
-            oninput="applyFilters()"
-          />
-        </div>
-        <button class="reset-button" onclick="resetFilters()">
-          Reset Filters
+      <!-- Toggle between modes -->
+      <div class="mode-toggle">
+        <button id="togglePlanModeBtn" class="primary-button">
+          Create Workout Plan
         </button>
       </div>
 
-      <div class="controls">
-        <button onclick="pickExercise()" id="pickExerciseBtn">
-          Pick Random Exercise
-        </button>
-        <button onclick="previousExercise()" id="prevExerciseBtn" disabled>
-          Previous Exercise
-        </button>
+      <!-- Single Exercise Mode (Initial View) -->
+      <div id="singleExerciseMode" class="mode-section">
+        <div class="filters">
+          <div class="filter-group">
+            <label for="categoryFilter">Category:</label>
+            <select id="categoryFilter" onchange="applyFilters()"></select>
+          </div>
+          <div class="filter-group">
+            <label for="targetFilter">Target:</label>
+            <select id="targetFilter" onchange="applyFilters()"></select>
+          </div>
+          <div class="filter-group">
+            <label for="nameSearch">Search by Name:</label>
+            <input
+              type="text"
+              id="nameSearch"
+              placeholder="e.g., Squat or Push-Up"
+              oninput="applyFilters()"
+            />
+          </div>
+          <button class="reset-button" onclick="resetFilters()">
+            Reset Filters
+          </button>
+        </div>
+
+        <div class="controls">
+          <button onclick="pickExercise()" id="pickExerciseBtn">
+            Pick Random Exercise
+          </button>
+          <button onclick="previousExercise()" id="prevExerciseBtn" disabled>
+            Previous Exercise
+          </button>
+        </div>
+
+        <div class="card" id="exerciseCard">
+          <div class="card-content-wrapper">
+            <h2 id="exerciseName"></h2>
+            <p>
+              <strong>Category:</strong> <span id="exerciseCategory"></span>
+            </p>
+            <p><strong>Target:</strong> <span id="exerciseTarget"></span></p>
+            <p>
+              <strong>Reps / Time:</strong> <span id="exerciseRepsTime"></span>
+            </p>
+            <p class="instructions-header">Instructions:</p>
+            <ul id="instructionList"></ul>
+          </div>
+          <div class="no-exercise-message" style="display: none">
+            No exercises match your current filters. Try adjusting them!
+          </div>
+        </div>
       </div>
 
-      <div class="card" id="exerciseCard">
-        <div class="card-content-wrapper">
-          <h2 id="exerciseName"></h2>
-          <p><strong>Category:</strong> <span id="exerciseCategory"></span></p>
-          <p><strong>Target:</strong> <span id="exerciseTarget"></span></p>
-          <p>
-            <strong>Reps / Time:</strong> <span id="exerciseRepsTime"></span>
-          </p>
-          <p class="instructions-header">Instructions:</p>
-          <ul id="instructionList"></ul>
+      <!-- Workout Plan Mode (Initially hidden) -->
+      <div id="workoutPlanMode" class="mode-section hidden">
+        <h2>Build Your Workout Plan</h2>
+        <div class="plan-config">
+          <div id="planSectionsContainer">
+            <!-- Dynamic workout plan sections will be added here -->
+          </div>
+          <button
+            class="add-section-button"
+            onclick="addWorkoutPlanSection()"
+            id="addSectionBtn"
+          >
+            + Add Section
+          </button>
+          <button
+            class="primary-button generate-plan-button"
+            onclick="generateWorkoutPlan()"
+            id="generatePlanBtn"
+          >
+            Generate Workout Plan
+          </button>
         </div>
-        <div class="no-exercise-message" style="display: none">
-          No exercises match your current filters. Try adjusting them!
+
+        <div class="generated-plan-display" id="generatedPlanDisplay">
+          <!-- Generated workout plan will be displayed here -->
+          <div class="no-exercise-message initial-message">
+            Define sections above and click "Generate Workout Plan" to create
+            your customized workout!
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- Path corrected -->
     <script src="/tool/random-exercise/script.js"></script>
   </body>
 </html>

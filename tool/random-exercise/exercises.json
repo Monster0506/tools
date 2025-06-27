@@ -2,7 +2,7 @@
   {
     "name": "Goblet Squat",
     "category": "Lower Body Strength",
-    "target": "Quads, glutes, core",
+    "target": "Quads, Glutes, Core",
     "reps": "8–12 reps",
     "instructions": [
       "Stand with feet shoulder-width apart, toes slightly turned out.",
@@ -15,8 +15,8 @@
   },
   {
     "name": "Pallof Press",
-    "category": "Core Stability",
-    "target": "Obliques, anti-rotation",
+    "category": "Core",
+    "target": "Obliques, Anti-rotation, Core Stability, Core Strength",
     "reps": "10 per side",
     "instructions": [
       "Anchor a resistance band at chest level.",
@@ -28,7 +28,7 @@
   {
     "name": "Bent-Over Dumbbell Row",
     "category": "Upper Body Strength",
-    "target": "Lats, upper back, biceps",
+    "target": "Lats, Upper Back, Biceps",
     "reps": "10–12 reps",
     "instructions": [
       "Hold dumbbells, hinge at hips with a flat back.",
@@ -38,8 +38,8 @@
   },
   {
     "name": "Bear Crawl",
-    "category": "Conditioning",
-    "target": "Core, shoulders, full-body control",
+    "category": "Conditioning, Full Body, Core",
+    "target": "Core, Shoulders, Coordination",
     "reps": "30 seconds forward and back",
     "instructions": [
       "Get on hands and toes, knees close to ground.",
@@ -49,8 +49,8 @@
   },
   {
     "name": "Dead Bug",
-    "category": "Core Stability",
-    "target": "Deep core, anti-extension",
+    "category": "Core",
+    "target": "Deep Core, Anti-extension, Core Stability, Core Strength",
     "reps": "6 per side",
     "instructions": [
       "Lie flat on your back, knees and hips at 90 degrees, arms pointing straight up.",
@@ -61,8 +61,8 @@
   },
   {
     "name": "Lateral Lunge",
-    "category": "Lower Body Mobility/Strength",
-    "target": "Glutes, adductors, quads",
+    "category": "Lower Body Mobility, Lower Body Strength",
+    "target": "Glutes, Adductors, Quads",
     "reps": "6–8 reps per side",
     "instructions": [
       "Stand tall with feet together and arms at sides.",
@@ -73,8 +73,8 @@
   },
   {
     "name": "Push-Up to Shoulder Tap",
-    "category": "Upper Body & Core",
-    "target": "Chest, shoulders, triceps, core",
+    "category": "Upper Body Strength, Core",
+    "target": "Chest, Shoulders, Triceps, Core Stability",
     "reps": "8–10 reps",
     "instructions": [
       "Begin in a plank position with hands directly under shoulders.",
@@ -85,8 +85,8 @@
   },
   {
     "name": "Jump Squat",
-    "category": "Explosive / Cardio",
-    "target": "Quads, glutes, calves",
+    "category": "Explosive, Cardio, Lower Body Strength",
+    "target": "Quads, Glutes, Calves",
     "reps": "15–20 seconds",
     "instructions": [
       "Start in a squat position with feet shoulder-width apart.",
@@ -96,8 +96,8 @@
   },
   {
     "name": "Mountain Climbers",
-    "category": "Cardio",
-    "target": "Core, shoulders, cardiovascular",
+    "category": "Cardio, Core, Conditioning",
+    "target": "Core, Shoulders, Cardiovascular",
     "reps": "30 seconds",
     "instructions": [
       "Begin in a high plank position.",
@@ -107,8 +107,8 @@
   },
   {
     "name": "Band Face Pull",
-    "category": "Upper Body Posture",
-    "target": "Rear delts, upper back",
+    "category": "Upper Body Strength",
+    "target": "Rear Deltoids, Upper Back, Posture",
     "reps": "12–15 reps",
     "instructions": [
       "Anchor band at upper chest height.",
@@ -119,7 +119,7 @@
   {
     "name": "Glute Bridge",
     "category": "Lower Body Strength",
-    "target": "Glutes, hamstrings",
+    "target": "Glutes, Hamstrings",
     "reps": "12–15 reps",
     "instructions": [
       "Lie on your back with knees bent and feet flat on the ground.",
@@ -130,8 +130,8 @@
   },
   {
     "name": "High Knees",
-    "category": "Cardio",
-    "target": "Cardiovascular system, hip flexors, calves",
+    "category": "Cardio, Conditioning",
+    "target": "Cardiovascular, Hip Flexors, Calves",
     "reps": "30 seconds",
     "instructions": [
       "Stand tall with feet hip-width apart.",
@@ -143,7 +143,7 @@
   {
     "name": "Dumbbell Shoulder Press",
     "category": "Upper Body Strength",
-    "target": "Shoulders, triceps",
+    "target": "Shoulders, Triceps",
     "reps": "8–10 reps",
     "instructions": [
       "Sit or stand with a dumbbell in each hand at shoulder height, palms facing forward.",
@@ -153,8 +153,8 @@
   },
   {
     "name": "Side Plank",
-    "category": "Core Stability",
-    "target": "Obliques, shoulder stabilizers",
+    "category": "Core",
+    "target": "Obliques, Shoulder Stabilizers, Core Stability, Core Strength",
     "reps": "20–30 seconds per side",
     "instructions": [
       "Lie on your side and prop yourself up on your elbow.",
@@ -165,8 +165,8 @@
   },
   {
     "name": "Speed Skaters",
-    "category": "Cardio / Agility",
-    "target": "Glutes, hamstrings, calves",
+    "category": "Cardio, Agility",
+    "target": "Glutes, Hamstrings, Calves",
     "reps": "30 seconds",
     "instructions": [
       "Start in a slight squat position.",
@@ -178,7 +178,7 @@
   {
     "name": "Resistance Band Row",
     "category": "Upper Body Strength",
-    "target": "Back, biceps",
+    "target": "Back, Biceps",
     "reps": "12–15 reps",
     "instructions": [
       "Anchor the band at chest height.",
@@ -201,8 +201,8 @@
   },
   {
     "name": "Burpee",
-    "category": "Full Body Conditioning",
-    "target": "Full body, especially chest, legs, and core",
+    "category": "Full Body, Cardio, Conditioning",
+    "target": "Full Body, Chest, Quads, Glutes, Hamstrings, Calves, Core",
     "reps": "8–12 reps",
     "instructions": [
       "Begin standing, then drop into a squat and place your hands on the floor.",
@@ -213,8 +213,8 @@
   },
   {
     "name": "Wall Sit",
-    "category": "Lower Body Isometric",
-    "target": "Quads, glutes",
+    "category": "Lower Body Strength",
+    "target": "Quads, Glutes",
     "reps": "30–60 seconds hold",
     "instructions": [
       "Stand with back flat against a wall.",
@@ -225,8 +225,8 @@
   },
   {
     "name": "Plank to Elbow Tap",
-    "category": "Core Strength",
-    "target": "Core, shoulders",
+    "category": "Core",
+    "target": "Core, Shoulders, Core Strength, Core Stability",
     "reps": "8–10 reps per side",
     "instructions": [
       "Begin in a high plank position.",
@@ -278,7 +278,7 @@
   {
     "name": "Single Leg Deadlift (Dumbbell)",
     "category": "Lower Body Strength",
-    "target": "Hamstrings, Glutes, Core, Balance",
+    "target": "Hamstrings, Glutes, Core, Balance, Core Stability",
     "reps": "8–10 reps per leg",
     "instructions": [
       "Hold a dumbbell in one hand.",
@@ -325,8 +325,8 @@
   },
   {
     "name": "Resistance Band Pull Apart",
-    "category": "Upper Body Posture",
-    "target": "Upper Back, Rear Deltoids",
+    "category": "Upper Body Strength",
+    "target": "Upper Back, Rear Deltoids, Posture",
     "reps": "15–20 reps",
     "instructions": [
       "Hold a light resistance band with both hands, palms facing down, hands about shoulder-width apart.",
@@ -337,8 +337,8 @@
   },
   {
     "name": "Push-Up",
-    "category": "Upper Body Strength",
-    "target": "Chest, Shoulders, Triceps",
+    "category": "Upper Body Strength, Core",
+    "target": "Chest, Shoulders, Triceps, Core Stability",
     "reps": "8–15 reps",
     "instructions": [
       "Start in a plank position with hands directly under shoulders, body in a straight line.",
@@ -349,8 +349,8 @@
   },
   {
     "name": "Bird-Dog",
-    "category": "Core Stability",
-    "target": "Deep Core, Back Stability",
+    "category": "Core",
+    "target": "Deep Core, Back Stability, Core Stability, Core Strength",
     "reps": "8–10 reps per side",
     "instructions": [
       "Start on your hands and knees, wrists under shoulders, knees under hips.",
@@ -362,8 +362,8 @@
   },
   {
     "name": "Leg Raises (lying)",
-    "category": "Core Strength",
-    "target": "Lower Abs, Hip Flexors",
+    "category": "Core",
+    "target": "Lower Abs, Hip Flexors, Core Strength",
     "reps": "12–15 reps",
     "instructions": [
       "Lie flat on your back, hands under your lower back for support if needed.",
@@ -374,8 +374,8 @@
   },
   {
     "name": "Flutter Kicks",
-    "category": "Core Endurance",
-    "target": "Lower Abs, Hip Flexors",
+    "category": "Core, Cardio",
+    "target": "Lower Abs, Hip Flexors, Core Endurance",
     "reps": "30–45 seconds",
     "instructions": [
       "Lie on your back with your hands under your lower back for support.",
@@ -386,8 +386,8 @@
   },
   {
     "name": "Russian Twist (Bodyweight)",
-    "category": "Core Strength",
-    "target": "Obliques, Core Rotators",
+    "category": "Core",
+    "target": "Obliques, Core Rotators, Core Strength",
     "reps": "15–20 reps per side",
     "instructions": [
       "Sit on the floor with knees bent and feet flat.",
@@ -399,8 +399,8 @@
   },
   {
     "name": "Plank Hip Dips",
-    "category": "Core Stability",
-    "target": "Obliques, Core",
+    "category": "Core",
+    "target": "Obliques, Abs, Core Strength, Core Stability",
     "reps": "10–12 reps per side",
     "instructions": [
       "Start in an elbow plank position, forearms on the ground, body in a straight line.",
@@ -412,8 +412,8 @@
   },
   {
     "name": "Jumping Jacks",
-    "category": "Cardio",
-    "target": "Full body, Cardiovascular",
+    "category": "Cardio, Full Body",
+    "target": "Full Body, Cardiovascular",
     "reps": "30–45 seconds",
     "instructions": [
       "Start standing with feet together and arms at your sides.",
@@ -436,8 +436,8 @@
   },
   {
     "name": "Shadow Boxing (Light)",
-    "category": "Cardio / Conditioning",
-    "target": "Full body, Coordination, Cardiovascular",
+    "category": "Cardio, Conditioning, Full Body",
+    "target": "Full Body, Coordination, Cardiovascular",
     "reps": "1 minute",
     "instructions": [
       "Stand with a slight athletic stance, knees slightly bent.",
@@ -448,7 +448,7 @@
   },
   {
     "name": "Broad Jump",
-    "category": "Explosive Power",
+    "category": "Explosive, Lower Body Strength",
     "target": "Glutes, Quads, Calves",
     "reps": "5–8 reps",
     "instructions": [
@@ -460,7 +460,7 @@
   },
   {
     "name": "Plyometric Push-Up (Modified)",
-    "category": "Explosive Power",
+    "category": "Explosive, Upper Body Strength",
     "target": "Chest, Shoulders, Triceps",
     "reps": "5–8 reps",
     "instructions": [
@@ -473,7 +473,7 @@
   {
     "name": "Cat-Cow Stretch",
     "category": "Mobility",
-    "target": "Spine, Core",
+    "target": "Spine Mobility, Core",
     "reps": "10–15 reps",
     "instructions": [
       "Start on your hands and knees, hands under shoulders, knees under hips.",
@@ -497,8 +497,8 @@
   },
   {
     "name": "Scapular Push-Up",
-    "category": "Posture / Shoulder Stability",
-    "target": "Scapular Stabilizers",
+    "category": "Mobility",
+    "target": "Scapular Stabilizers, Posture, Shoulder Stability",
     "reps": "12–15 reps",
     "instructions": [
       "Start in a high plank position with straight arms, hands directly under shoulders.",
@@ -509,8 +509,8 @@
   },
   {
     "name": "Hollow Body Hold",
-    "category": "Core Isometric",
-    "target": "Deep Core",
+    "category": "Core",
+    "target": "Deep Core, Core Strength",
     "reps": "20–45 seconds hold",
     "instructions": [
       "Lie flat on your back, arms extended overhead, legs straight.",
@@ -521,7 +521,7 @@
   },
   {
     "name": "L-Sit Tuck Progression",
-    "category": "Core / Arm Isometric",
+    "category": "Core, Upper Body Strength",
     "target": "Abs, Hip Flexors, Triceps, Shoulders",
     "reps": "10–20 seconds hold",
     "instructions": [
@@ -533,8 +533,8 @@
   },
   {
     "name": "Crab Walk",
-    "category": "Conditioning / Coordination",
-    "target": "Shoulders, Triceps, Glutes, Hamstrings",
+    "category": "Conditioning, Full Body",
+    "target": "Shoulders, Triceps, Glutes, Hamstrings, Coordination",
     "reps": "30 seconds (forward and back)",
     "instructions": [
       "Sit on the floor with knees bent, feet flat, and hands on the floor behind you, fingers pointing forward.",
@@ -545,7 +545,7 @@
   },
   {
     "name": "Arm Circles",
-    "category": "Warm-up / Mobility",
+    "category": "Warm-up, Mobility",
     "target": "Shoulders, Upper Back",
     "reps": "15–20 circles forward, then backward",
     "instructions": [
@@ -558,7 +558,7 @@
   },
   {
     "name": "Inchworm",
-    "category": "Warm-up / Mobility / Core",
+    "category": "Warm-up, Mobility, Core",
     "target": "Hamstrings, Core, Shoulders",
     "reps": "6-8 reps",
     "instructions": [
@@ -571,8 +571,8 @@
   },
   {
     "name": "Plank Shoulder Taps (Alternating)",
-    "category": "Core Stability",
-    "target": "Core, Shoulders",
+    "category": "Core, Upper Body Strength",
+    "target": "Core, Shoulders, Core Stability",
     "reps": "10-12 per side",
     "instructions": [
       "Start in a high plank position, hands under shoulders, body in a straight line.",
@@ -584,7 +584,7 @@
   },
   {
     "name": "Thruster (Dumbbell)",
-    "category": "Full Body Strength / Conditioning",
+    "category": "Full Body Strength, Conditioning",
     "target": "Quads, Glutes, Shoulders, Triceps",
     "reps": "8-10 reps",
     "instructions": [
@@ -597,7 +597,7 @@
   },
   {
     "name": "Walking Lunge",
-    "category": "Lower Body Strength / Conditioning",
+    "category": "Lower Body Strength, Conditioning",
     "target": "Quads, Glutes, Hamstrings, Balance",
     "reps": "10-12 reps per leg",
     "instructions": [
@@ -610,7 +610,7 @@
   },
   {
     "name": "Plank Jacks",
-    "category": "Cardio / Core",
+    "category": "Cardio, Core",
     "target": "Core, Hips, Shoulders, Cardiovascular",
     "reps": "30 seconds",
     "instructions": [
@@ -622,7 +622,7 @@
   },
   {
     "name": "Box Jumps (Low Box)",
-    "category": "Explosive Power",
+    "category": "Explosive, Lower Body Strength",
     "target": "Glutes, Quads, Calves, Explosiveness",
     "reps": "5-8 reps",
     "instructions": [
@@ -646,8 +646,8 @@
   },
   {
     "name": "Side Shuffle (Athletic Stance)",
-    "category": "Agility / Cardio",
-    "target": "Legs, Glutes, Cardiovascular, Lateral Movement",
+    "category": "Agility, Cardio",
+    "target": "Quads, Hamstrings, Calves, Glutes, Cardiovascular, Lateral Movement",
     "reps": "30 seconds (back and forth)",
     "instructions": [
       "Set two markers about 10-20 feet apart.",
@@ -659,8 +659,8 @@
   },
   {
     "name": "Superman",
-    "category": "Core Stability / Posterior Chain",
-    "target": "Lower Back, Glutes, Hamstrings",
+    "category": "Core",
+    "target": "Lower Back, Glutes, Hamstrings, Core Stability, Posterior Chain",
     "reps": "10-12 reps",
     "instructions": [
       "Lie face down on the floor with arms extended straight overhead and legs straight.",
@@ -672,19 +672,19 @@
   },
   {
     "name": "Standing Band Rotation",
-    "category": "Core Strength",
-    "target": "Obliques, Core Rotation",
+    "category": "Core",
+    "target": "Obliques, Core Rotation, Core Strength",
     "reps": "10-12 reps per side",
     "instructions": [
       "Anchor a resistance band at chest height to your side.",
-      "Stand sideways to the anchor, holding the band with both hands out in front of you.",
+      "Stand sideways to the anchor, holding the band in both hands out in front of you.",
       "Rotate your torso away from the anchor, keeping your arms straight and hips relatively still.",
       "Control the rotation back to the starting position."
     ]
   },
   {
     "name": "Split Jumps (Lunge Jumps)",
-    "category": "Explosive / Cardio",
+    "category": "Explosive, Cardio, Lower Body Strength",
     "target": "Quads, Glutes, Hamstrings, Calves, Explosiveness",
     "reps": "8-10 reps per leg (total)",
     "instructions": [
@@ -709,8 +709,8 @@
   },
   {
     "name": "Crunches",
-    "category": "Core Strength",
-    "target": "Upper Abs",
+    "category": "Core",
+    "target": "Upper Abs, Core Strength",
     "reps": "15-20 reps",
     "instructions": [
       "Lie on your back with knees bent, feet flat on the floor, and hands behind your head or crossed over your chest.",
@@ -721,8 +721,8 @@
   },
   {
     "name": "Reverse Crunches",
-    "category": "Core Strength",
-    "target": "Lower Abs",
+    "category": "Core",
+    "target": "Lower Abs, Core Strength",
     "reps": "12-15 reps",
     "instructions": [
       "Lie on your back, knees bent, feet off the floor, forming a 90-degree angle at the hips and knees.",
@@ -733,7 +733,7 @@
   },
   {
     "name": "Single-Leg Glute Bridge",
-    "category": "Lower Body Strength",
+    "category": "Lower Body Strength, Core",
     "target": "Glutes, Hamstrings, Core Stability",
     "reps": "10-12 reps per leg",
     "instructions": [
@@ -745,7 +745,7 @@
   },
   {
     "name": "Pistol Squat Progression (Assisted)",
-    "category": "Lower Body Strength",
+    "category": "Lower Body Strength, Mobility",
     "target": "Quads, Glutes, Balance, Ankle Mobility",
     "reps": "5-8 reps per leg",
     "instructions": [
@@ -758,7 +758,7 @@
   {
     "name": "Sumo Squat (Bodyweight)",
     "category": "Lower Body Strength",
-    "target": "Inner Thighs (Adductors), Glutes, Quads",
+    "target": "Inner Thighs, Adductors, Glutes, Quads",
     "reps": "12-15 reps",
     "instructions": [
       "Stand with feet wider than shoulder-width, toes pointed out at 45 degrees.",
@@ -770,8 +770,8 @@
   },
   {
     "name": "Good Mornings (Bodyweight)",
-    "category": "Lower Body Posture",
-    "target": "Hamstrings, Glutes, Lower Back",
+    "category": "Lower Body Strength",
+    "target": "Hamstrings, Glutes, Lower Back, Posture",
     "reps": "12-15 reps",
     "instructions": [
       "Stand tall with a slight bend in your knees.",
@@ -783,8 +783,8 @@
   },
   {
     "name": "Plank with Leg Lift",
-    "category": "Core Stability",
-    "target": "Core, Glutes, Back Stability",
+    "category": "Core",
+    "target": "Core, Glutes, Back Stability, Core Stability, Glute Activation",
     "reps": "8-10 reps per side",
     "instructions": [
       "Start in a high plank position, body in a straight line.",
@@ -807,7 +807,7 @@
   },
   {
     "name": "Alternating Arm & Leg Swings (Dynamic)",
-    "category": "Warm-up / Mobility",
+    "category": "Warm-up, Mobility",
     "target": "Hips, Shoulders, Hamstrings, Dynamic Flexibility",
     "reps": "10-12 per side",
     "instructions": [
@@ -820,7 +820,7 @@
   },
   {
     "name": "Spiderman Lunge with Rotation",
-    "category": "Mobility",
+    "category": "Mobility, Core",
     "target": "Hips, Thoracic Spine, Core",
     "reps": "6-8 reps per side",
     "instructions": [
@@ -846,7 +846,7 @@
   },
   {
     "name": "World's Greatest Stretch",
-    "category": "Mobility",
+    "category": "Mobility, Full Body",
     "target": "Hips, Hamstrings, Thoracic Spine, Quads, Ankles",
     "reps": "3-5 reps per side",
     "instructions": [
@@ -870,18 +870,6 @@
     ]
   },
   {
-    "name": "Band Assisted Pull-Up (Modified)",
-    "category": "Upper Body Strength",
-    "target": "Back, Biceps, Forearms",
-    "reps": "6-10 reps",
-    "instructions": [
-      "Loop a resistance band over a sturdy bar (or attach to door anchor high).",
-      "Place one or both knees into the loop (or one foot if using a single loop).",
-      "Hang with arms fully extended, then pull your chest towards the band/bar.",
-      "Lower with control, allowing the band to assist."
-    ]
-  },
-  {
     "name": "Dumbbell Floor Press",
     "category": "Upper Body Strength",
     "target": "Chest, Triceps, Shoulders",
@@ -895,8 +883,8 @@
   },
   {
     "name": "Dumbbell Farmers Carry",
-    "category": "Full Body Strength",
-    "target": "Grip, Core, Shoulders, Traps, Legs",
+    "category": "Full Body Strength, Core",
+    "target": "Grip, Core, Shoulders, Traps, Core Stability",
     "reps": "30-60 seconds / distance",
     "instructions": [
       "Hold a heavy dumbbell in each hand, arms hanging straight at your sides.",
@@ -907,8 +895,8 @@
   },
   {
     "name": "Half-Kneeling Chop (Band)",
-    "category": "Core Strength",
-    "target": "Obliques, Rotational Core, Hip Stability",
+    "category": "Core",
+    "target": "Obliques, Rotational Core, Hip Stability, Core Strength, Core Stability",
     "reps": "8-10 reps per side",
     "instructions": [
       "Kneel with one knee up (90-degree angle at hip and knee), the other knee down.",
@@ -944,8 +932,8 @@
   },
   {
     "name": "Seated Good Mornings (Band)",
-    "category": "Posterior Chain Mobility",
-    "target": "Hamstrings, Lower Back, Glutes",
+    "category": "Lower Body Strength, Mobility",
+    "target": "Hamstrings, Lower Back, Glutes, Posterior Chain",
     "reps": "15-20 reps",
     "instructions": [
       "Sit on the floor with legs straight and a resistance band around your upper back/neck, holding the ends.",
@@ -956,8 +944,8 @@
   },
   {
     "name": "High Plank Row (Dumbbell)",
-    "category": "Upper Body Strength, Core Stability",
-    "target": "Back, Core, Shoulders, Triceps",
+    "category": "Upper Body Strength, Core",
+    "target": "Back, Core, Shoulders, Triceps, Core Stability",
     "reps": "8-10 reps per arm",
     "instructions": [
       "Start in a high plank position with hands on dumbbells, feet wide for stability.",
@@ -968,8 +956,8 @@
   },
   {
     "name": "Dumbbell Renegade Row",
-    "category": "Upper Body Strength, Core Stability",
-    "target": "Back, Core, Shoulders, Triceps",
+    "category": "Upper Body Strength, Core",
+    "target": "Back, Core, Shoulders, Triceps, Core Stability",
     "reps": "6-8 reps per arm",
     "instructions": [
       "Start in a high plank position with hands on dumbbells, feet wide.",
@@ -1053,8 +1041,8 @@
   },
   {
     "name": "Shuffle Sprints",
-    "category": "Cardio / Agility",
-    "target": "Legs, Cardiovascular, Lateral Speed",
+    "category": "Cardio, Agility",
+    "target": "Quads, Hamstrings, Calves, Cardiovascular, Lateral Movement",
     "reps": "30-45 seconds",
     "instructions": [
       "Set two markers about 10-20 feet apart.",
@@ -1066,7 +1054,7 @@
   },
   {
     "name": "Pop Squats",
-    "category": "Explosive / Cardio",
+    "category": "Explosive, Cardio, Lower Body Strength",
     "target": "Quads, Glutes, Calves, Explosiveness",
     "reps": "30-45 seconds",
     "instructions": [
@@ -1078,8 +1066,8 @@
   },
   {
     "name": "Skydiver (Superman Variation)",
-    "category": "Core Stability / Posterior Chain",
-    "target": "Lower Back, Glutes, Upper Back",
+    "category": "Core",
+    "target": "Lower Back, Glutes, Upper Back, Core Stability, Posterior Chain",
     "reps": "10-12 reps",
     "instructions": [
       "Lie face down, arms bent, hands by your head (like a skydiver).",
@@ -1091,8 +1079,8 @@
   },
   {
     "name": "Bird Dog with Elbow to Knee",
-    "category": "Core Stability",
-    "target": "Deep Core, Balance, Coordination",
+    "category": "Core",
+    "target": "Deep Core, Balance, Coordination, Core Stability, Core Strength",
     "reps": "8-10 reps per side",
     "instructions": [
       "Start on hands and knees. Extend one arm forward and opposite leg back.",
@@ -1102,8 +1090,8 @@
   },
   {
     "name": "Standing Side Bend (Dumbbell)",
-    "category": "Core Strength",
-    "target": "Obliques, Core",
+    "category": "Core",
+    "target": "Obliques, Core, Core Strength",
     "reps": "10-12 reps per side",
     "instructions": [
       "Stand tall, feet hip-width apart. Hold one dumbbell in one hand.",
@@ -1115,8 +1103,8 @@
   },
   {
     "name": "Glute March",
-    "category": "Core Stability / Glute Activation",
-    "target": "Glutes, Core Stability",
+    "category": "Core",
+    "target": "Glutes, Core Stability, Glute Activation",
     "reps": "10-12 reps per leg",
     "instructions": [
       "Lie on your back, knees bent, feet flat, hips raised in a glute bridge position.",
@@ -1139,7 +1127,7 @@
   },
   {
     "name": "Leg Sweeps (Dynamic)",
-    "category": "Mobility / Warm-up",
+    "category": "Mobility, Warm-up",
     "target": "Hamstrings, Hip Flexors, Groin",
     "reps": "10-12 forward, 10-12 lateral per leg",
     "instructions": [
@@ -1151,11 +1139,11 @@
   },
   {
     "name": "Dynamic Chest Stretch (Arm Swings)",
-    "category": "Mobility / Warm-up",
+    "category": "Mobility, Warm-up",
     "target": "Chest, Shoulders, Upper Back",
     "reps": "15-20 reps",
     "instructions": [
-      "Stand tall, feet shoulder-width apart.",
+      "Stand tall with feet shoulder-width apart.",
       "Swing both arms forward and across your body, then open them wide to the sides, feeling a stretch in your chest.",
       "Maintain a controlled, rhythmic motion.",
       "Avoid over-extending or shrugging your shoulders."
@@ -1163,8 +1151,8 @@
   },
   {
     "name": "Cossack Squat (Assisted)",
-    "category": "Lower Body Mobility/Strength",
-    "target": "Inner Thighs, Glutes, Hamstrings, Ankle Mobility",
+    "category": "Lower Body Mobility, Lower Body Strength",
+    "target": "Inner Thighs, Adductors, Glutes, Hamstrings, Ankle Mobility",
     "reps": "6-8 reps per side",
     "instructions": [
       "Stand with feet wide, toes pointed slightly out. Hold onto something for balance if needed.",
@@ -1175,8 +1163,8 @@
   },
   {
     "name": "Forearm Plank (Low Plank)",
-    "category": "Core Isometric",
-    "target": "Core, Shoulders, Back",
+    "category": "Core",
+    "target": "Core, Shoulders, Back, Core Strength",
     "reps": "30-60 seconds hold",
     "instructions": [
       "Lie on your stomach. Prop yourself up on your forearms, elbows directly under shoulders.",
@@ -1187,7 +1175,7 @@
   },
   {
     "name": "Static Lunge Hold",
-    "category": "Lower Body Isometric",
+    "category": "Lower Body Strength",
     "target": "Quads, Glutes, Hamstrings, Core",
     "reps": "20-30 seconds per side",
     "instructions": [
@@ -1211,7 +1199,7 @@
   },
   {
     "name": "Resistance Band Rotational Punch",
-    "category": "Explosive / Core",
+    "category": "Explosive, Core",
     "target": "Core, Obliques, Shoulders, Punch Power",
     "reps": "10-12 per side",
     "instructions": [
@@ -1247,8 +1235,8 @@
   },
   {
     "name": "Lying Windshield Wipers",
-    "category": "Core Mobility",
-    "target": "Obliques, Hip Mobility, Spine",
+    "category": "Core, Mobility",
+    "target": "Obliques, Hip Mobility, Spine Mobility, Core Mobility, Core Strength",
     "reps": "10-12 reps per side",
     "instructions": [
       "Lie on your back, arms spread wide to the sides, palms down.",
@@ -1259,7 +1247,7 @@
   },
   {
     "name": "Push-Up Hold (Isometric)",
-    "category": "Upper Body Isometric",
+    "category": "Upper Body Strength",
     "target": "Chest, Shoulders, Triceps, Core",
     "reps": "20-40 seconds hold",
     "instructions": [
@@ -1271,8 +1259,8 @@
   },
   {
     "name": "Bird Dog Plank",
-    "category": "Core Stability",
-    "target": "Core, Shoulders, Glutes, Anti-Rotation",
+    "category": "Core",
+    "target": "Core, Shoulders, Glutes, Anti-Rotation, Core Stability, Core Strength",
     "reps": "5-8 reps per side",
     "instructions": [
       "Start in a high plank position.",
@@ -1283,8 +1271,8 @@
   },
   {
     "name": "Ankle Touches (Lying Oblique Crunch)",
-    "category": "Core Strength",
-    "target": "Obliques",
+    "category": "Core",
+    "target": "Obliques, Core Strength",
     "reps": "15-20 per side",
     "instructions": [
       "Lie on your back with knees bent, feet flat on the floor, heels close to your glutes.",
@@ -1295,8 +1283,8 @@
   },
   {
     "name": "Leg Bicycle Crunches",
-    "category": "Core Strength",
-    "target": "Abs, Obliques",
+    "category": "Core",
+    "target": "Abs, Obliques, Core Strength",
     "reps": "15-20 per side",
     "instructions": [
       "Lie on your back, hands behind your head, legs lifted with knees bent at 90 degrees.",
@@ -1307,8 +1295,8 @@
   },
   {
     "name": "Standing Band Abduction",
-    "category": "Lower Body Stability",
-    "target": "Glute Medius (Side Glute), Hip Stability",
+    "category": "Lower Body Strength",
+    "target": "Glute Medius, Hip Stability, Lower Body Stability",
     "reps": "15-20 reps per leg",
     "instructions": [
       "Loop a small resistance band around your ankles or just above your knees.",
@@ -1319,8 +1307,8 @@
   },
   {
     "name": "Wrist Curls (Dumbbell)",
-    "category": "Grip Strength / Forearm Strength",
-    "target": "Forearms, Grip",
+    "category": "Upper Body Strength",
+    "target": "Forearms, Grip, Grip Strength, Forearm Strength",
     "reps": "15-20 reps (palm up), then 15-20 reps (palm down)",
     "instructions": [
       "Sit with your forearm resting on your thigh, wrist off the knee.",
@@ -1332,7 +1320,7 @@
   },
   {
     "name": "Neck Rotation and Flexion (Gentle)",
-    "category": "Mobility / Warm-up",
+    "category": "Mobility, Warm-up",
     "target": "Neck, Upper Traps",
     "reps": "5-8 slow reps each direction",
     "instructions": [
@@ -1345,7 +1333,7 @@
   },
   {
     "name": "Dynamic Quad Stretch (Standing)",
-    "category": "Mobility / Warm-up",
+    "category": "Mobility, Warm-up",
     "target": "Quads, Hip Flexors",
     "reps": "10-12 reps per leg",
     "instructions": [
@@ -1358,7 +1346,7 @@
   {
     "name": "Scorpion Stretch (Prone)",
     "category": "Mobility",
-    "target": "Spine, Hips, Shoulders",
+    "target": "Spine Mobility, Hips, Shoulders",
     "reps": "3-5 slow reps per side",
     "instructions": [
       "Lie face down, arms out to the sides like a 'T', palms down.",
@@ -1369,14 +1357,257 @@
   },
   {
     "name": "Bird-Dog Crunch",
-    "category": "Core Stability",
-    "target": "Deep Core, Balance",
+    "category": "Core",
+    "target": "Deep Core, Balance, Core Stability, Core Strength",
     "reps": "8-10 reps per side",
     "instructions": [
       "Start on all fours. Extend one arm forward and the opposite leg straight back.",
       "Simultaneously bring the extended elbow and knee together underneath your body, touching if possible.",
       "Extend them back out with control, then return to the starting position.",
       "Maintain a flat back throughout."
+    ]
+  },
+  {
+    "name": "Dumbbell Romanian Deadlift (RDL)",
+    "category": "Lower Body Strength",
+    "target": "Hamstrings, Glutes, Lower Back",
+    "reps": "8-12 reps",
+    "instructions": [
+      "Stand holding dumbbells in front of your thighs, palms facing you.",
+      "Keep a slight bend in your knees and your back straight.",
+      "Hinge at your hips, lowering the dumbbells towards the floor, feeling a stretch in your hamstrings.",
+      "Keep the dumbbells close to your legs. Push through your heels to return to standing, squeezing your glutes at the top."
+    ]
+  },
+  {
+    "name": "Dumbbell Front Squat",
+    "category": "Lower Body Strength, Core",
+    "target": "Quads, Glutes, Core",
+    "reps": "8-12 reps",
+    "instructions": [
+      "Hold dumbbells at your shoulders, elbows pointing forward, palms facing each other (goblet style with two dumbbells or on shoulders).",
+      "Stand with feet shoulder-width apart, toes slightly out.",
+      "Brace your core, keep your chest up, and squat down, pushing knees out.",
+      "Descend until thighs are parallel or below, then push through heels to stand."
+    ]
+  },
+  {
+    "name": "Bulgarian Split Squat (Dumbbell)",
+    "category": "Lower Body Strength",
+    "target": "Quads, Glutes, Hamstrings, Balance",
+    "reps": "6-8 reps per leg",
+    "instructions": [
+      "Hold a dumbbell in each hand. Stand a few feet in front of a low bench or sturdy chair.",
+      "Place the top of one foot on the bench behind you.",
+      "Keep your chest upright and core braced.",
+      "Lower your body by bending your front knee until your back knee is close to the floor.",
+      "Push through your front heel to return to the starting position.",
+      "Complete all reps on one leg before switching."
+    ]
+  },
+  {
+    "name": "Dumbbell Bent-Over Fly",
+    "category": "Upper Body Strength",
+    "target": "Rear Deltoids, Upper Back",
+    "reps": "10-15 reps",
+    "instructions": [
+      "Hold a light dumbbell in each hand, palms facing each other.",
+      "Hinge at your hips with a slight bend in your knees, keeping your back straight and nearly parallel to the floor.",
+      "Let arms hang down, then raise dumbbells out to the sides in an arc, squeezing your shoulder blades.",
+      "Maintain a slight bend in elbows. Lower slowly with control."
+    ]
+  },
+  {
+    "name": "Decline Push-Up",
+    "category": "Upper Body Strength",
+    "target": "Chest, Shoulders, Triceps",
+    "reps": "8-15 reps",
+    "instructions": [
+      "Place your feet on a sturdy bench or riser, hands on the floor slightly wider than shoulder-width.",
+      "Ensure your body forms a straight line from head to heels.",
+      "Lower your chest towards the floor by bending your elbows.",
+      "Push through your hands to return to the starting position."
+    ]
+  },
+  {
+    "name": "Medicine Ball Overhead Slam",
+    "category": "Full Body, Explosive, Conditioning",
+    "target": "Core, Shoulders, Glutes, Explosiveness, Cardiovascular",
+    "reps": "8-12 reps",
+    "instructions": [
+      "Stand with feet shoulder-width apart, holding a medicine ball with both hands.",
+      "Reach the medicine ball overhead, extending your body fully.",
+      "Explosively slam the medicine ball down towards the floor, engaging your core and glutes.",
+      "Squat down to pick up the ball and immediately repeat."
+    ]
+  },
+  {
+    "name": "Medicine Ball Chest Pass (Seated/Kneeling)",
+    "category": "Upper Body Strength, Explosive",
+    "target": "Chest, Shoulders, Triceps, Explosiveness",
+    "reps": "8-12 reps",
+    "instructions": [
+      "Sit or kneel facing a wall (or partner), holding a medicine ball at chest level.",
+      "Explosively push the medicine ball straight out from your chest towards the target.",
+      "Catch the rebound with control and immediately prepare for the next rep."
+    ]
+  },
+  {
+    "name": "Medicine Ball Rotational Throw (Side to Side)",
+    "category": "Core, Explosive",
+    "target": "Obliques, Core Rotators, Explosiveness",
+    "reps": "8-12 reps per side",
+    "instructions": [
+      "Stand sideways to a wall (or partner), holding a medicine ball at chest level.",
+      "Pivot your feet and powerfully rotate your torso to throw the ball against the wall.",
+      "Catch the rebound and control the rotation back to the starting position.",
+      "Complete all reps on one side before switching."
+    ]
+  },
+  {
+    "name": "Dumbbell Single-Arm Row",
+    "category": "Upper Body Strength",
+    "target": "Lats, Upper Back, Biceps",
+    "reps": "8-12 reps per arm",
+    "instructions": [
+      "Place one knee and same-side hand on a bench for support, with the other foot on the floor.",
+      "Hold a dumbbell in the free hand, letting it hang straight down.",
+      "Keeping your back flat, pull the dumbbell up towards your rib cage, squeezing your shoulder blade.",
+      "Lower with control. Complete all reps on one arm, then switch."
+    ]
+  },
+  {
+    "name": "Standing Band Chest Fly",
+    "category": "Upper Body Strength",
+    "target": "Chest, Shoulders",
+    "reps": "12-15 reps",
+    "instructions": [
+      "Anchor a resistance band behind you at chest height (e.g., around a sturdy pole or door anchor).",
+      "Grab an end of the band in each hand, step forward to create tension.",
+      "With a slight bend in your elbows, bring your hands together in front of your chest, squeezing your pecs.",
+      "Control the band slowly back to the starting position."
+    ]
+  },
+  {
+    "name": "Resistance Band Lateral Walk",
+    "category": "Lower Body Strength",
+    "target": "Glute Medius, Hip Abductors, Hip Stability",
+    "reps": "10-15 steps per side",
+    "instructions": [
+      "Loop a resistance band around your ankles or just above your knees.",
+      "Stand with feet hip-width apart, slight bend in knees, athletic stance.",
+      "Take a step sideways, pulling against the band's resistance, keeping tension.",
+      "Bring the trailing foot to meet the lead foot. Continue walking sideways, staying low.",
+      "Perform desired steps in one direction, then reverse."
+    ]
+  },
+  {
+    "name": "Medicine Ball Russian Twist (Weighted)",
+    "category": "Core",
+    "target": "Obliques, Core Rotators, Core Strength",
+    "reps": "10-15 reps per side",
+    "instructions": [
+      "Sit on the floor with knees bent, feet off the ground (optional), holding a medicine ball with both hands.",
+      "Lean back slightly, engaging your core.",
+      "Rotate your torso from side to side, tapping the medicine ball lightly on the floor beside your hips.",
+      "Maintain a tight core and straight back."
+    ]
+  },
+  {
+    "name": "Plank with Hip Abduction",
+    "category": "Core",
+    "target": "Glute Medius, Core Stability",
+    "reps": "8-12 reps per side",
+    "instructions": [
+      "Start in a high plank position, hands directly under shoulders, body in a straight line.",
+      "Keep your core tight and hips stable.",
+      "Slowly lift one leg directly out to the side a few inches, without letting your hips twist.",
+      "Hold briefly, then lower with control and switch sides."
+    ]
+  },
+  {
+    "name": "Hindu Push-Up",
+    "category": "Upper Body Strength, Mobility",
+    "target": "Chest, Shoulders, Triceps, Spine Mobility",
+    "reps": "8-12 reps",
+    "instructions": [
+      "Start in a pike position (hips high, hands shoulder-width, feet hip-width apart).",
+      "Dive your head and chest down and forward, like a wave, until your chest nearly touches the floor.",
+      "Scoop your chest up and forward, straightening your arms and arching your back, ending in an upward-facing dog-like position.",
+      "Reverse the motion to return to the pike position."
+    ]
+  },
+  {
+    "name": "Box Jumps (Lateral)",
+    "category": "Explosive, Cardio, Lower Body Strength",
+    "target": "Quads, Glutes, Calves, Explosiveness, Lateral Movement",
+    "reps": "5-8 reps per side",
+    "instructions": [
+      "Stand sideways to a sturdy low box or step, about a foot away.",
+      "Swing your arms back and bend your knees, then explode laterally up onto the box.",
+      "Land softly with both feet fully on the box, bending your knees to absorb impact.",
+      "Step down or jump back carefully to the starting position on the same side. Alternate sides with each set."
+    ]
+  },
+  {
+    "name": "Tuck Jumps",
+    "category": "Explosive, Cardio, Lower Body Strength",
+    "target": "Quads, Glutes, Calves, Explosiveness",
+    "reps": "8-12 reps",
+    "instructions": [
+      "Stand with feet hip-width apart, slight bend in knees.",
+      "Swing your arms back and quickly bend your knees, loading up for the jump.",
+      "Explode straight up, driving your knees towards your chest as high as possible.",
+      "Land softly on the balls of your feet, immediately going into a slight squat to absorb impact and prepare for the next jump."
+    ]
+  },
+  {
+    "name": "Cossack Squat",
+    "category": "Lower Body Mobility, Lower Body Strength",
+    "target": "Inner Thighs, Adductors, Glutes, Hamstrings, Ankle Mobility",
+    "reps": "6-8 reps per side",
+    "instructions": [
+      "Stand with feet wide, toes pointed slightly out (you can hold a dumbbell at your chest for balance/load).",
+      "Shift your weight to one side, bending that knee and pushing your hips back, keeping the other leg straight.",
+      "Lower your hips as deep as comfortable into the squat, keeping the straight leg's heel on the ground.",
+      "Push through the heel of your bent leg to return to standing, then switch sides."
+    ]
+  },
+  {
+    "name": "Kneeling Hip Flexor Stretch (Dynamic)",
+    "category": "Mobility",
+    "target": "Hip Flexors, Hips",
+    "reps": "8-10 reps per side",
+    "instructions": [
+      "Start in a half-kneeling position (one knee on the ground, other foot flat in front).",
+      "Gently lean forward, pushing your hips forward to feel a stretch in the hip flexor of the kneeling leg.",
+      "Hold briefly, then rock back slightly. Focus on a controlled, pulsing movement into the stretch.",
+      "Keep your core engaged to prevent over-arching your lower back. Switch legs."
+    ]
+  },
+  {
+    "name": "Quadruped Thoracic Rotation",
+    "category": "Mobility",
+    "target": "Thoracic Spine, Shoulders",
+    "reps": "8-10 reps per side",
+    "instructions": [
+      "Start on your hands and knees, hands under shoulders, knees under hips.",
+      "Place one hand on the back of your head, elbow pointing towards the floor.",
+      "Rotate your upper body, lifting your elbow towards the ceiling, looking up.",
+      "Return with control. Focus on rotating through your upper back, not just your arm.",
+      "Complete all reps on one side, then switch."
+    ]
+  },
+  {
+    "name": "Standing Dynamic Hamstring Stretch",
+    "category": "Mobility, Warm-up",
+    "target": "Hamstrings, Hip Flexors, Dynamic Flexibility",
+    "reps": "10-12 reps per leg",
+    "instructions": [
+      "Stand tall. Keeping one leg straight and heel on the ground, hinge at your hips, reaching your opposite hand towards your toes.",
+      "Simultaneously, lift the leg being stretched slightly behind you.",
+      "Return to standing quickly. This is a controlled 'good morning' motion per leg.",
+      "Focus on a smooth, repetitive stretch rather than a static hold. Alternate sides."
     ]
   }
 ]
