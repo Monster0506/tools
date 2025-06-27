@@ -5,24 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Martial Arts Exercise Generator</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Mono:wght@400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400&display=swap"
       rel="stylesheet"
     />
-    <!-- Path corrected -->
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="/tool/random-exercise/style.css" />
   </head>
   <body>
     <div class="container">
       <h1>Martial Arts Exercise Generator</h1>
 
-      <!-- Toggle between modes -->
       <div class="mode-toggle">
-        <button id="togglePlanModeBtn" class="primary-button">
-          Create Workout Plan
+        <button id="singleExerciseTab" class="active">
+          <i class="fas fa-running"></i>
+          Single Exercise
+        </button>
+        <button id="workoutPlanTab">
+          <i class="fas fa-clipboard-list"></i>
+          Workout Plan
         </button>
       </div>
 
-      <!-- Single Exercise Mode (Initial View) -->
       <div id="singleExerciseMode" class="mode-section">
         <div class="filters">
           <div class="filter-group">
@@ -30,7 +38,7 @@
             <select id="categoryFilter" onchange="applyFilters()"></select>
           </div>
           <div class="filter-group">
-            <label for="targetFilter">Target:</label>
+            <label for="targetFilter">Target Muscle:</label>
             <select id="targetFilter" onchange="applyFilters()"></select>
           </div>
           <div class="filter-group">
@@ -43,15 +51,18 @@
             />
           </div>
           <button class="reset-button" onclick="resetFilters()">
+            <i class="fas fa-sync-alt"></i>
             Reset Filters
           </button>
         </div>
 
         <div class="controls">
           <button onclick="pickExercise()" id="pickExerciseBtn">
+            <i class="fas fa-random"></i>
             Pick Random Exercise
           </button>
           <button onclick="previousExercise()" id="prevExerciseBtn" disabled>
+            <i class="fas fa-arrow-left"></i>
             Previous Exercise
           </button>
         </div>
@@ -75,31 +86,29 @@
         </div>
       </div>
 
-      <!-- Workout Plan Mode (Initially hidden) -->
       <div id="workoutPlanMode" class="mode-section hidden">
         <h2>Build Your Workout Plan</h2>
         <div class="plan-config">
-          <div id="planSectionsContainer">
-            <!-- Dynamic workout plan sections will be added here -->
-          </div>
+          <div id="planSectionsContainer"></div>
           <button
             class="add-section-button"
             onclick="addWorkoutPlanSection()"
             id="addSectionBtn"
           >
-            + Add Section
+            <i class="fas fa-plus"></i>
+            Add Section
           </button>
           <button
             class="primary-button generate-plan-button"
             onclick="generateWorkoutPlan()"
             id="generatePlanBtn"
           >
+            <i class="fas fa-play"></i>
             Generate Workout Plan
           </button>
         </div>
 
         <div class="generated-plan-display" id="generatedPlanDisplay">
-          <!-- Generated workout plan will be displayed here -->
           <div class="no-exercise-message initial-message">
             Define sections above and click "Generate Workout Plan" to create
             your customized workout!
@@ -108,7 +117,6 @@
       </div>
     </div>
 
-    <!-- Path corrected -->
     <script src="/tool/random-exercise/script.js"></script>
   </body>
 </html>
