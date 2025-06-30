@@ -88,6 +88,33 @@
 
       <div id="workoutPlanMode" class="mode-section hidden">
         <h2>Build Your Workout Plan</h2>
+
+        <!-- New: Template Controls -->
+        <div class="template-controls">
+          <div class="filter-group">
+            <label for="workoutPlanTemplateSelect">Load Template:</label>
+            <select id="workoutPlanTemplateSelect"></select>
+          </div>
+          <button id="loadTemplateBtn" disabled>
+            <i class="fas fa-folder-open"></i> Load
+          </button>
+          <button
+            id="saveTemplateBtn"
+            class="save-template-button"
+            onclick="saveWorkoutPlanTemplate()"
+          >
+            <i class="fas fa-save"></i> Save Current
+          </button>
+          <button
+            id="deleteTemplateBtn"
+            class="delete-template-button"
+            disabled
+          >
+            <i class="fas fa-trash-alt"></i> Delete
+          </button>
+        </div>
+        <!-- End New: Template Controls -->
+
         <div class="plan-config">
           <div id="planSectionsContainer"></div>
           <button

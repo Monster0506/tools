@@ -70,7 +70,8 @@ h1 {
 .controls,
 .filters,
 .plan-config,
-.generated-plan-display {
+.generated-plan-display,
+.template-controls {
   background: var(--card-background);
   border-radius: var(--border-radius);
   padding: var(--spacing-lg);
@@ -103,7 +104,8 @@ h1 {
 }
 
 .filter-group label,
-.plan-section-input-group label {
+.plan-section-input-group label,
+.template-controls label {
   font-weight: 600;
   margin-bottom: var(--spacing-xs);
   color: var(--text-color);
@@ -115,7 +117,8 @@ h1 {
 .filter-group input[type="text"],
 .plan-section-input-group select,
 .plan-section-input-group input[type="text"],
-.plan-section-input-group input[type="number"] {
+.plan-section-input-group input[type="number"],
+.template-controls select {
   width: 100%;
   padding: 0.9rem 1.2rem;
   border: 1px solid var(--border-color);
@@ -139,7 +142,8 @@ h1 {
 .filter-group input[type="text"]:hover,
 .plan-section-input-group select:hover,
 .plan-section-input-group input[type="text"]:hover,
-.plan-section-input-group input[type="number"]:hover {
+.plan-section-input-group input[type="number"]:hover,
+.template-controls select:hover {
   border-color: var(--secondary-color);
 }
 
@@ -147,7 +151,8 @@ h1 {
 .filter-group input[type="text"]:focus,
 .plan-section-input-group select:focus,
 .plan-section-input-group input[type="text"]:focus,
-.plan-section-input-group input[type="number"]:focus {
+.plan-section-input-group input[type="number"]:focus,
+.template-controls select:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
   background-color: var(--card-background);
@@ -361,6 +366,38 @@ button:disabled {
   margin-top: var(--spacing-sm);
   font-size: 1.2rem;
 }
+
+/* New: Template Controls */
+.template-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: var(--spacing-lg);
+}
+
+.template-controls .filter-group {
+  margin-bottom: 0; /* Override default margin from filter-group */
+}
+
+.template-controls button {
+  margin: 0; /* Override default margin from button */
+}
+
+.template-controls button.delete-template-button {
+  background: var(--error-color);
+}
+.template-controls button.delete-template-button:hover {
+  background: var(--error-hover);
+}
+.template-controls button.save-template-button {
+  background: var(--accent-color);
+}
+.template-controls button.save-template-button:hover {
+  background: var(--accent-hover);
+}
+/* End New: Template Controls */
 
 .generated-plan-display {
   background: var(--card-background);
@@ -628,6 +665,18 @@ button:disabled {
   #planSectionsContainer {
     width: 100%;
   }
+
+  .template-controls {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-end;
+  }
+
+  .template-controls .filter-group {
+    width: auto;
+    flex: 1;
+    margin-right: var(--spacing-sm);
+  }
 }
 
 @media (max-width: 480px) {
@@ -645,7 +694,8 @@ button:disabled {
   }
 
   .filters,
-  .plan-config {
+  .plan-config,
+  .template-controls {
     padding: var(--spacing-md);
   }
 
@@ -711,5 +761,10 @@ button:disabled {
     font-size: 1rem;
     min-width: auto;
     min-height: auto;
+  }
+
+  .template-controls {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
