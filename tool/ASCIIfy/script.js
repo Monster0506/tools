@@ -41,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "\u3000": " ", // Ideographic Space
 
     // Dashes
+    "\u2011": "-",  // Non-breaking hyphen
+    "\u2012": "-",  // Dash
     "\u2013": "-", // En Dash
     "\u2014": "--", // Em Dash
     "\u2015": "--", // Horizontal Bar (often used like Em Dash)
