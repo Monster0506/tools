@@ -238,7 +238,7 @@
 
     <footer>
       <p>
-        © 2025 TJ Raklovits -
+        © <span id="year"></span> TJ Raklovits -
         <a href="https://github.com/Monster0506">GitHub</a> -
       </p>
     </footer>
@@ -654,6 +654,10 @@
           (params.toString() ? "?" + params.toString() : "");
         window.history.replaceState({}, "", newUrl);
       }
+
+      // get year dynamically
+      document.getElementById("year").textContent = new Date().getFullYear();
     </script>
   </body>
 </html>
+
