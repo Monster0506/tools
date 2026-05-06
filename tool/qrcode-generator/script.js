@@ -341,6 +341,67 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+
+function populateFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+
+  const qr = params.get("qr");
+  if (!qr) return;
+
+  const type = params.get("type") || "url";
+
+  qrTypeSelect.value = type;
+  updateInputFields();
+
+  try {
+    switch (type) {
+      case "url":
+        document.getElementById("urlInput").value = qr;
+        break;
+      case "text":
+        document.getElementById("textInput").value = qr;
+        break;
+      case "email":
+        document.getElementById("emailRecipient").value = qr;
+        break;
+      case "sms":
+        document.getElementById("smsNumber").value = qr;
+        break;
+      case "geo":
+        const [lat, lon] = qr.split(",");
+        document.getElementById("geoLatitude").value = lat || "";
+        document.getElementById("geoLongitude").value = lon || "";
+        break;
+
+      case "wifi":
+      case "vcard": {
+        const data = JSON.parse(qr);
+
+        if (type === "wifi") {
+          document.getElementById("wifiSSID").value = data.ssid || "";
+          document.getElementById("wifiPassword").value = data.password || "";
+          document.getElementById("wifiEncryption").value =
+            data.encryption || "WPA";
+        }
+
+        if (type === "vcard") {
+          document.getElementById("vcardName").value = data.name || "";
+          document.getElementById("vcardPhone").value = data.phone || "";
+          document.getElementById("vcardEmail").value = data.email || "";
+          document.getElementById("vcardOrg").value = data.org || "";
+        }
+
+        break;
+      }
+    }
+
+    generateQRCode();
+  } catch (e) {
+    console.error("Failed to parse query params:", e);
+    errorMessage.textContent = "Invalid query parameters.";
+  }
+}
+
   function populateFromUrl() {
     const hash = window.location.hash;
 
@@ -414,5 +475,6 @@ document.addEventListener("DOMContentLoaded", () => {
   copyLinkBtn.addEventListener("click", copyShareableLink);
 
   updateInputFields();
+  populateFromQuery();
   populateFromUrl();
 });
