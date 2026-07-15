@@ -104,7 +104,9 @@
 
       .tool-id {
         background-color: var(--tk-entry-bg);
-        border: 1px inset var(--tk-bg);
+        border: 1px solid;
+        border-color: var(--tk-shadow) var(--tk-light) var(--tk-light)
+          var(--tk-shadow);
         border-radius: 0;
         padding: 0.05rem 0.5rem;
       }
@@ -123,7 +125,9 @@
 
       .tag {
         background-color: var(--tk-bg);
-        border: 1px outset var(--tk-bg);
+        border: 1px solid;
+        border-color: var(--tk-light) var(--tk-shadow) var(--tk-shadow)
+          var(--tk-light);
         border-radius: 0;
         padding: 0.1rem 0.5rem;
         font-size: 0.7rem;
@@ -139,7 +143,9 @@
 
       .tool-links a {
         background-color: var(--tk-bg);
-        border: 2px outset var(--tk-bg);
+        border: 2px solid;
+        border-color: var(--tk-light) var(--tk-shadow) var(--tk-shadow)
+          var(--tk-light);
         border-radius: 0;
         padding: 0.2rem 0.6rem;
         color: var(--tk-text);
@@ -147,12 +153,14 @@
       }
 
       .tool-links a:hover {
-        border-style: inset;
+        border-color: var(--tk-shadow) var(--tk-light) var(--tk-light)
+          var(--tk-shadow);
         color: var(--tk-text);
       }
 
       .tool-links a:active {
-        border-style: inset;
+        border-color: var(--tk-shadow) var(--tk-light) var(--tk-light)
+          var(--tk-shadow);
       }
 
       footer {
@@ -179,7 +187,9 @@
 
       .filter-tag {
         background-color: var(--tk-bg);
-        border: 2px outset var(--tk-bg);
+        border: 2px solid;
+        border-color: var(--tk-light) var(--tk-shadow) var(--tk-shadow)
+          var(--tk-light);
         border-radius: 0;
         padding: 0.15rem 0.6rem;
         font-size: 0.8rem;
@@ -189,7 +199,8 @@
       }
 
       .filter-tag.active {
-        border-style: inset;
+        border-color: var(--tk-shadow) var(--tk-light) var(--tk-light)
+          var(--tk-shadow);
         background-color: var(--tk-select-bg);
         color: var(--tk-select-text);
       }
@@ -198,7 +209,9 @@
         width: 100%;
         padding: 0.4rem 0.5rem;
         margin-bottom: 1rem;
-        border: 2px inset var(--tk-bg);
+        border: 2px solid;
+        border-color: var(--tk-shadow) var(--tk-light) var(--tk-light)
+          var(--tk-shadow);
         border-radius: 0;
         background-color: var(--tk-entry-bg);
         color: var(--tk-text);
@@ -217,12 +230,16 @@
 
       ::-webkit-scrollbar-track {
         background: var(--tk-bg);
-        border: 1px inset var(--tk-bg);
+        border: 1px solid;
+        border-color: var(--tk-shadow) var(--tk-light) var(--tk-light)
+          var(--tk-shadow);
       }
 
       ::-webkit-scrollbar-thumb {
         background: var(--tk-bg);
-        border: 2px outset var(--tk-bg);
+        border: 2px solid;
+        border-color: var(--tk-light) var(--tk-shadow) var(--tk-shadow)
+          var(--tk-light);
       }
 
       @media (max-width: 600px) {

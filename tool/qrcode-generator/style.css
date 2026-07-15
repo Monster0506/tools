@@ -1,9 +1,10 @@
 body {
-  font-family: sans-serif;
-  line-height: 1.6;
+  font-family: Tahoma, "MS Sans Serif", Geneva, Verdana, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
   padding: 20px;
-  background-color: #f4f4f4;
-  color: #333;
+  background-color: #d9d9d9;
+  color: #000;
 }
 
 .container {
@@ -12,16 +13,17 @@ body {
   gap: 30px;
   max-width: 900px;
   margin: 20px auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #d9d9d9;
+  padding: 20px;
+  border: 2px groove #d9d9d9;
+  border-radius: 0;
 }
 
 h1,
 h2 {
   text-align: center;
-  color: #333;
+  color: #000;
+  font-weight: bold;
   width: 100%;
 }
 
@@ -48,13 +50,18 @@ input[type="url"],
 input[type="password"],
 input[type="tel"],
 input[type="email"],
+input[type="number"],
 textarea,
 select {
   width: 100%;
-  padding: 10px;
+  padding: 8px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  border-radius: 0;
+  background-color: #fff;
+  color: #000;
+  font-family: inherit;
   box-sizing: border-box;
 }
 
@@ -64,19 +71,24 @@ textarea {
 
 button {
   display: inline-block;
-  background-color: #007bff;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
+  background-color: #d9d9d9;
+  color: #000;
+  padding: 10px 18px;
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+  border-radius: 0;
   cursor: pointer;
-  font-size: 16px;
+  font-family: inherit;
+  font-size: 1rem;
   margin-top: 20px;
-  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #e6e6e6;
+}
+
+button:active {
+  border-color: #808080 #fff #fff #808080;
 }
 
 #generateBtn {
@@ -84,27 +96,20 @@ button:hover {
 }
 
 #downloadBtn {
-  background-color: #28a745;
   margin-top: 15px;
 }
 
-#downloadBtn:hover {
-  background-color: #218838;
-}
 #copyBtn {
-  background-color: #17a2b8;
   margin-top: 15px;
   margin-left: 10px;
 }
 
-#copyBtn:hover {
-  background-color: #117a8b;
-}
 #qrcode {
   width: 256px;
   height: 256px;
   margin: 20px auto;
-  border: 1px solid #eee;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
   padding: 10px;
   background-color: #fff;
 }
@@ -118,58 +123,60 @@ button:hover {
 .input-section {
   margin-top: 15px;
   padding-top: 10px;
-  border-top: 1px dashed #eee;
+  border-top: 1px solid #808080;
 }
 
 .error {
-  color: #dc3545;
+  color: #a00000;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.success {
+  color: #006000;
   margin-top: 15px;
   font-weight: bold;
 }
 
 #fileInput {
   width: 100%;
-  padding: 8px;
+  padding: 6px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  border-radius: 0;
   box-sizing: border-box;
   background-color: #fff;
   line-height: 1.4;
 }
 
 #fileInput::file-selector-button {
-  padding: 8px 15px;
+  padding: 6px 12px;
   margin-right: 10px;
-  background-color: #e9ecef;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  color: #495057;
+  background-color: #d9d9d9;
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+  border-radius: 0;
+  color: #000;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  font-family: inherit;
 }
 
 #fileInput::file-selector-button:hover {
-  background-color: #dee2e6;
+  background-color: #e6e6e6;
 }
 
 #fileInfo {
   margin-top: 5px;
   font-size: 0.9em;
-  color: #333;
+  color: #000;
   padding: 5px 0;
   word-break: break-all;
 }
 
 #input-file p {
   font-size: 0.8em;
-  color: #666;
+  color: #454545;
   margin-top: 8px;
   line-height: 1.4;
-}
-
-.input-section {
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px dashed #eee;
 }
