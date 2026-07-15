@@ -479,7 +479,10 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const locale = params?.locale || "en-US";
         const conjunction = params?.conjunction || "and";
-        const items = text.map((s) => s.trim()).filter(Boolean);
+        const items = text
+          .split("\n")
+          .map((s) => s.trim())
+          .filter(Boolean);
         if (items.length === 0) return "";
         const listFormat = new Intl.ListFormat(locale, {
           style: "long",
