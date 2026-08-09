@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const qrTypeSelect = document.getElementById("qrType");
+  const qrVersionSelect = document.getElementById("qrVersion");
+  const qrSizeSelect = document.getElementById("qrSize");
+  const qrErrorCorrectionSelect = document.getElementById("qrErrorCorrection");
   const generateBtn = document.getElementById("generateBtn");
   const downloadBtn = document.getElementById("downloadBtn");
   const copyBtn = document.getElementById("copyBtn");
@@ -11,6 +14,92 @@ document.addEventListener("DOMContentLoaded", () => {
   const fileInputElement = document.getElementById("fileInput");
   const fileInfoElement = document.getElementById("fileInfo");
   let qrCodeInstance = null;
+
+  const ditherEnabledCheckbox = document.getElementById("ditherEnabled");
+  const ditherOptions = document.getElementById("ditherOptions");
+  const ditherImageInput = document.getElementById("ditherImageInput");
+  const ditherIntensityInput = document.getElementById("ditherIntensity");
+  const ditherIntensityValue = document.getElementById("ditherIntensityValue");
+  const ditherWarning = document.getElementById("ditherWarning");
+
+  ditherEnabledCheckbox.addEventListener("change", () => {
+    ditherOptions.style.display = ditherEnabledCheckbox.checked
+      ? "block"
+      : "none";
+  });
+  ditherIntensityInput.addEventListener("input", () => {
+    ditherIntensityValue.textContent = ditherIntensityInput.value;
+  });
+
+  function applyDithering(data, qr, size) {
+    return new Promise((resolve, reject) => {
+      const file = ditherImageInput.files[0];
+      if (!file) {
+        reject(new Error("Select an image to embed before generating."));
+        return;
+      }
+
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+        try {
+          const moduleCount = qr.getModuleCount();
+          const version = (moduleCount - 17) / 4;
+          const functionMask = QRDither.buildFunctionMask(moduleCount, version);
+          const dataModuleCount = QRDither.countDataModules(functionMask);
+
+          const MAX_FLIP_FRACTION = 0.35;
+          const intensity = Number(ditherIntensityInput.value) / 100;
+          const flipBudget = Math.floor(
+            dataModuleCount * intensity * MAX_FLIP_FRACTION,
+          );
+
+          const grayGrid = QRDither.sampleImageToGrid(img, moduleCount);
+          const { matrix } = QRDither.ditherQRMatrix({
+            isDark: (r, c) => qr.isDark(r, c),
+            moduleCount,
+            version,
+            grayGrid,
+            flipBudget,
+          });
+
+          const quietZoneModules = 4;
+          const moduleSize = Math.max(
+            1,
+            Math.round(size / (moduleCount + quietZoneModules * 2)),
+          );
+          const ditheredCanvas = QRDither.renderMatrixToCanvas(
+            matrix,
+            moduleCount,
+            moduleSize,
+            quietZoneModules,
+          );
+
+          qrCodeContainer.innerHTML = "";
+          qrCodeContainer.appendChild(ditheredCanvas);
+
+          const scannable = QRDither.verifyScannable(ditheredCanvas, data);
+          ditherWarning.textContent =
+            scannable === false
+              ? "This dithered QR code may not scan reliably. Try lowering the intensity."
+              : "";
+
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error("Failed to load the selected image."));
+      };
+
+      img.src = objectUrl;
+    });
+  }
 
   function updateInputFields() {
     const selectedType = qrTypeSelect.value;
@@ -26,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function clearQRCode() {
     qrCodeContainer.innerHTML = "";
     errorMessage.textContent = "";
+    ditherWarning.textContent = "";
     downloadBtn.style.display = "none";
     copyBtn.style.display = "none";
     copyLinkBtn.style.display = "none";
@@ -175,26 +265,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (data) {
         // data will be null if formatData promise was rejected before this point
-        qrCodeInstance = new QRCode(qrCodeContainer, {
-          text: data,
-          width: 256,
-          height: 256,
-          colorDark: "#000000",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H, // High error correction is good, but reduces capacity
-        });
-        setTimeout(() => {
-          const canvas = qrCodeContainer.querySelector("canvas");
-          if (canvas) {
-            downloadBtn.style.display = "inline-block";
-            if (navigator.clipboard && navigator.clipboard.write) {
-              copyBtn.style.display = "inline-block";
-            }
-            copyLinkBtn.style.display = "inline-block";
-          } else {
-            errorMessage.textContent = "Failed to render QR Code canvas.";
+        const qrSize = Number(qrSizeSelect.value);
+        const typeNumber = Number(qrVersionSelect.value); // 0 = auto
+
+        let qr;
+        try {
+          qr = qrcode(typeNumber, qrErrorCorrectionSelect.value);
+          qr.addData(data);
+          qr.make();
+        } catch (genError) {
+          if (/overflow/i.test(String(genError && genError.message ? genError.message : genError))) {
+            throw new Error(
+              'This data doesn\'t fit in the selected QR version. Choose "Auto" or a larger version.',
+            );
           }
-        }, 100);
+          throw genError instanceof Error ? genError : new Error(String(genError));
+        }
+
+        qrCodeInstance = qr;
+
+        const moduleCount = qr.getModuleCount();
+        const quietZoneModules = 4;
+        const moduleSize = Math.max(
+          1,
+          Math.round(qrSize / (moduleCount + quietZoneModules * 2)),
+        );
+        const matrix = QRDither.buildMatrix(
+          (r, c) => qr.isDark(r, c),
+          moduleCount,
+        );
+        const canvas = QRDither.renderMatrixToCanvas(
+          matrix,
+          moduleCount,
+          moduleSize,
+          quietZoneModules,
+        );
+        qrCodeContainer.appendChild(canvas);
+
+        if (ditherEnabledCheckbox.checked) {
+          try {
+            await applyDithering(data, qr, qrSize);
+          } catch (ditherError) {
+            console.error("Dithering failed:", ditherError);
+            errorMessage.textContent =
+              ditherError.message || "Failed to apply dithering.";
+            return;
+          }
+        }
+
+        downloadBtn.style.display = "inline-block";
+        if (navigator.clipboard && navigator.clipboard.write) {
+          copyBtn.style.display = "inline-block";
+        }
+        copyLinkBtn.style.display = "inline-block";
       }
       // If data is null/undefined (e.g., promise rejected and caught below), buttons remain hidden
     } catch (error) {
