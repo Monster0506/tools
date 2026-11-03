@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Draw</title>
+    <link rel="stylesheet" href="/tool/draw/styles.css" />
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <div class="tools">
+      <div class="group" role="group" aria-label="Tool">
+        <button type="button" data-tool="pen" aria-pressed="true" title="Pen (1, Tab)">Pen</button>
+        <button type="button" data-tool="eraser" aria-pressed="false" title="Eraser (2, Tab)">Eraser</button>
+      </div>
+      <div class="group" role="group" aria-label="History">
+        <button type="button" id="undo" title="Undo (Ctrl+Z)">Undo</button>
+        <button type="button" id="redo" title="Redo (Ctrl+Y)">Redo</button>
+      </div>
+      <div class="group" role="group" aria-label="View">
+        <button type="button" id="home" title="Show whole drawing (0, Home)">Home</button>
+      </div>
+    </div>
+
+    <p id="status" class="status" role="alert" hidden>Storage full: changes not saved</p>
+
+    <script type="module" src="/tool/draw/script.js"></script>
+  </body>
+</html>
